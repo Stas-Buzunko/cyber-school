@@ -9,14 +9,14 @@ export default (store) => ({
     require.ensure([], (require) => {
       /*  Webpack - use require callback to define
           dependencies for bundling   */
-      const MainView = require('./components/MainView').default
+      const NewCourse = require('./components/EditCourse').default
       // const reducer = require('./modules/counter').default
 
       /*  Add the reducer to the store on key 'counter'  */
       // injectReducer(store, { key: 'counter', reducer })
 
       /*  Return getComponent   */
-      cb(null, MainView)
+      cb(null, NewCourse)
 
     /* Webpack named bundle   */
     }, 'admin/courses(/:action)')
