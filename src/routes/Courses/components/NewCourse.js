@@ -112,7 +112,10 @@ class NewCourse extends Component {
                     className='btn btn-success lg'
                     onClick={() => {
                       this.setState({
-                        lessonsNumber: [1, 2]
+                        lessons: [
+                          ...this.state.lessons,
+                          this.state.lessons.length + 1
+                        ]
                       })
                     }}
                 >Add Lesson
@@ -126,7 +129,7 @@ class NewCourse extends Component {
                 style={{ width:'50%', margin: '15px' }}
                 className='btn btn-success lg'
                 onClick={() => {
-                  browserHistory.push(`/admin/courses/new`)
+                  browserHistory.push(`/admin/courses`)
                 }}
               >Save course
             </button>

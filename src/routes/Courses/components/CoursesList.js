@@ -7,22 +7,22 @@ class CoursesList extends Component {
     this.state = {
       courses: [
         { description : 'First course about cooking rissotto',
-          main_photo:  '1',
+          mainPhoto:  '1',
           duration:  '34:54',
           price: '100$',
           lessons: [{
-            video_link:  '1',
+            videoLink:  '1',
             description: '1',
             test: 'ltest_id'
           }
           ]
         },
         { description: 'Course make up like Shurigina',
-          main_photo:  '2',
+          mainPhoto:  '2',
           duration:  '24:40',
           price:  '20$',
           lessons: [{
-            video_link:  '2.1',
+            videoLink:  '2.1',
             description: '2.1',
             test: 'ltest_id2.1'
           },
@@ -48,7 +48,7 @@ class CoursesList extends Component {
             </div>
             <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Main photo:</label>
-              <div> {item.main_photo}</div>
+              <div> {item.mainPhoto}</div>
             </div> <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Duration:</label>
               <div> {item.duration}</div>
@@ -62,7 +62,7 @@ class CoursesList extends Component {
               type='button'
               className='btn btn-primary lg'
               onClick={() => {
-                browserHistory.push(`/admin/courses/edit`)
+                browserHistory.push(`/admin/courses/edit/${i}`)
               }}
               >Edit course</button>
           </div>

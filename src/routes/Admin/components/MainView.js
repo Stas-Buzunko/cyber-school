@@ -19,3 +19,8 @@ const MainView = (props) => {
     </div>
   )
 }
+MainView.propTypes = {
+  authenticated: React.PropTypes.string,
+  auth: React.PropTypes.object
+}
+export default MainView

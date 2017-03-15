@@ -22,7 +22,7 @@ const MainView = (props) => {
     <div>
       <Link to='/admin/courses' activeClassName='route--active'>Courses List</Link>
       {' · '}
-      <Link to='/admin/courses/new' activeClassName='route--active'>Courses New</Link>
+      <Link to='/admin/courses/new' activeClassName='route--active'>Course New</Link>
       {' · '}
       <Link to='/admin/courses/edit' activeClassName='route--active'>Courses Edit</Link>
       {content}
