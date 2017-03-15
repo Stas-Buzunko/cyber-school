@@ -7,11 +7,11 @@ import { onLoginSuccess, onLogoutSuccess } from './actions/auth-actions'
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAaLFv6zXGP2_GKh_kREsi4PXbf1BtsclQ",
-  authDomain: "cyber-academy.firebaseapp.com",
-  databaseURL: "https://cyber-academy.firebaseio.com",
-  storageBucket: "cyber-academy.appspot.com",
-  messagingSenderId: "405616072197"
+  apiKey: 'AIzaSyAaLFv6zXGP2_GKh_kREsi4PXbf1BtsclQ',
+  authDomain: 'cyber-academy.firebaseapp.com',
+  databaseURL: 'https://cyber-academy.firebaseio.com',
+  storageBucket: 'cyber-academy.appspot.com',
+  messagingSenderId: '405616072197'
 }
 
 firebase.initializeApp(firebaseConfig)

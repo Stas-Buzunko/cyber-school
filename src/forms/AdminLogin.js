@@ -3,28 +3,28 @@ import { Field, reduxForm } from 'redux-form'
 
 const AdminLogin = ({ handleSubmit }) => (
   <form onSubmit={handleSubmit}>
-    <div className="login-modal__email-field flex-row">
+    <div className='login-modal__email-field flex-row'>
       <Field
-        className="input-text flex"
-        component="input"
-        name="email"
-        placeholder="Email"
-        type="email" />
+        className='input-text flex'
+        component='input'
+        name='email'
+        placeholder='Email'
+        type='email' />
     </div>
 
-    <div className="login-modal__password-field flex-row">
+    <div className='login-modal__password-field flex-row'>
       <Field
-        className="input-text flex"
-        component="input"
-        name="password"
-        placeholder="Password"
-        type="password" />
+        className='input-text flex'
+        component='input'
+        name='password'
+        placeholder='Password'
+        type='password' />
     </div>
 
-    <div className="login-modal__buttons flex-col mtm">
+    <div className='login-modal__buttons flex-col mtm'>
       <button
-        className="login-modal__login-button flex bd-btn-primary mbs"
-        type="submit">
+        className='login-modal__login-button flex bd-btn-primary mbs'
+        type='submit'>
         Login
       </button>
     </div>
