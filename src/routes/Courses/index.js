@@ -1,4 +1,4 @@
-import { injectReducer } from '../../store/reducers'
+import { browserHistory } from 'react-router'
 
 export default (store) => ({
   path : 'admin/courses(/:action)',
@@ -9,6 +9,13 @@ export default (store) => ({
     require.ensure([], (require) => {
       /*  Webpack - use require callback to define
           dependencies for bundling   */
+      const state = store.getState()
+      const { authenticated } = state.auth
+
+      if (!authenticated) {
+        browserHistory.push('/admin')
+      }
+
       const MainView = require('./components/MainView').default
       // const reducer = require('./modules/counter').default
 

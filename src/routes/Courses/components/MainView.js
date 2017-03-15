@@ -29,5 +29,8 @@ const MainView = (props) => {
     </div>
   )
 }
-
+MainView.propTypes = {
+  action: React.PropTypes.string,
+  params: React.PropTypes.object
+}
 export default MainView

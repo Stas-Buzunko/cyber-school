@@ -9,14 +9,22 @@ export const Header = () => (
       Home
     </IndexLink>
     {' · '}
-    <Link to='/counter' activeClassName='route--active'>
-      Counter
+    <Link to='/disciplines/dota2'>
+       Dota 2
     </Link>
-      {' · '}
+    {' · '}
+    <Link to='/disciplines/cs_go'>
+      CS:GO
+    </Link>
+    {' · '}
+    <Link to='/disciplines/lol'>
+      LOL
+    </Link>
+    {' · '}
     <Link to='/admin' activeClassName='route--active'>
       Admin
     </Link>
-      {' · '}
+    {' · '}
     <Link to='/admin/courses' activeClassName='route--active'>
       Courses
     </Link>

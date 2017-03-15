@@ -1,8 +1,21 @@
-import React, { Component } from 'react'
-import { Link, browserHistory } from 'react-router';
+import React from 'react'
+import UserList from '../containers/UserListContainer'
+import Login from '../containers/LoginContainer'
 
+const MainView = (props) => {
+  let content
 
-class MainView extends Component {
+  switch (props.auth.authenticated) {
+    case true:
+      content = <UserList />
+      break
+    default:
+      content = <Login />
+  }
 
+  return (
+    <div>
+      {content}
+    </div>
+  )
 }
-export default MainView;

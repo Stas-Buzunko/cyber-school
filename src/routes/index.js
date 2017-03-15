@@ -4,6 +4,7 @@ import Home from './Home'
 import CounterRoute from './Counter'
 import Admin from './Admin'
 import Courses from './Courses'
+import Disciplines from './Disciplines'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -15,7 +16,8 @@ export const createRoutes = (store) => ({
   childRoutes : [
     CounterRoute(store),
     Admin(store),
-    Courses(store)
+    Courses(store),
+    Disciplines(store)
   ]
 })
 
