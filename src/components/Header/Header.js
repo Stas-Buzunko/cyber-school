@@ -17,13 +17,10 @@ export const Header = () => (
       Admin
     </Link>
       {' · '}
-    <Link to='/admin/courses/new' activeClassName='route--active'>
-      Courses new
+    <Link to='/admin/courses' activeClassName='route--active'>
+      Courses
     </Link>
     {' · '}
-  <Link to='/admin/courses/:id/edit' activeClassName='route--active'>
-    Courses edit
-  </Link>
   </div>
 )
 

@@ -74,16 +74,16 @@ return (
   <div className="container">
     <div className="row">
       <div className="col-xs-6 col-md-4">
-
-        <ul>
+        <h4>Here will be user list</h4>
+        {/*<ul>
           {coursesList}
         </ul>
         <button
           type="button"
           className="btn btn-success lg"
-          onClick={() => { browserHistory.push(`/admin/courses/new`)
+          onClick={() => { browserHistory.push(`/admin/courses`)
           }}
-          >Add course</button>
+          >Courses</button>*/}
         </div>
       </div>
     </div>
