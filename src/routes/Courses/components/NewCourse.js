@@ -14,12 +14,12 @@ class NewCourse extends Component {
       videoLink:  '',
       descriptionLesson: '',
       test: '',
-      lessonsNumber: [1]
+      lessons: [1]
     }
   }
 
   render () {
-    const lessonList = this.state.lessonsNumber.map((item, i) =>
+    const lessonList = this.state.lessons.map((item, i) =>
 
       <li key={i}>
         <div className='col-xs-12 col-md-12'>
