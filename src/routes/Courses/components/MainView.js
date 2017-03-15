@@ -5,7 +5,6 @@ import CoursesList from './CoursesList'
 import { Link } from 'react-router'
 
 const MainView = (props) => {
-  console.log(props)
   let content
 
   switch (props.params.action) {
