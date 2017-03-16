@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
+import firebase from 'firebase'
 
 class EditCourse extends Component {
   constructor (props) {
@@ -10,12 +11,51 @@ class EditCourse extends Component {
       mainPhoto:  '123321',
       duration:  '57:53',
       price:  '100$',
-
+      discipline: 'joga',
       videoLink:  'wwww.joga.com',
       description2: 'joga',
       test: 'ltest_id'
 
     }
+  }
+  handleSubmitEdit() {
+    const { phone, username, phoneVerified, name, profilePicture, bio, instagram, twitter, snapchat } = this.state;
+    if (!username.length) {
+      this.setState({error: 'Please, enter your username'});
+      return false;
+    }
+    if (!phone.length) {
+      this.setState({error: 'Please, enter your phone'});
+      return false;
+    }
+    if (!/^[-\w\.\$@\*\!]{1,30}$/.test(username)) {
+      this.setState({error: 'Please, enter valid username'});
+      return false;
+    }
+    this.setState({error: ''});
+    const { user } = this.props;
+    if (phoneVerified) {
+      let avatar;
+      firebase.database().ref('users')
+      .orderByChild('username')
+      .equalTo(`${username}`)
+      .once('value').then(snapshot => {
+        const object = snapshot.val();
+        const condition = object == null || object[Object.keys(object)[0]].uid === user.uid;
+        if (condition) {
+          firebase.database().ref('users/'+ user.uid).update({ phone, username })
+        } else {
+          this.setState({error: 'Username is taken. Please choose another username.'});
+        }
+      });
+    }
+    let avatar;
+    avatar = profilePicture;
+    firebase.database().ref('users/'+ user.uid).update({ name, avatar, bio, instagram, twitter, snapchat })
+    .then(() => {
+      NotificationManager.success('Your profile saved!');
+      browserHistory.push({pathname: '/dashboard'});
+    });
   }
 
   render () {

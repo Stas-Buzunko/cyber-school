@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
+import firebase from 'firebase'
 
 class CoursesList extends Component {
   constructor (props) {
@@ -10,6 +11,7 @@ class CoursesList extends Component {
           mainPhoto:  '1',
           duration:  '34:54',
           price: '100$',
+          discipline: 'cooking',
           lessons: [{
             videoLink:  '1',
             description: '1',
@@ -21,6 +23,7 @@ class CoursesList extends Component {
           mainPhoto:  '2',
           duration:  '24:40',
           price:  '20$',
+          discipline: 'make up',
           lessons: [{
             videoLink:  '2.1',
             description: '2.1',
@@ -33,9 +36,41 @@ class CoursesList extends Component {
           }
           ]
         }
-      ]
+      ],
+      coursesLoaded: false
     }
   };
+
+  componentWillMount () {
+    const { discipline } = this.props
+    this.fetchItems(discipline)
+  }
+
+  fetchItems (discipline) {
+    this.setState({
+      courses: [],
+      coursesLoaded: false
+    })
+    firebase.database().ref('courses')
+      // .orderByChild('discipline')
+      // .equalTo(`${discipline}`)
+      .once('value', (snapshot => {
+        const object = snapshot.val()
+        if (object !== null) {
+          Object.keys(object).map(id => {
+            this.setState({
+              courses: [
+                ...this.state.courses,
+                {
+                  ...object[id],
+                }
+              ]
+            });
+          });
+        }
+    }));
+    this.setState({ coursesLoaded: true});
+  }
   render () {
     const coursesList = this.state.courses.map((item, i) =>
       <li key={i}>
@@ -49,12 +84,18 @@ class CoursesList extends Component {
             <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Main photo:</label>
               <div> {item.mainPhoto}</div>
-            </div> <div className='col-xs-10'>
+            </div>
+            <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Duration:</label>
               <div> {item.duration}</div>
-            </div> <div className='col-xs-10'>
+            </div>
+            <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Price:</label>
               <div> {item.price}</div>
+            </div>
+            <div className='col-xs-10'>
+              <label className='control-label col-xs-2'>Discipline:</label>
+              <div> {item.discipline}</div>
             </div>
           </div>
           <div className='col-xs-12 col-md-4'>

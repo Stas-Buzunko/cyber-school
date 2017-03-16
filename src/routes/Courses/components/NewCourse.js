@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
+import { NotificationManager } from 'react-notifications'
+import firebase from 'firebase'
 
 class NewCourse extends Component {
   constructor (props) {
@@ -10,14 +12,25 @@ class NewCourse extends Component {
       mainPhoto:  '',
       duration:  '',
       price:  '',
+      discipline: 'cooking',
 
       videoLink:  '',
       descriptionLesson: '',
       test: '',
-      lessonsNumber: [1]
+      lessonsNumber: [1],
+      error: ''
     }
   }
-
+  saveCourse () {
+    const { description, mainPhoto, duration, price, discipline, videoLink, descriptionLesson, test } = this.state
+    this.setState({ error: '' })
+    firebase.database().ref('courses/'+ id).update({
+      description, mainPhoto, duration, price, discipline, videoLink, descriptionLesson, test })
+      .then(() => {
+        NotificationManager.success('Your course saved!')
+        browserHistory.push(`/admin/courses`)
+      })
+  }
   render () {
     const lessonList = this.state.lessonsNumber.map((item, i) =>
 
@@ -72,7 +85,7 @@ class NewCourse extends Component {
               </div>
 
               <div className='form-group'>
-                <label className='control-label col-xs-2'>Main photo</label>
+                <label className='control-label col-xs-2'>MainPhoto</label>
                 <div className='col-xs-10 col-md-6'>
                   <input
                     type='text'
@@ -98,6 +111,16 @@ class NewCourse extends Component {
                     type='text'
                     className='form-control'
                     onChange={(e) => this.setState({ price: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Discipline</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ discipline: e.target.value })} />
                 </div>
               </div>
               <label className='control-label col-xs-2 col-md-4'>Lessons: </label>
@@ -128,8 +151,7 @@ class NewCourse extends Component {
                 type='button'
                 style={{ width:'50%', margin: '15px' }}
                 className='btn btn-success lg'
-                onClick={() => {
-                  browserHistory.push(`/admin/courses`)
+                onClick={() => { this.saveCourse()
                 }}
               >Save course
             </button>
