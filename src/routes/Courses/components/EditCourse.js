@@ -7,59 +7,47 @@ class EditCourse extends Component {
     super(props)
 
     this.state = {
-      description: 'Video course about joga positions',
-      mainPhoto:  '123321',
-      duration:  '57:53',
-      price:  '100$',
-      discipline: 'joga',
-      videoLink:  'wwww.joga.com',
-      description2: 'joga',
-      test: 'ltest_id'
-
+      description: '',
+      mainPhoto:'',
+      duration:'',
+      dateUploaded:'',
+      price:'',
+      discipline:'',
+      author:'',
+      lessons: [],
+      error: '',
+      id: 1
     }
   }
-  handleSubmitEdit() {
-    const { phone, username, phoneVerified, name, profilePicture, bio, instagram, twitter, snapchat } = this.state;
-    if (!username.length) {
-      this.setState({error: 'Please, enter your username'});
-      return false;
-    }
-    if (!phone.length) {
-      this.setState({error: 'Please, enter your phone'});
-      return false;
-    }
-    if (!/^[-\w\.\$@\*\!]{1,30}$/.test(username)) {
-      this.setState({error: 'Please, enter valid username'});
-      return false;
-    }
-    this.setState({error: ''});
-    const { user } = this.props;
-    if (phoneVerified) {
-      let avatar;
-      firebase.database().ref('users')
-      .orderByChild('username')
-      .equalTo(`${username}`)
-      .once('value').then(snapshot => {
-        const object = snapshot.val();
-        const condition = object == null || object[Object.keys(object)[0]].uid === user.uid;
-        if (condition) {
-          firebase.database().ref('users/'+ user.uid).update({ phone, username })
+  componentWillMount() {
+  this.fetchCourse(this.state.id)
+}
+
+
+fetchCourse(id) {
+    firebase.database().ref('courses/'+ id)
+    .once('value', snapshot => {
+      const object = snapshot.val();
+        if (object !== null) {
+          this.setState({ description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons});
         } else {
-          this.setState({error: 'Username is taken. Please choose another username.'});
-        }
-      });
-    }
-    let avatar;
-    avatar = profilePicture;
-    firebase.database().ref('users/'+ user.uid).update({ name, avatar, bio, instagram, twitter, snapchat })
-    .then(() => {
-      NotificationManager.success('Your profile saved!');
-      browserHistory.push({pathname: '/dashboard'});
-    });
+          this.setState({error: true});
+      }
+    })
+}
+  editCourse() {
+    const { description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons, id } = this.state
+    this.setState({ error: '' })
+    firebase.database().ref('courses/'+ id).update({
+      description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons })
+      .then(() => {
+        toastr.success('Your course saved!')
+        browserHistory.push(`/admin/courses`)
+      })
   }
 
   render () {
-    const { description, mainPhoto, duration, price, videoLink, description2, test } = this.state
+    const { description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -99,6 +87,17 @@ class EditCourse extends Component {
               </div>
 
               <div className='form-group'>
+                <label className='control-label col-xs-2'>Date Uploaded</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={duration}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ dateUploaded: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
                 <label className='control-label col-xs-2'>Price</label>
                 <div className='col-xs-10 col-md-6'>
                   <input
@@ -109,10 +108,32 @@ class EditCourse extends Component {
                 </div>
               </div>
 
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Discipline</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={price}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ discipline: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Author</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={price}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ author: e.target.value })} />
+                </div>
+              </div>
+
               <div className='col-xs-12 col-md-12'>
                 <label className='control-label col-xs-2 col-md-4'>Lesson: 1 </label>
 
-                <div className='col-xs-12 col-md-10'>
+                {/* <div className='col-xs-12 col-md-10'>
                   <div className='form-group'>
                     <label className='control-label col-xs-2'>Video link</label>
                     <div className='col-xs-10 col-md-6'>
@@ -144,26 +165,24 @@ class EditCourse extends Component {
                         className='form-control'
                         onChange={(e) => this.setState({ test: e.target.value })} />
                     </div>
-                  </div>
-                </div>
-              </div>
+                  </div> */}
 
+              </div>
             </form>
 
+            <div className='col-xs-12 col-md-10'>
             <button
               type='button'
               className='btn btn-success lg'
               style={{ width:'50%', margin: '15px' }}
-              onClick={() => {
-                browserHistory.push(`/admin/courses`)
-              }}
-              >Save course
+              onClick={() => { this.editCourse() }}
+              >Edit course
             </button>
+            </div>
           </div>
         </div>
       </div>
     )
   }
-
 }
 export default EditCourse
