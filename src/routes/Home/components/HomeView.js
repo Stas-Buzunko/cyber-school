@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import StripeComponent from '../../../containers/StripeComponentContainer'
 
 export const HomeView = () => (
   <div>
@@ -25,6 +26,7 @@ export const HomeView = () => (
         <h4>LOL</h4>
       </Link>
     </div>
+    <StripeComponent amount={5 * 100} buttonText={'5$'} description={'Course for begginers'} />
   </div>
 )
 

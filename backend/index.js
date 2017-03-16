@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 // const admin = require('firebase-admin')
+var stripeToken = 'sk_test_mokQLE90JDfe8foUzMRby89E'
+var stripe = require('stripe')(stripeToken)
 
 const app = express()
 app.use(cors({ credentials: true, origin: true }))
@@ -15,6 +17,26 @@ app.use(bodyParser.json())
 //   }),
 //   databaseURL: "https://dressmate-d0b76.firebaseio.com"
 // });
+
+app.post('/charge', (req, res) => {
+  const { token, amount } = req.body
+  stripe.charges.create({
+    amount, // Amount in cents
+    currency: 'usd',
+    source: token,
+    description: 'cyber-academy'
+  }, (error, charge) => {
+    if (charge.status === 'succeeded') {
+      // everything is ok
+      console.log('charge is successful')
+      res.sendStatus(200)
+    } else {
+      // something went wrong
+      console.log('charge failed')
+      res.sendStatus(400)
+    }
+  })
+})
 
 app.listen(3001, function () {
   console.log(`Example app listening on port 3001`)
