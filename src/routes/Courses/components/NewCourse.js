@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
-import { NotificationManager } from 'react-notifications'
+import toastr from 'toastr'
 import firebase from 'firebase'
 
 class NewCourse extends Component {
@@ -12,27 +12,30 @@ class NewCourse extends Component {
       mainPhoto:  '',
       duration:  '',
       price:  '',
-      discipline: 'cooking',
-
-      videoLink:  '',
-      descriptionLesson: '',
-      test: '',
-      lessonsNumber: [1],
+      discipline: '',
+      lessons: [
+        {
+          id: '',
+          videoLink: '',
+          descriptionLesson: '',
+          test: ''
+        }
+      ],
       error: ''
     }
   }
   saveCourse () {
     const { description, mainPhoto, duration, price, discipline, videoLink, descriptionLesson, test } = this.state
     this.setState({ error: '' })
-    firebase.database().ref('courses/'+ id).update({
+    firebase.database().ref('courses/').push({
       description, mainPhoto, duration, price, discipline, videoLink, descriptionLesson, test })
       .then(() => {
-        NotificationManager.success('Your course saved!')
+        toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
       })
   }
   render () {
-    const lessonList = this.state.lessonsNumber.map((item, i) =>
+    const lessonList = this.state.lessons.map((item, i) =>
 
       <li key={i}>
         <div className='col-xs-12 col-md-12'>
@@ -45,7 +48,7 @@ class NewCourse extends Component {
                 <input
                   type='text'
                   className='form-control'
-                  onChange={(e) => this.setState({ videoLink: e.target.value })} />
+                  onChange={(e) => this.setState({ item.videoLink: e.target.value })} />
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import firebase from 'firebase'
-
+import toastr from 'toastr'
 class EditCourse extends Component {
   constructor (props) {
     super(props)

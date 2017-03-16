@@ -42,8 +42,7 @@ class CoursesList extends Component {
   };
 
   componentWillMount () {
-    const { discipline } = this.props
-    this.fetchItems(discipline)
+    this.fetchItems()
   }
 
   fetchItems (discipline) {
@@ -52,9 +51,7 @@ class CoursesList extends Component {
       coursesLoaded: false
     })
     firebase.database().ref('courses')
-      // .orderByChild('discipline')
-      // .equalTo(`${discipline}`)
-      .once('value', (snapshot => {
+      .once('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
           Object.keys(object).map(id => {
@@ -62,14 +59,14 @@ class CoursesList extends Component {
               courses: [
                 ...this.state.courses,
                 {
-                  ...object[id],
+                  ...object[id]
                 }
               ]
-            });
-          });
+            })
+          })
         }
-    }));
-    this.setState({ coursesLoaded: true});
+      })
+    this.setState({ coursesLoaded: true })
   }
   render () {
     const coursesList = this.state.courses.map((item, i) =>
