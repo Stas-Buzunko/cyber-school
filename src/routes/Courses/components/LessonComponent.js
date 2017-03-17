@@ -14,7 +14,7 @@ class LessonComponent extends Component {
         videoUrl: '',
         isFree: '',
         testId: '',
-        comments: []
+        comments: ''
     },
       error: ''
     }
@@ -63,10 +63,10 @@ class LessonComponent extends Component {
           </div>
 
           <div className='form-group'>
-            <label className='control-label col-xs-2'>, VideoUrl</label>
+            <label className='control-label col-xs-2'>VideoUrl</label>
             <div className='col-xs-10 col-md-6'>
               <input type='text' className='form-control' onChange={(e) => this.setState({
-                VideoUrl: e.target.value })} />
+                videoUrl: e.target.value })} />
             </div>
           </div>
 

@@ -19,10 +19,9 @@ class EditCourse extends Component {
       id: 1
     }
   }
-  componentWillMount() {
-  this.fetchCourse(this.state.id)
-}
-
+    componentWillMount () {
+    this.fetchCourse(this.state.id)
+    }
 
 fetchCourse(id) {
     firebase.database().ref('courses/'+ id)
@@ -171,7 +170,7 @@ fetchCourse(id) {
             </form>
 
             <div className='col-xs-12 col-md-10'>
-            <button
+              <button
               type='button'
               className='btn btn-success lg'
               style={{ width:'50%', margin: '15px' }}

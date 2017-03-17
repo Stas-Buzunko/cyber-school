@@ -109,7 +109,7 @@ class NewCourse extends Component {
               <label className='control-label col-xs-2 col-md-4'>Lessons: </label>
               <div className='col-xs-2 col-md-10'>
                 <ul className='list-unstyled'>
-                  {LessonComponent}
+                  <LessonComponent/>
                 </ul>
                 <div className='control-label col-xs-2 col-md-4'>
                   <button
