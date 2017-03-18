@@ -51,21 +51,14 @@ class CoursesList extends Component {
       coursesLoaded: false
     })
     firebase.database().ref('courses')
-      .once('value', snapshot => {
-        const object = snapshot.val()
-        if (object !== null) {
-          Object.keys(object).map(id => {
-            this.setState({
-              courses: [
-                ...this.state.courses,
-                {
-                  ...object[id]
-                }
-              ]
-            })
-          })
-        }
-      })
+     .once('value', snapshot => {
+       const object = snapshot.val()
+       if (object !== null) {
+         const courses = Object.keys(object).map(id => ({ ...object[id], id }))
+         this.setState({ courses })
+       }
+     }
+      )
     this.setState({ coursesLoaded: true })
   }
   render () {
@@ -100,9 +93,7 @@ class CoursesList extends Component {
               type='button'
               className='btn btn-primary lg'
               onClick={() => {
-                browserHistory.push(`/admin/courses/edit/1`
-                  // ${i}`
-                )
+                browserHistory.push({pathname: `/admin/courses/edit/${item.id}`})
               }}
               >Edit course</button>
           </div>

@@ -16,7 +16,7 @@ class NewCourse extends Component {
       price:'',
       discipline:'',
       author:'',
-      lessons: [],
+      lessons: [1,2],
       error: ''
     }
   }
@@ -31,6 +31,17 @@ class NewCourse extends Component {
       })
   }
   render () {
+
+    const lessonList = this.state.lessons.map((item, i) =>
+
+      <li key={i}>
+        <div>
+          <label className='control-label col-xs-2 col-md-4'>Lesson: {item} </label>
+          <LessonComponent/>
+        </div>
+      </li>
+      )
+
     return (
       <div className='container'>
         <div className='row'>
@@ -109,7 +120,7 @@ class NewCourse extends Component {
               <label className='control-label col-xs-2 col-md-4'>Lessons: </label>
               <div className='col-xs-2 col-md-10'>
                 <ul className='list-unstyled'>
-                  <LessonComponent/>
+                  {lessonList}
                 </ul>
                 <div className='control-label col-xs-2 col-md-4'>
                   <button

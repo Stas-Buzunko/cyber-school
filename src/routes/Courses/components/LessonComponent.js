@@ -15,7 +15,7 @@ class LessonComponent extends Component {
         isFree: '',
         testId: '',
         comments: ''
-    },
+  },
       error: ''
     }
   }
@@ -31,8 +31,6 @@ class LessonComponent extends Component {
   render () {
     return (
       <div className='col-xs-12 col-md-12'>
-        <label className='control-label col-xs-2 col-md-4'>Lesson:  1 </label>
-
         <div className='col-xs-12 col-md-10'>
 
           <div className='form-group'>

@@ -7,45 +7,56 @@ class EditCourse extends Component {
     super(props)
 
     this.state = {
-      description: '',
-      mainPhoto:'',
-      duration:'',
-      dateUploaded:'',
-      price:'',
-      discipline:'',
-      author:'',
-      lessons: [],
-      error: '',
-      id: 1
+      // description: '',
+      // mainPhoto:'',
+      // duration:'',
+      // dateUploaded:'',
+      // price:'',
+      // discipline:'',
+      // author:'',
+      // lessons: [],
+      error: ''
+      // id: '-KfO8DVKQuHKsoHpaEGu'
     }
   }
-    componentWillMount () {
-    this.fetchCourse(this.state.id)
-    }
+  componentWillMount () {
+    this.fetchCourse(this.props.params.id)
+  }
 
-fetchCourse(id) {
-    firebase.database().ref('courses/'+ id)
-    .once('value', snapshot => {
-      const object = snapshot.val();
+  fetchCourse(id) {
+      firebase.database().ref('courses/'+`${id}`)
+      .once('value', snapshot => {
+        const object = snapshot.val()
         if (object !== null) {
-          this.setState({ description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons});
-        } else {
-          this.setState({error: true});
-      }
+        this.setState({
+          description: object.description,
+          mainPhoto: object.mainPhoto,
+          duration: object.duration,
+          dateUploaded: object.dateUploaded,
+          price: object.price,
+          discipline: object.discipline,
+          author: object.author,
+          lessons: object.lessons
+        });
+      } else {
+        this.setState({ error: true });
+        }
     })
-}
+  }
   editCourse() {
     const { description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons, id } = this.state
     this.setState({ error: '' })
-    firebase.database().ref('courses/'+ id).update({
-      description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons })
+    firebase.database().ref('courses/'+ id)
+    .update({
+      description, mainPhoto, duration, dateUploaded, price, discipline, author })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
       })
-  }
+    }
 
   render () {
+
     const { description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons } = this.state
     return (
       <div className='container'>
@@ -82,6 +93,17 @@ fetchCourse(id) {
                     type='text'
                     className='form-control'
                     onChange={(e) => this.setState({ duration: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Duration</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={dateUploaded}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ dateUploaded: e.target.value })} />
                 </div>
               </div>
 
