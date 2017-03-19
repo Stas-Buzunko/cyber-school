@@ -1,31 +1,94 @@
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
-
+import firebase from 'firebase'
+import toastr from 'toastr'
 class EditCourse extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      description: 'Video course about joga positions',
-      mainPhoto:  '123321',
-      duration:  '57:53',
-      price:  '100$',
-
-      videoLink:  'wwww.joga.com',
-      description2: 'joga',
-      test: 'ltest_id'
-
+      description: '',
+      mainPhoto:'',
+      duration:'',
+      dateUploaded:'',
+      price:'',
+      discipline:'',
+      author:'',
+      lessons: [],
+      id: '',
+      error: ''
     }
+  }
+  componentWillMount () {
+    this.fetchCourse(this.props.params.id)
+  }
+
+  fetchCourse (id) {
+    firebase.database().ref('courses/' + `${id}`)
+    .once('value')
+    .then(snapshot => {
+      const object = snapshot.val()
+      if (object !== null) {
+        this.setState({
+          description: object.description,
+          mainPhoto: object.mainPhoto,
+          duration: object.duration,
+          dateUploaded: object.dateUploaded,
+          price: object.price,
+          discipline: object.discipline,
+          author: object.author,
+          lessons: object.lessons,
+          id: snapshot.key
+        })
+      } else {
+        this.setState({ error: true })
+      }
+    })
+  }
+
+  editCourse = () => {
+    const { description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons, id } = this.state
+
+    this.setState({ error: '' })
+    firebase.database().ref('courses/' + id)
+    .update({
+      description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons
+    })
+    .then(() => {
+      toastr.success('Your course saved!')
+      browserHistory.push(`/admin/courses`)
+    })
   }
 
   render () {
-    const { description, mainPhoto, duration, price, videoLink, description2, test } = this.state
+    const { description, mainPhoto, duration, price, discipline, author, lessons } = this.state
+
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-10'>
 
             <form className='form-horizontal'>
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Discipline</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={discipline}
+                    type='text'
+                    className='form-control' onChange={(e) => this.setState({ discipline: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Author</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={author}
+                    type='text'
+                    className='form-control' onChange={(e) => this.setState({ author: e.target.value })} />
+                </div>
+              </div>
+
               <div className='form-group'>
                 <label htmlFor='inputDescription' className='control-label col-xs-2'>Description</label>
                 <div className='col-xs-10 col-md-6'>
@@ -69,10 +132,32 @@ class EditCourse extends Component {
                 </div>
               </div>
 
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Discipline</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={price}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ discipline: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Author</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={price}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ author: e.target.value })} />
+                </div>
+              </div>
+
               <div className='col-xs-12 col-md-12'>
                 <label className='control-label col-xs-2 col-md-4'>Lesson: 1 </label>
 
-                <div className='col-xs-12 col-md-10'>
+                {/* <div className='col-xs-12 col-md-10'>
                   <div className='form-group'>
                     <label className='control-label col-xs-2'>Video link</label>
                     <div className='col-xs-10 col-md-6'>
@@ -104,26 +189,24 @@ class EditCourse extends Component {
                         className='form-control'
                         onChange={(e) => this.setState({ test: e.target.value })} />
                     </div>
-                  </div>
-                </div>
-              </div>
+                  </div> */}
 
+              </div>
             </form>
 
-            <button
-              type='button'
-              className='btn btn-success lg'
-              style={{ width:'50%', margin: '15px' }}
-              onClick={() => {
-                browserHistory.push(`/admin/courses`)
-              }}
-              >Save course
+            <div className='col-xs-12 col-md-10'>
+              <button
+                type='button'
+                className='btn btn-success lg'
+                style={{ width:'50%', margin: '15px' }}
+                onClick={this.editCourse}
+              >Save changes
             </button>
+            </div>
           </div>
         </div>
       </div>
     )
   }
-
 }
 export default EditCourse
