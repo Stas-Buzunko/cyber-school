@@ -15,19 +15,23 @@ class LessonComponent extends Component {
         isFree: '',
         testId: '',
         comments: ''
-  },
+      },
       error: ''
     }
   }
-  savelesson () {
+
+  saveLesson = () => {
     const { description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
+
     this.setState({ error: '' })
     firebase.database().ref('lessons/').push({
-      description, length, imageUrl, videoUrl, isFree, testId, comments })
-      .then(() => {
-        toastr.success('Your lesson saved!')
-      })
+      description, length, imageUrl, videoUrl, isFree, testId, comments
+    })
+    .then(() => {
+      toastr.success('Your lesson saved!')
+    })
   }
+
   render () {
     return (
       <div className='col-xs-12 col-md-12'>
@@ -99,7 +103,7 @@ class LessonComponent extends Component {
             type='button'
             style={{ width:'50%', margin: '15px' }}
             className='btn btn-success lg'
-            onClick={() => { this.savelesson() }}
+            onClick={this.saveLesson}
               >Save lesson
           </button>
         </div>
