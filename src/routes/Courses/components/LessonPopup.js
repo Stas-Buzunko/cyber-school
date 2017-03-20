@@ -41,7 +41,7 @@ class LessonPopup extends Component {
 }
 
 export default connectModal({
-  name: 'Lesson'
+  name: 'lesson'
 })(LessonPopup)
 
 //       <Modal

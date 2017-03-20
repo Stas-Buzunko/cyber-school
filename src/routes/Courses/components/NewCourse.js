@@ -7,7 +7,7 @@ import LessonPopup from './LessonPopup'
 import { show } from 'redux-modal'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-
+import BootstrapModal from './BootstrapModal'
 class NewCourse extends Component {
   constructor (props) {
     super(props)
@@ -77,8 +77,9 @@ class NewCourse extends Component {
       </li>
     )
   }
-  handleOpen = name => () => {
+  handleOpen = (name) => {
      this.props.show(name, { message: `This is a ${name} modal` })
+     console.log(name);
   }
   render () {
     return (
@@ -197,10 +198,14 @@ class NewCourse extends Component {
               >Save course
             </button>
             </div>
-            <div className='col-xs-12 col-md-10'>
-              <button onClick={this.handleOpen('Lesson')}>Launch bootstrap modal</button>
+            {/* <div className='col-xs-12 col-md-10'>
+              <button onClick={this.handleOpen('lesson')}>Launch bootstrap modal</button>
               <LessonPopup />
-            </div>
+            </div> */}
+            <p>
+          <button onClick={this.handleOpen('bootstrap')}>Launch bootstrap modal</button>
+          <BootstrapModal />
+        </p>
           </div>
         </div>
       </div>
@@ -209,6 +214,15 @@ class NewCourse extends Component {
 }
 
 // export default NewCourse
+// const mapDispatchToProps = {
+//  openModal: show
+// }
+//
+// export default connect(
+//   null,
+//   mapDispatchToProps
+// )(NewCourse)
+
 export default connect(
   null,
   dispatch => bindActionCreators({ show }, dispatch)
