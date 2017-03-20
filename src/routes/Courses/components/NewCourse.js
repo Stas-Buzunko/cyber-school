@@ -3,12 +3,17 @@ import { browserHistory } from 'react-router'
 import toastr from 'toastr'
 import firebase from 'firebase'
 import LessonComponent from './LessonComponent'
+import LessonPopup from './LessonPopup'
+import { show } from 'redux-modal'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
 class NewCourse extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
+      name: '',
       description: '',
       mainPhoto:'',
       duration:'',
@@ -17,15 +22,17 @@ class NewCourse extends Component {
       discipline:'',
       author:'',
       lessons: [1],
-
       error: ''
     }
   }
 
   saveCourse () {
-    const { description, mainPhoto, duration, dateUploaded, price, discipline, author } = this.state
-
-    if (!description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
+    const { name, description, mainPhoto, duration, price, discipline, author } = this.state
+    const dateUploaded = Date.now()
+    if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
+      if (!name) {
+        toastr.error('Please, fill name')
+      };
       if (!description) {
         toastr.error('Please, fill description')
       };
@@ -51,7 +58,7 @@ class NewCourse extends Component {
     }
     this.setState({ error: '' })
     firebase.database().ref('courses/').push({
-      description, mainPhoto, duration, dateUploaded, price, discipline, author })
+      name, description, mainPhoto, duration, dateUploaded, price, discipline, author })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
@@ -70,15 +77,26 @@ class NewCourse extends Component {
       </li>
     )
   }
-
+  handleOpen = name => () => {
+     this.props.show(name, { message: `This is a ${name} modal` })
+  }
   render () {
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-10'>
             <form className='form-horizontal'>
+
               <div className='form-group'>
-                <label htmlFor='inputDescription' className='control-label col-xs-2'>Description</label>
+                <label className='control-label col-xs-2'>Name</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ name: e.target.value })} />
+                </div>
+              </div>
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Description</label>
                 <div className='col-xs-10 col-md-6'>
                   <input type='text'
                     className='form-control'
@@ -179,6 +197,10 @@ class NewCourse extends Component {
               >Save course
             </button>
             </div>
+            <div className='col-xs-12 col-md-10'>
+              <button onClick={this.handleOpen('Lesson')}>Launch bootstrap modal</button>
+              <LessonPopup />
+            </div>
           </div>
         </div>
       </div>
@@ -186,4 +208,8 @@ class NewCourse extends Component {
   }
 }
 
-export default NewCourse
+// export default NewCourse
+export default connect(
+  null,
+  dispatch => bindActionCreators({ show }, dispatch)
+)(NewCourse)

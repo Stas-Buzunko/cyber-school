@@ -34,14 +34,18 @@ class CoursesList extends Component {
     )
   }
 
-  renderCoursesList() {
+  renderCoursesList () {
     const { courses } = this.state
 
     return courses.map((item, i) =>
       <li key={i}>
-        <div className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-12 col-md-8'>
 
+            <div className='col-xs-10'>
+              <label className='control-label col-xs-2'>Name:</label>
+              <div> {item.name}</div>
+            </div>
             <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Description:</label>
               <div> {item.description}</div>
@@ -81,7 +85,7 @@ class CoursesList extends Component {
     return (
       <div className='container'>
         <div className='row'>
-          <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
+          <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
             <ul className='list-unstyled'>
               {this.renderCoursesList()}
             </ul>

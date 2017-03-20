@@ -8,6 +8,7 @@ class LessonComponent extends Component {
 
     this.state = {
       lesson: {
+        name: '',
         description: '',
         length: '',
         imageUrl: '',
@@ -21,11 +22,11 @@ class LessonComponent extends Component {
   }
 
   saveLesson = () => {
-    const { description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
 
     this.setState({ error: '' })
     firebase.database().ref('lessons/').push({
-      description, length, imageUrl, videoUrl, isFree, testId, comments
+      name, description, length, imageUrl, videoUrl, isFree, testId, comments
     })
     .then(() => {
       toastr.success('Your lesson saved!')

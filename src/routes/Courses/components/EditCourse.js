@@ -2,18 +2,19 @@ import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import firebase from 'firebase'
 import toastr from 'toastr'
+
 class EditCourse extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
+      name: '',
+      discipline: '',
+      author:'',
       description: '',
       mainPhoto:'',
       duration:'',
-      dateUploaded:'',
       price:'',
-      discipline:'',
-      author:'',
       lessons: [],
       id: '',
       error: ''
@@ -29,6 +30,7 @@ class EditCourse extends Component {
         const object = snapshot.val()
         if (object !== null) {
           this.setState({
+            name: object.name,
             description: object.description,
             mainPhoto: object.mainPhoto,
             duration: object.duration,
@@ -43,23 +45,35 @@ class EditCourse extends Component {
       })
   }
   editCourse (id) {
-    const { description, mainPhoto, duration, dateUploaded, price, discipline, author } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price } = this.state
+    const dateUploaded = Date.now()
     this.setState({ error: '' })
     firebase.database().ref('courses/' + `${id}`)
     .update({
-      description, mainPhoto, duration, dateUploaded, price, discipline, author })
+      name, discipline, author, description, mainPhoto, duration, price, dateUploaded })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
       })
   }
   render () {
-    const { description, mainPhoto, duration, dateUploaded, price, discipline, author } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price } = this.state
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-10'>
             <form className='form-horizontal'>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Name</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={name}
+                    type='text'
+                    className='form-control' onChange={(e) => this.setState({ name: e.target.value })} />
+                </div>
+              </div>
+
               <div className='form-group'>
                 <label className='control-label col-xs-2'>Discipline</label>
                 <div className='col-xs-10 col-md-6'>
