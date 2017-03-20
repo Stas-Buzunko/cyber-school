@@ -7,6 +7,15 @@ class EditCourse extends Component {
     super(props)
 
     this.state = {
+      description: '',
+      mainPhoto:'',
+      duration:'',
+      dateUploaded:'',
+      price:'',
+      discipline:'',
+      author:'',
+      lessons: [],
+      id: '',
       error: ''
     }
   }
@@ -50,8 +59,27 @@ class EditCourse extends Component {
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-10'>
-
             <form className='form-horizontal'>
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Discipline</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={discipline}
+                    type='text'
+                    className='form-control' onChange={(e) => this.setState({ discipline: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>Author</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={author}
+                    type='text'
+                    className='form-control' onChange={(e) => this.setState({ author: e.target.value })} />
+                </div>
+              </div>
+
               <div className='form-group'>
                 <label htmlFor='inputDescription' className='control-label col-xs-2'>Description</label>
                 <div className='col-xs-10 col-md-6'>
@@ -75,23 +103,13 @@ class EditCourse extends Component {
 
               <div className='form-group'>
                 <label className='control-label col-xs-2'>Duration</label>
+
                 <div className='col-xs-10 col-md-6'>
                   <input
                     value={duration}
                     type='text'
                     className='form-control'
                     onChange={(e) => this.setState({ duration: e.target.value })} />
-                </div>
-              </div>
-
-              <div className='form-group'>
-                <label className='control-label col-xs-2'>Date Uploaded</label>
-                <div className='col-xs-10 col-md-6'>
-                  <input
-                    value={dateUploaded}
-                    type='text'
-                    className='form-control'
-                    onChange={(e) => this.setState({ dateUploaded: e.target.value })} />
                 </div>
               </div>
 
@@ -105,29 +123,6 @@ class EditCourse extends Component {
                     onChange={(e) => this.setState({ price: e.target.value })} />
                 </div>
               </div>
-
-              <div className='form-group'>
-                <label className='control-label col-xs-2'>Discipline</label>
-                <div className='col-xs-10 col-md-6'>
-                  <input
-                    value={discipline}
-                    type='text'
-                    className='form-control'
-                    onChange={(e) => this.setState({ discipline: e.target.value })} />
-                </div>
-              </div>
-
-              <div className='form-group'>
-                <label className='control-label col-xs-2'>Author</label>
-                <div className='col-xs-10 col-md-6'>
-                  <input
-                    value={author}
-                    type='text'
-                    className='form-control'
-                    onChange={(e) => this.setState({ author: e.target.value })} />
-                </div>
-              </div>
-
               <div className='col-xs-12 col-md-12'>
                 <label className='control-label col-xs-2 col-md-4'>Lesson List </label>
 
@@ -173,8 +168,9 @@ class EditCourse extends Component {
                 type='button'
                 className='btn btn-success lg'
                 style={{ width:'50%', margin: '15px' }}
-                onClick={() => { this.editCourse(this.props.params.id) }}
-              >Edit course
+                onClick={this.editCourse}
+              >Save changes
+
             </button>
             </div>
           </div>

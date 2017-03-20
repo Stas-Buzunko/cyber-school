@@ -17,9 +17,11 @@ class NewCourse extends Component {
       discipline:'',
       author:'',
       lessons: [1],
+
       error: ''
     }
   }
+
   saveCourse () {
     const { description, mainPhoto, duration, dateUploaded, price, discipline, author } = this.state
 
@@ -55,17 +57,21 @@ class NewCourse extends Component {
         browserHistory.push(`/admin/courses`)
       })
   }
-  render () {
-    const lessonList = this.state.lessons.map((item, i) =>
 
+  renderLessons () {
+    const { lessons } = this.state
+
+    return lessons.map((item, i) =>
       <li key={i}>
         <div>
           <label className='control-label col-xs-2 col-md-4'>Lesson: {item} </label>
           <LessonComponent />
         </div>
       </li>
-      )
+    )
+  }
 
+  render () {
     return (
       <div className='container'>
         <div className='row'>
@@ -143,7 +149,7 @@ class NewCourse extends Component {
               <label className='control-label col-xs-2 col-md-4'>Lessons: </label>
               <div className='col-xs-2 col-md-10'>
                 <ul className='list-unstyled'>
-                  {lessonList}
+                  {this.renderLessons()}
                 </ul>
                 <div className='control-label col-xs-2 col-md-4'>
                   <button
