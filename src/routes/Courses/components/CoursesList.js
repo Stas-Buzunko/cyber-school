@@ -93,7 +93,7 @@ class CoursesList extends Component {
               type='button'
               className='btn btn-primary lg'
               onClick={() => {
-                browserHistory.push({pathname: `/admin/courses/edit/${item.id}`})
+                browserHistory.push({ pathname: `/admin/courses/edit/${item.id}` })
               }}
               >Edit course</button>
           </div>

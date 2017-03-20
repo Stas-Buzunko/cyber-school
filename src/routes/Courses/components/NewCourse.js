@@ -16,28 +16,52 @@ class NewCourse extends Component {
       price:'',
       discipline:'',
       author:'',
-      lessons: [1,2],
+      lessons: [1],
       error: ''
     }
   }
   saveCourse () {
-    const { description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons } = this.state
+    const { description, mainPhoto, duration, dateUploaded, price, discipline, author } = this.state
+
+    if (!description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
+      if (!description) {
+        toastr.error('Please, fill description')
+      };
+      if (!mainPhoto) {
+        toastr.error('Please, fill main photo')
+      };
+      if (!duration) {
+        toastr.error('Please, fill duration')
+      };
+      if (!dateUploaded) {
+        toastr.error('Please, fill date uploaded')
+      };
+      if (!price) {
+        toastr.error('Please, fill price')
+      };
+      if (!discipline) {
+        toastr.error('Please, fill discipline')
+      };
+      if (!author) {
+        toastr.error('Please, fill author')
+      };
+      return false
+    }
     this.setState({ error: '' })
     firebase.database().ref('courses/').push({
-      description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons })
+      description, mainPhoto, duration, dateUploaded, price, discipline, author })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
       })
   }
   render () {
-
     const lessonList = this.state.lessons.map((item, i) =>
 
       <li key={i}>
         <div>
           <label className='control-label col-xs-2 col-md-4'>Lesson: {item} </label>
-          <LessonComponent/>
+          <LessonComponent />
         </div>
       </li>
       )
@@ -46,7 +70,6 @@ class NewCourse extends Component {
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-10'>
-
             <form className='form-horizontal'>
               <div className='form-group'>
                 <label htmlFor='inputDescription' className='control-label col-xs-2'>Description</label>

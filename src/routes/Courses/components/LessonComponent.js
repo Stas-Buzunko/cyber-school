@@ -32,7 +32,6 @@ class LessonComponent extends Component {
     return (
       <div className='col-xs-12 col-md-12'>
         <div className='col-xs-12 col-md-10'>
-
           <div className='form-group'>
             <label className='control-label col-xs-2'>Description </label>
             <div className='col-xs-10 col-md-6'>
