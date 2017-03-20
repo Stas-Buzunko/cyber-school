@@ -3,18 +3,13 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-import createOidcMiddleware from 'redux-oidc'
-import userManager from '../utils/userManager'
 
 export default (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
 
-  // create the middleware
-  const oidcMiddleware = createOidcMiddleware(userManager, () => true, false, '/callback')
-
-  const middleware = [thunk, oidcMiddleware]
+  const middleware = [thunk]
 
   // ======================================================
   // Store Enhancers

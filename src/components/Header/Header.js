@@ -1,6 +1,5 @@
 import React from 'react'
 import { IndexLink, Link } from 'react-router'
-import userManager from '../../utils/userManager'
 import './Header.scss'
 
 export const Header = () => (
@@ -30,12 +29,8 @@ export const Header = () => (
       Courses
     </Link>
     {' · '}
-    <a
-      className='button'
-      onClick={e => {
-        e.preventDefault()
-        userManager.signinRedirect()
-      }}>
+    <a href='http://localhost:3001/auth/steam'
+      className='button'>
       <i className='fa fa-steam fa-space-right' />Sign in with Steam
     </a>
   </div>

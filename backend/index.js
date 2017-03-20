@@ -5,9 +5,12 @@ const bodyParser = require('body-parser')
 var stripeToken = 'sk_test_mokQLE90JDfe8foUzMRby89E'
 var stripe = require('stripe')(stripeToken)
 
+
 const app = express()
 app.use(cors({ credentials: true, origin: true }))
 app.use(bodyParser.json())
+
+var passport = require('passport')
 
 // admin.initializeApp({
 //   credential: admin.credential.cert({
@@ -17,6 +20,8 @@ app.use(bodyParser.json())
 //   }),
 //   databaseURL: "https://dressmate-d0b76.firebaseio.com"
 // });
+
+
 
 app.post('/charge', (req, res) => {
   const { token, amount } = req.body
@@ -38,6 +43,39 @@ app.post('/charge', (req, res) => {
   })
 })
 
+
+const SteamStrategy = require('passport-steam').Strategy
+
+passport.use(new SteamStrategy({
+    returnURL: 'http://localhost:3001/auth/steam/return',
+    realm: 'http://localhost:3001/',
+    apiKey: 'DA083B7B78BC4F2F6690F3A154A1008D'
+  },
+  function(identifier, profile, done) {
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+
+      // To keep the example simple, the user's Steam profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the Steam account with a user record in your database,
+      // and return that user instead.
+      profile.identifier = identifier;
+      return done(null, profile);
+    });
+  }
+));
+
+app.get('/auth/steam',
+  passport.authenticate('steam', { failureRedirect: '/' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+app.get('/auth/steam/return',
+  passport.authenticate('steam', { failureRedirect: '/' }),
+  function(req, res) {
+    res.redirect('/');
+  });
 app.listen(3001, function () {
   console.log(`Example app listening on port 3001`)
 })
