@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import toastr from 'toastr'
 import firebase from 'firebase'
-import LessonComponent from './LessonComponent'
-import LessonPopup from './LessonPopup'
 import { show } from 'redux-modal'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import BootstrapModal from './BootstrapModal'
+import LessonComponent from './LessonComponent'
+
 class NewCourse extends Component {
   constructor (props) {
     super(props)
@@ -72,15 +70,16 @@ class NewCourse extends Component {
       <li key={i}>
         <div>
           <label className='control-label col-xs-2 col-md-4'>Lesson: {item} </label>
-          <LessonComponent />
+          <button onClick={(e) => {
+            e.preventDefault();
+            this.props.openModal('lesson', { item })
+          }}>Edit lesson</button>
+          {/* <LessonComponent /> */}
         </div>
       </li>
     )
   }
-  handleOpen = (name) => {
-     this.props.show(name, { message: `This is a ${name} modal` })
-     console.log(name);
-  }
+
   render () {
     return (
       <div className='container'>
@@ -198,32 +197,20 @@ class NewCourse extends Component {
               >Save course
             </button>
             </div>
-            {/* <div className='col-xs-12 col-md-10'>
-              <button onClick={this.handleOpen('lesson')}>Launch bootstrap modal</button>
-              <LessonPopup />
-            </div> */}
-            <p>
-          <button onClick={this.handleOpen('bootstrap')}>Launch bootstrap modal</button>
-          <BootstrapModal />
-        </p>
+            <p />
           </div>
         </div>
+        <LessonComponent />
       </div>
     )
   }
 }
 
-// export default NewCourse
-// const mapDispatchToProps = {
-//  openModal: show
-// }
-//
-// export default connect(
-//   null,
-//   mapDispatchToProps
-// )(NewCourse)
+const mapDispatchToProps = {
+  openModal: show
+}
 
 export default connect(
   null,
-  dispatch => bindActionCreators({ show }, dispatch)
+  mapDispatchToProps
 )(NewCourse)

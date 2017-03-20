@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import toastr from 'toastr'
 import firebase from 'firebase'
+import { connectModal } from 'redux-modal'
+import { Modal } from 'react-bootstrap'
 
 class LessonComponent extends Component {
   constructor (props) {
@@ -34,9 +36,16 @@ class LessonComponent extends Component {
   }
 
   render () {
+    const { handleHide, show } = this.props
+
     return (
-      <div className='col-xs-12 col-md-12'>
-        <div className='col-xs-12 col-md-10'>
+      <Modal
+        backdrop
+        dialogClassName='login-modal'
+        onHide={handleHide}
+        show={show}>
+        <i className='icon-cross2 modal-close color-white' onClick={handleHide} />
+        <Modal.Body>
           <div className='form-group'>
             <label className='control-label col-xs-2'>Description </label>
             <div className='col-xs-10 col-md-6'>
@@ -96,9 +105,8 @@ class LessonComponent extends Component {
             </div>
           </div>
 
-        </div>
-
-        <div className='col-xs-12 col-md-10'>
+        </Modal.Body>
+        <Modal.Footer>
           <button
             type='button'
             style={{ width:'50%', margin: '15px' }}
@@ -106,10 +114,12 @@ class LessonComponent extends Component {
             onClick={this.saveLesson}
               >Save lesson
           </button>
-        </div>
-      </div>
+        </Modal.Footer>
+      </Modal>
     )
   }
 }
 
-export default LessonComponent
+export default connectModal({
+  name: 'lesson'
+})(LessonComponent)
