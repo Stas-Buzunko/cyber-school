@@ -206,6 +206,7 @@ class NewCourse extends Component {
         </div>
         <LessonComponent
           saveLesson={this.saveLesson}
+          isNewLesson={true}
          />
       </div>
     )
