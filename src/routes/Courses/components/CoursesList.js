@@ -20,7 +20,7 @@ class CoursesList extends Component {
       courses: [],
       coursesLoaded: false
     })
-    firebase.database().ref('courses')
+    firebase.database().ref('courses/')
      .once('value')
      .then(snapshot => {
        const object = snapshot.val()

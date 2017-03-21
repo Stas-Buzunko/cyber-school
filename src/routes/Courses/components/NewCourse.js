@@ -5,6 +5,7 @@ import firebase from 'firebase'
 import { show } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonComponent from './LessonComponent'
+import LessonsList from './LessonList'
 
 class NewCourse extends Component {
   constructor (props) {
@@ -19,13 +20,16 @@ class NewCourse extends Component {
       price:'',
       discipline:'',
       author:'',
-      lessons: [1],
+      lessons: [],
       error: ''
     }
   }
 
+  componentWillMount () {
+  }
+
   saveCourse () {
-    const { name, description, mainPhoto, duration, price, discipline, author } = this.state
+    const { name, description, mainPhoto, duration, price, discipline, author, lessons } = this.state
     const dateUploaded = Date.now()
     if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
       if (!name) {
@@ -56,7 +60,8 @@ class NewCourse extends Component {
     }
     this.setState({ error: '' })
     firebase.database().ref('courses/').push({
-      name, description, mainPhoto, duration, dateUploaded, price, discipline, author })
+      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons
+    })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
@@ -64,20 +69,30 @@ class NewCourse extends Component {
   }
 
   renderLessons () {
-    const { lessons } = this.state
-
-    return lessons.map((item, i) =>
-      <li key={i}>
-        <div>
-          <label className='control-label col-xs-2 col-md-4'>Lesson: {item} </label>
-          <button onClick={(e) => {
-            e.preventDefault();
-            this.props.openModal('lesson', { item })
-          }}>Edit lesson</button>
-          {/* <LessonComponent /> */}
-        </div>
-      </li>
+    return (
+      <div>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          onClick={(e) => {
+            e.preventDefault()
+            this.props.openModal('lesson')
+          }}>Add Lesson
+        </button>
+      </div>
     )
+  }
+
+  saveLesson = (lesson) => {
+    const lessonKey = firebase.database().ref('lessons/').push().key
+    // const lessons = { }
+    this.setState({lessons:
+      // ...this.state.lessons,
+       lessonKey })
+    firebase.database().ref('lessons/' + `${lessonKey}`).update({lesson})
+    .then(() => {
+      toastr.success('Your lesson saved!')
+    })
   }
 
   render () {
@@ -168,23 +183,12 @@ class NewCourse extends Component {
               <div className='col-xs-2 col-md-10'>
                 <ul className='list-unstyled'>
                   {this.renderLessons()}
+                  <LessonsList
+                    isNewLesson={true}
+                    lessonsIds={this.state.lessons}
+                  />
                 </ul>
-                <div className='control-label col-xs-2 col-md-4'>
-                  <button
-                    type='button'
 
-                    className='btn btn-success lg'
-                    onClick={() => {
-                      this.setState({
-                        lessons: [
-                          ...this.state.lessons,
-                          this.state.lessons.length + 1
-                        ]
-                      })
-                    }}
-                >Add Lesson
-              </button>
-                </div>
               </div>
             </form>
 
@@ -200,7 +204,9 @@ class NewCourse extends Component {
             <p />
           </div>
         </div>
-        <LessonComponent />
+        <LessonComponent
+          saveLesson={this.saveLesson}
+         />
       </div>
     )
   }

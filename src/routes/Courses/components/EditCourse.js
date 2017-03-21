@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import firebase from 'firebase'
 import toastr from 'toastr'
+import LessonsList from './LessonList'
 
 class EditCourse extends Component {
   constructor (props) {
@@ -16,12 +17,13 @@ class EditCourse extends Component {
       duration:'',
       price:'',
       lessons: [],
-      id: '',
+      id: this.props.params.id,
       error: ''
     }
+    this.editCourse = this.editCourse.bind(this)
   }
   componentWillMount () {
-    this.fetchCourse(this.props.params.id)
+    this.fetchCourse(this.state.id)
   }
 
   fetchCourse (id) {
@@ -34,18 +36,18 @@ class EditCourse extends Component {
             description: object.description,
             mainPhoto: object.mainPhoto,
             duration: object.duration,
-            dateUploaded: object.dateUploaded,
             price: object.price,
             discipline: object.discipline,
-            author: object.author
+            author: object.author,
+            lessons: object.lessons
           })
         } else {
           this.setState({ error: true })
         }
       })
   }
-  editCourse (id) {
-    const { name, discipline, author, description, mainPhoto, duration, price } = this.state
+  editCourse () {
+    const { name, discipline, author, description, mainPhoto, duration, price, id } = this.state
     const dateUploaded = Date.now()
     this.setState({ error: '' })
     firebase.database().ref('courses/' + `${id}`)
@@ -57,7 +59,7 @@ class EditCourse extends Component {
       })
   }
   render () {
-    const { name, discipline, author, description, mainPhoto, duration, price } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price, lessons } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -140,40 +142,12 @@ class EditCourse extends Component {
               <div className='col-xs-12 col-md-12'>
                 <label className='control-label col-xs-2 col-md-4'>Lesson List </label>
 
-                {/* <div className='col-xs-12 col-md-10'>
-                  <div className='form-group'>
-                    <label className='control-label col-xs-2'>Video link</label>
-                    <div className='col-xs-10 col-md-6'>
-                      <input
-                        value={videoLink}
-                        type='text'
-                        className='form-control'
-                        onChange={(e) => this.setState({ videoLink: e.target.value })} />
-                    </div>
-                  </div>
-
-                  <div className='form-group'>
-                    <label className='control-label col-xs-2'>Description</label>
-                    <div className='col-xs-10 col-md-6'>
-                      <input
-                        value={description2}
-                        type='text'
-                        className='form-control'
-                        onChange={(e) => this.setState({ descriptionLesson: e.target.value })} />
-                    </div>
-                  </div>
-
-                  <div className='form-group'>
-                    <label className='control-label col-xs-2'>Test</label>
-                    <div className='col-xs-10 col-md-6'>
-                      <input
-                        value={test}
-                        type='text'
-                        className='form-control'
-                        onChange={(e) => this.setState({ test: e.target.value })} />
-                    </div>
-                  </div> */}
-
+                <LessonsList
+                  isNewLesson={false}
+                  lessonsIds={'-Kfm6PrF7wHKNxtsYKSB'
+                    // this.state.lessons
+                  }
+                />
               </div>
             </form>
 
@@ -182,9 +156,8 @@ class EditCourse extends Component {
                 type='button'
                 className='btn btn-success lg'
                 style={{ width:'50%', margin: '15px' }}
-                onClick={this.editCourse}
+                onClick={() => this.editCourse()}
               >Save changes
-
             </button>
             </div>
           </div>
