@@ -37,16 +37,18 @@ class LessonsList extends Component {
       lessons: [],
       lessonsLoaded: false
     })
-
     lessonsIds.map(id => {
       firebase.database().ref('lessons/' + `${id}`)
       .once('value')
       .then(snapshot => {
         const object = snapshot.val()
         if (object !== null) {
-          const lessonFromId = Object.keys(object).map(id => ({ ...object[id], id }))
+          const lessonFromId = Object.keys(object).map((item) => ({ ...object[item], item }))
           const lessons = this.state.lessons
-          lessonFromId.map(id => lessons.push(id))
+          lessonFromId.map((lessonItem) => {
+            lessonItem.id = id
+            lessons.push(lessonItem)
+          })
           this.setState({ lessons, lessonsLoaded: true })
         } else {
           this.setState({ coursesLoaded: true })
@@ -61,8 +63,8 @@ class LessonsList extends Component {
     this.props.openModal('lesson', { item })
   }
 
-  saveLesson = (lesson) => {
-    const lessonKey = firebase.database().ref('lessons/').push().key
+  editLesson = (lesson) => {
+    const lessonKey = lesson.id
     const lessonsIds = this.state.lessonsIds
     lessonsIds.push(lessonKey)
     this.setState({ lessonsIds })
@@ -124,7 +126,7 @@ class LessonsList extends Component {
             </button>
             <LessonPopupComponent
               isNewLesson={false}
-              saveLesson={this.saveLesson}
+              saveLesson={this.editLesson}
 
               />
           </div> }

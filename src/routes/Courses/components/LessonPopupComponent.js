@@ -16,7 +16,7 @@ class LessonPopupComponent extends Component {
       isFree: '',
       testId: '',
       comments: '',
-
+      id: '',
       error: ''
     }
 
@@ -25,8 +25,6 @@ class LessonPopupComponent extends Component {
   componentWillMount () {
     const isNewLesson = this.props.isNewLesson
     const lesson = this.props.item
-    console.log(lesson)
-    console.log(isNewLesson)
     if (!isNewLesson) {
       this.setState({
         name: lesson.name,
@@ -36,12 +34,13 @@ class LessonPopupComponent extends Component {
         videoUrl: lesson.videoUrl,
         isFree: lesson.isFree,
         testId: lesson.testId,
-        comments: lesson.comments
+        comments: lesson.comments,
+        id: lesson.id
       })
     }
   }
   saveLessonPopup = () => {
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments, id } = this.state
     this.setState({ error: '' })
     if (!name || !description || !length || !imageUrl || !videoUrl || !isFree || !testId || !comments) {
       if (!name) {
@@ -70,7 +69,7 @@ class LessonPopupComponent extends Component {
       };
       return false
     }
-    const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, comments }
+    const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, comments, id }
     this.props.saveLesson(lesson)
   }
 
@@ -198,8 +197,11 @@ class LessonPopupComponent extends Component {
 }
 
 LessonPopupComponent.propTypes = {
+  show: React.PropTypes.func,
+  handleHide: React.PropTypes.func,
+  saveLesson: React.PropTypes.func,
   isNewLesson: React.PropTypes.bool,
-  lesson: React.PropTypes.object
+  item: React.PropTypes.object
 }
 
 export default connectModal({

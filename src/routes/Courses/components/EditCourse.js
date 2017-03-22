@@ -144,7 +144,7 @@ class EditCourse extends Component {
 
                 <LessonsList
                   isNewLesson={false}
-                  lessonsIds={ lessonsIds }
+                  lessonsIds={lessonsIds}
                 />
               </div>
             </form>

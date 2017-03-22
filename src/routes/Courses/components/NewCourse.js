@@ -88,7 +88,6 @@ class NewCourse extends Component {
     const lessonsIds = this.state.lessonsIds
     lessonsIds.push(lessonKey)
     this.setState({ lessonsIds })
-    console.log('saveLesson')
     firebase.database().ref('lessons/' + `${lessonKey}`).update({ lesson })
     .then(() => {
       toastr.success('Your lesson saved!')
