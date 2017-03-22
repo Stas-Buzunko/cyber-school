@@ -1,23 +1,21 @@
 import React, { Component } from 'react'
 import toastr from 'toastr'
-import firebase from 'firebase'
 import { connectModal } from 'redux-modal'
 import { Modal } from 'react-bootstrap'
 
-class LessonComponent extends Component {
+class LessonPopupComponent extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-
-        name: '',
-        description: '',
-        length: '',
-        imageUrl: '',
-        videoUrl: '',
-        isFree: '',
-        testId: '',
-        comments: '',
+      name: '',
+      description: '',
+      length: '',
+      imageUrl: '',
+      videoUrl: '',
+      isFree: '',
+      testId: '',
+      comments: '',
 
       error: ''
     }
@@ -26,7 +24,7 @@ class LessonComponent extends Component {
   }
   componentWillMount () {
     const isNewLesson = this.props.isNewLesson
-    const lesson = this.props.lesson
+    const lesson = this.props.item
     console.log(lesson)
     console.log(isNewLesson)
     if (!isNewLesson) {
@@ -39,8 +37,8 @@ class LessonComponent extends Component {
         isFree: lesson.isFree,
         testId: lesson.testId,
         comments: lesson.comments
-     })
-   }
+      })
+    }
   }
   saveLessonPopup = () => {
     const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
@@ -77,15 +75,12 @@ class LessonComponent extends Component {
   }
 
   render () {
-    console.log(this.state.lesson)
     const { handleHide, show } = this.props
     const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
-    console.log(name, description, length, imageUrl, videoUrl, isFree, testId, comments)
     return (
       <Modal
         backdrop={true}
         dialogClassName='login-modal'
-
         onHide={handleHide}
         show={show}>
         <i className='icon-cross2 modal-close color-white' onClick={handleHide} />
@@ -202,6 +197,11 @@ class LessonComponent extends Component {
   }
 }
 
+LessonPopupComponent.propTypes = {
+  isNewLesson: React.PropTypes.bool,
+  lesson: React.PropTypes.object
+}
+
 export default connectModal({
   name: 'lesson'
-})(LessonComponent)
+})(LessonPopupComponent)

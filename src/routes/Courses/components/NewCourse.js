@@ -4,7 +4,7 @@ import toastr from 'toastr'
 import firebase from 'firebase'
 import { show } from 'redux-modal'
 import { connect } from 'react-redux'
-import LessonComponent from './LessonComponent'
+import LessonPopupComponent from './LessonPopupComponent'
 import LessonsList from './LessonList'
 
 class NewCourse extends Component {
@@ -20,7 +20,7 @@ class NewCourse extends Component {
       price:'',
       discipline:'',
       author:'',
-      lessons: [],
+      lessonsIds: ['-KfpDaBzmb9DfpOUuDSQ', '-KfpDkTklhAjKLC8bRTQ'],
       error: ''
     }
   }
@@ -29,7 +29,7 @@ class NewCourse extends Component {
   }
 
   saveCourse () {
-    const { name, description, mainPhoto, duration, price, discipline, author, lessons } = this.state
+    const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = this.state
     const dateUploaded = Date.now()
     if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
       if (!name) {
@@ -60,7 +60,7 @@ class NewCourse extends Component {
     }
     this.setState({ error: '' })
     firebase.database().ref('courses/').push({
-      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessons
+      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds
     })
       .then(() => {
         toastr.success('Your course saved!')
@@ -68,7 +68,7 @@ class NewCourse extends Component {
       })
   }
 
-  renderLessons () {
+  renderLessonPopup () {
     return (
       <div>
         <button
@@ -85,17 +85,24 @@ class NewCourse extends Component {
 
   saveLesson = (lesson) => {
     const lessonKey = firebase.database().ref('lessons/').push().key
-    // const lessons = { }
-    this.setState({lessons:
-      // ...this.state.lessons,
-       lessonKey })
-    firebase.database().ref('lessons/' + `${lessonKey}`).update({lesson})
+    const lessonsIds = this.state.lessonsIds
+    lessonsIds.push(lessonKey)
+    this.setState({ lessonsIds })
+    console.log('saveLesson')
+    firebase.database().ref('lessons/' + `${lessonKey}`).update({ lesson })
     .then(() => {
       toastr.success('Your lesson saved!')
     })
   }
 
   render () {
+
+
+
+    console.log('lessonsIdrender', this.state.lessonsIds)
+
+
+
     return (
       <div className='container'>
         <div className='row'>
@@ -140,16 +147,6 @@ class NewCourse extends Component {
               </div>
 
               <div className='form-group'>
-                <label className='control-label col-xs-2'>Uploaded date</label>
-                <div className='col-xs-10 col-md-6'>
-                  <input
-                    type='text'
-                    className='form-control'
-                    onChange={(e) => this.setState({ dateUploaded: e.target.value })} />
-                </div>
-              </div>
-
-              <div className='form-group'>
                 <label className='control-label col-xs-2'>Price</label>
                 <div className='col-xs-10 col-md-6'>
                   <input
@@ -182,10 +179,10 @@ class NewCourse extends Component {
               <label className='control-label col-xs-2 col-md-4'>Lessons: </label>
               <div className='col-xs-2 col-md-10'>
                 <ul className='list-unstyled'>
-                  {this.renderLessons()}
+                  {this.renderLessonPopup()}
                   <LessonsList
                     isNewLesson={true}
-                    lessonsIds={this.state.lessons}
+                    lessonsIds={this.state.lessonsIds}
                   />
                 </ul>
 
@@ -204,7 +201,7 @@ class NewCourse extends Component {
             <p />
           </div>
         </div>
-        <LessonComponent
+        <LessonPopupComponent
           saveLesson={this.saveLesson}
           isNewLesson={true}
          />
@@ -215,6 +212,10 @@ class NewCourse extends Component {
 
 const mapDispatchToProps = {
   openModal: show
+}
+
+NewCourse.propTypes = {
+  openModal: React.PropTypes.func
 }
 
 export default connect(

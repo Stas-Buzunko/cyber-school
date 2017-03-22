@@ -16,7 +16,7 @@ class EditCourse extends Component {
       mainPhoto:'',
       duration:'',
       price:'',
-      lessons: [],
+      lessonsIds: [],
       id: this.props.params.id,
       error: ''
     }
@@ -39,7 +39,7 @@ class EditCourse extends Component {
             price: object.price,
             discipline: object.discipline,
             author: object.author,
-            lessons: object.lessons
+            lessonsIds: object.lessonsIds
           })
         } else {
           this.setState({ error: true })
@@ -59,7 +59,7 @@ class EditCourse extends Component {
       })
   }
   render () {
-    const { name, discipline, author, description, mainPhoto, duration, price, lessons } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price, lessonsIds } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -144,9 +144,7 @@ class EditCourse extends Component {
 
                 <LessonsList
                   isNewLesson={false}
-                  lessonsIds={'-Kfm6PrF7wHKNxtsYKSB'
-                    // this.state.lessons
-                  }
+                  lessonsIds={ lessonsIds }
                 />
               </div>
             </form>

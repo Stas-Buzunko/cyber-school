@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import toastr from 'toastr'
 import firebase from 'firebase'
-import { connectModal } from 'redux-modal'
-import { Modal } from 'react-bootstrap'
-import { show } from 'redux-modal'
+import { connectModal, show } from 'redux-modal'
 import { connect } from 'react-redux'
-import LessonComponent from './LessonComponent'
+import LessonPopupComponent from './LessonPopupComponent'
 
 class LessonsList extends Component {
   constructor (props) {
@@ -21,11 +19,17 @@ class LessonsList extends Component {
   componentWillMount () {
     const lessonsIds = this.props.lessonsIds
     this.fetchItems(lessonsIds)
+    console.log('componentWillMount', lessonsIds)
   }
 
-  componentWillReceiveProps(nextProps) {
-    const lessonsIds = nextProps.lessonsIds
-    this.fetchItems(lessonsIds)
+  componentWillReceiveProps (nextProps) {
+    this.props.lessonsIds !== nextProps.lessonsIds && this.fetchItems(nextProps.lessonsIds)
+  // &&
+  //   const lessonsIds = nextProps.lessonsIds
+  // &&  this.setState({ lessonsIds })
+  //   && console.log('componentWillUpdate', lessonsIds)
+  //   console.log('this.props.lessonsIds', this.props.lessonsIds)
+  // console.log('nextProps.lessonsIds',nextProps.lessonsIds)
   }
 
   fetchItems (lessonsIds) {
@@ -34,41 +38,40 @@ class LessonsList extends Component {
       lessonsLoaded: false
     })
 
-    console.log("list",lessonsIds)
-    // lessonsIds.map(id => {
-    firebase.database().ref('lessons/'
-    + `${lessonsIds}`
-  )
-     .once('value')
-     .then(snapshot => {
-       const object = snapshot.val()
-       if (object !== null) {
-         const lessons = Object.keys(object).map(id => ({ ...object[id], id }))
-         this.setState({ lessons, lessonsLoaded: true })
-       } else {
-         this.setState({ coursesLoaded: true })
-       }
-     }
+    lessonsIds.map(id => {
+      firebase.database().ref('lessons/' + `${id}`)
+      .once('value')
+      .then(snapshot => {
+        const object = snapshot.val()
+        if (object !== null) {
+          const lessonFromId = Object.keys(object).map(id => ({ ...object[id], id }))
+          const lessons = this.state.lessons
+          lessonFromId.map(id => lessons.push(id))
+          this.setState({ lessons, lessonsLoaded: true })
+        } else {
+          this.setState({ coursesLoaded: true })
+        }
+      })
+    }
     )
-  // }
-  //   )
   }
 
-  renderLessons () {
-    this.props.openModal('lesson')
+  renderLessonPopup (e, item) {
+    e.preventDefault()
+    this.props.openModal('lesson', { item })
   }
 
   saveLesson = (lesson) => {
     const lessonKey = firebase.database().ref('lessons/').push().key
-    // const lessons = { }
-    this.setState({lessons:
-      // ...this.state.lessons,
-       lessonKey })
-    firebase.database().ref('lessons/' + `${lessonKey}`).update({lesson})
+    const lessonsIds = this.state.lessonsIds
+    lessonsIds.push(lessonKey)
+    this.setState({ lessonsIds })
+    firebase.database().ref('lessons/' + `${lessonKey}`).update({ lesson })
     .then(() => {
       toastr.success('Your lesson saved!')
     })
   }
+
   renderLessonsList () {
     const { lessons } = this.state
     const isNewLesson = this.props.isNewLesson
@@ -114,14 +117,15 @@ class LessonsList extends Component {
             <button
               type='button'
               className='btn btn-primary lg'
-              onClick={() => {
-                {this.renderLessons() }
+              onClick={(e) => {
+                this.renderLessonPopup(e, item)
               }}
-              >Edit lesson</button>
-            <LessonComponent
+              >Edit lesson
+            </button>
+            <LessonPopupComponent
               isNewLesson={false}
               saveLesson={this.saveLesson}
-              lesson={item}
+
               />
           </div> }
         </div>
@@ -141,6 +145,12 @@ class LessonsList extends Component {
       </div>
     )
   }
+}
+
+LessonsList.propTypes = {
+  openModal: React.PropTypes.func,
+  lessonsIds: React.PropTypes.array,
+  isNewLesson: React.PropTypes.bool
 }
 
 const mapDispatchToProps = {

@@ -71,10 +71,9 @@ class CoursesList extends Component {
             <button
               type='button'
               className='btn btn-primary lg'
-              onClick={() => {
-                browserHistory.push({ pathname: `/admin/courses/edit/${item.id}` })
-              }}
-              >Edit course</button>
+              onClick={() => { browserHistory.push({ pathname: `/admin/courses/edit/${item.id}` }) }}
+              >Edit course
+            </button>
           </div>
         </div>
       </li>
