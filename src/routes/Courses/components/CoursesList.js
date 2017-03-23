@@ -15,7 +15,7 @@ class CoursesList extends Component {
     this.fetchItems()
   }
 
-  fetchItems (discipline) {
+  fetchItems () {
     this.setState({
       courses: [],
       coursesLoaded: false

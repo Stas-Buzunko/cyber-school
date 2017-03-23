@@ -187,7 +187,7 @@ class LessonPopupComponent extends Component {
             type='button'
             style={{ width:'50%', margin: '15px' }}
             className='btn btn-success lg'
-            onClick={() => this.saveLessonPopup()}
+            onClick={this.saveLessonPopup}
               >Save lesson
           </button>
         </Modal.Footer>
@@ -197,7 +197,7 @@ class LessonPopupComponent extends Component {
 }
 
 LessonPopupComponent.propTypes = {
-  show: React.PropTypes.func,
+  show: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
   saveLesson: React.PropTypes.func,
   isNewLesson: React.PropTypes.bool,

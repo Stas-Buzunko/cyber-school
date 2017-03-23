@@ -27,7 +27,7 @@ class EditCourse extends Component {
   }
 
   fetchCourse (id) {
-    firebase.database().ref('courses/' + `${id}`)
+    firebase.database().ref('courses/' + id)
       .once('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
@@ -50,7 +50,7 @@ class EditCourse extends Component {
     const { name, discipline, author, description, mainPhoto, duration, price, id } = this.state
     const dateUploaded = Date.now()
     this.setState({ error: '' })
-    firebase.database().ref('courses/' + `${id}`)
+    firebase.database().ref('courses/' + id)
     .update({
       name, discipline, author, description, mainPhoto, duration, price, dateUploaded })
       .then(() => {

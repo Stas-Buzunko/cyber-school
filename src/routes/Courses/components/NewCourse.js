@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import toastr from 'toastr'
 import firebase from 'firebase'
-import { show } from 'redux-modal'
+import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
 import LessonsList from './LessonList'
@@ -20,7 +20,7 @@ class NewCourse extends Component {
       price:'',
       discipline:'',
       author:'',
-      lessonsIds: ['-KfpDaBzmb9DfpOUuDSQ', '-KfpDkTklhAjKLC8bRTQ'],
+      lessonsIds: [],
       error: ''
     }
   }
@@ -85,23 +85,27 @@ class NewCourse extends Component {
 
   saveLesson = (lesson) => {
     const lessonKey = firebase.database().ref('lessons/').push().key
-    const lessonsIds = this.state.lessonsIds
-    lessonsIds.push(lessonKey)
-    this.setState({ lessonsIds })
-    firebase.database().ref('lessons/' + `${lessonKey}`).update({ lesson })
+    const { lessonsIds } = this.state
+    const newLessons = [...lessonsIds, lessonKey]
+    this.setState({ lessonsIds: newLessons })
+
+    firebase.database().ref('lessons/' + lessonKey).update({
+      name:lesson.name,
+      description: lesson.description,
+      length:  lesson.length,
+      imageUrl:  lesson.imageUrl,
+      videoUrl: lesson.videoUrl,
+      isFree: lesson.isFree,
+      testId:  lesson.testId,
+      comments: lesson.comments
+    })
     .then(() => {
+      this.props.hideModal('lesson')
       toastr.success('Your lesson saved!')
     })
   }
 
   render () {
-
-
-
-    console.log('lessonsIdrender', this.state.lessonsIds)
-
-
-
     return (
       <div className='container'>
         <div className='row'>
@@ -210,11 +214,13 @@ class NewCourse extends Component {
 }
 
 const mapDispatchToProps = {
-  openModal: show
+  openModal: show,
+  hideModal: hide
 }
 
 NewCourse.propTypes = {
-  openModal: React.PropTypes.func
+  openModal: React.PropTypes.func,
+  hideModal: React.PropTypes.func
 }
 
 export default connect(

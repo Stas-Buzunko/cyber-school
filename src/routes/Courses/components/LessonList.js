@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import toastr from 'toastr'
 import firebase from 'firebase'
-import { connectModal, show } from 'redux-modal'
+import { connectModal, show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
 
@@ -19,17 +19,11 @@ class LessonsList extends Component {
   componentWillMount () {
     const lessonsIds = this.props.lessonsIds
     this.fetchItems(lessonsIds)
-    console.log('componentWillMount', lessonsIds)
+
   }
 
   componentWillReceiveProps (nextProps) {
     this.props.lessonsIds !== nextProps.lessonsIds && this.fetchItems(nextProps.lessonsIds)
-  // &&
-  //   const lessonsIds = nextProps.lessonsIds
-  // &&  this.setState({ lessonsIds })
-  //   && console.log('componentWillUpdate', lessonsIds)
-  //   console.log('this.props.lessonsIds', this.props.lessonsIds)
-  // console.log('nextProps.lessonsIds',nextProps.lessonsIds)
   }
 
   fetchItems (lessonsIds) {
@@ -37,25 +31,22 @@ class LessonsList extends Component {
       lessons: [],
       lessonsLoaded: false
     })
-    lessonsIds.map(id => {
-      firebase.database().ref('lessons/' + `${id}`)
+    let newLessons = []
+    lessonsIds.forEach(id => {
+      firebase.database().ref('lessons/' + id)
       .once('value')
       .then(snapshot => {
         const object = snapshot.val()
         if (object !== null) {
-          const lessonFromId = Object.keys(object).map((item) => ({ ...object[item], item }))
-          const lessons = this.state.lessons
-          lessonFromId.map((lessonItem) => {
-            lessonItem.id = id
-            lessons.push(lessonItem)
-          })
-          this.setState({ lessons, lessonsLoaded: true })
+          const lessonFromId = object
+          lessonFromId.id = id
+          newLessons.push(lessonFromId)
+          this.setState({ lessons: newLessons, lessonsLoaded: true })
         } else {
           this.setState({ coursesLoaded: true })
         }
       })
-    }
-    )
+    })
   }
 
   renderLessonPopup (e, item) {
@@ -65,11 +56,47 @@ class LessonsList extends Component {
 
   editLesson = (lesson) => {
     const lessonKey = lesson.id
-    const lessonsIds = this.state.lessonsIds
-    lessonsIds.push(lessonKey)
-    this.setState({ lessonsIds })
-    firebase.database().ref('lessons/' + `${lessonKey}`).update({ lesson })
+    firebase.database().ref('lessons/' + lessonKey).update({
+      name:lesson.name,
+      description: lesson.description,
+      length:  lesson.length,
+      imageUrl:  lesson.imageUrl,
+      videoUrl: lesson.videoUrl,
+      isFree: lesson.isFree,
+      testId:  lesson.testId,
+      comments: lesson.comments
+    })
     .then(() => {
+      const { lessons } = this.state
+      console.log(lessons)
+      lessons.map(item => {
+        if (lessonKey !== item.id) {
+          return false
+        } else {
+
+          // this.fetchItems(this.props.lessonsIds)
+          this.setState({item: lesson
+            // name : lesson.name,
+            // description : lesson.description,
+            // length : lesson.length,
+            // imageUrl : lesson.imageUrl,
+            // videoUrl : lesson.videoUrl,
+            // isFree : lesson.isFree,
+            // testId : lesson.testId,
+            // comments : lesson.comments,
+          })
+
+          // item.name = lesson.name
+          // item.description = lesson.description
+          // item.length = lesson.length
+          // item.imageUrl = lesson.imageUrl
+          // item.videoUrl = lesson.videoUrl
+          // item.isFree = lesson.isFree
+          // item.testId = lesson.testId
+          // item.comments = lesson.comments
+        }
+      })
+      this.props.hideModal('lesson')
       toastr.success('Your lesson saved!')
     })
   }
@@ -152,11 +179,13 @@ class LessonsList extends Component {
 LessonsList.propTypes = {
   openModal: React.PropTypes.func,
   lessonsIds: React.PropTypes.array,
-  isNewLesson: React.PropTypes.bool
+  isNewLesson: React.PropTypes.bool,
+  hideModal: React.PropTypes.func
 }
 
 const mapDispatchToProps = {
-  openModal: show
+  openModal: show,
+  hideModal: hide
 }
 
 export default connect(
