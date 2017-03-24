@@ -28,7 +28,7 @@ class EditCourse extends Component {
 
   fetchCourse (id) {
     firebase.database().ref('courses/' + id)
-      .once('value', snapshot => {
+      .on('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
           this.setState({

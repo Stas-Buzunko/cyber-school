@@ -70,30 +70,19 @@ class LessonsList extends Component {
       const { lessons } = this.state
       console.log(lessons)
       lessons.map(item => {
-        if (lessonKey !== item.id) {
-          return false
-        } else {
+        if (lessonKey === item.id) {
+          console.log(item)
+            // this.Setstate({lessons[item]: lesson })
+          item.name = lesson.name
+          item.description = lesson.description
+          item.length = lesson.length
+          item.imageUrl = lesson.imageUrl
+          item.videoUrl = lesson.videoUrl
+          item.isFree = lesson.isFree
+          item.testId = lesson.testId
+          item.comments = lesson.comments
+          this.setState({lessons})
 
-          // this.fetchItems(this.props.lessonsIds)
-          this.setState({item: lesson
-            // name : lesson.name,
-            // description : lesson.description,
-            // length : lesson.length,
-            // imageUrl : lesson.imageUrl,
-            // videoUrl : lesson.videoUrl,
-            // isFree : lesson.isFree,
-            // testId : lesson.testId,
-            // comments : lesson.comments,
-          })
-
-          // item.name = lesson.name
-          // item.description = lesson.description
-          // item.length = lesson.length
-          // item.imageUrl = lesson.imageUrl
-          // item.videoUrl = lesson.videoUrl
-          // item.isFree = lesson.isFree
-          // item.testId = lesson.testId
-          // item.comments = lesson.comments
         }
       })
       this.props.hideModal('lesson')
