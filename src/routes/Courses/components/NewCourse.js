@@ -132,6 +132,14 @@ class NewCourse extends Component {
               <div className='form-group'>
                 <label className='control-label col-xs-2'>MainPhoto</label>
                 <div className='col-xs-10 col-md-6'>
+
+
+                  {/* <Dropzone
+        onDrop={this.onDrop}
+        className="dropzone-container"
+      >
+        <div className="drop-text">Drop your images here</div>
+      </Dropzone> */}
                   <input
                     type='text'
                     className='form-control'
@@ -188,7 +196,6 @@ class NewCourse extends Component {
                     lessonsIds={this.state.lessonsIds}
                   />
                 </ul>
-
               </div>
             </form>
 

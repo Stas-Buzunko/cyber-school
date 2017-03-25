@@ -1,24 +1,30 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
-
+import { browserHistory } from 'react-router'
+import MainView2 from  '../../Course/components/MainView'
+// import Dropzone from 'react-dropzone'
 class MainView extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
       courses: [],
-      coursesFetched: false
+      coursesFetched: false,
+      discipline: ''
     }
   }
 
   componentWillMount () {
     const { params } = this.props
     this.fetchCourses(params.discipline)
+    this.setState({ discipline:params.discipline })
+    console.log(params.discipline)
   }
 
   componentWillReceiveProps (nextProps) {
     if (this.props.params.discipline !== nextProps.params.discipline) {
       this.fetchCourses(nextProps.params.discipline)
+      this.setState({ discipline: nextProps.params.discipline })
     }
   }
 
@@ -40,11 +46,24 @@ class MainView extends Component {
   }
 
   rederCourses () {
-    const { courses } = this.state
-
+    const { courses, discipline  } = this.state
     return courses.map((course, i) => (
       <div key={i}>
-        Description: {course.description}
+          <div className="col-sm-6 col-md-4" >
+            <div className="thumbnail" style={{height: '300px'}}>
+              <img src={course.mainPhoto}   width="300px" height="250px"/>
+              <div className="caption">
+                <h5>{course.name} </h5>
+                <h5>{course.description}</h5>
+                <button
+                  type='button'
+                  className="btn btn-primary"
+                  onClick={() => { browserHistory.push({ pathname: `/discipline/${discipline}/${course.id}` }) }}
+                >More details
+              </button>
+              </div>
+            </div>
+          </div>
       </div>
     ))
   }
@@ -58,10 +77,15 @@ class MainView extends Component {
     }
 
     return (
-      <div>
-        <h3>Total: {courses.length} course for {params.discipline} found</h3>
-        <div>
-          {this.rederCourses()}
+      <div className='container'>
+        <div className='row'>
+          <div className='col-sm-12 col-md-12'>
+            <h4>Total: {courses.length} course for {params.discipline} found</h4>
+            <div>
+              {this.rederCourses()}
+
+            </div>
+          </div>
         </div>
       </div>
     )

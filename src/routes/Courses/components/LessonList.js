@@ -19,7 +19,6 @@ class LessonsList extends Component {
   componentWillMount () {
     const lessonsIds = this.props.lessonsIds
     this.fetchItems(lessonsIds)
-
   }
 
   componentWillReceiveProps (nextProps) {
@@ -68,11 +67,8 @@ class LessonsList extends Component {
     })
     .then(() => {
       const { lessons } = this.state
-      console.log(lessons)
       lessons.map(item => {
         if (lessonKey === item.id) {
-          console.log(item)
-            // this.Setstate({lessons[item]: lesson })
           item.name = lesson.name
           item.description = lesson.description
           item.length = lesson.length
@@ -82,7 +78,6 @@ class LessonsList extends Component {
           item.testId = lesson.testId
           item.comments = lesson.comments
           this.setState({lessons})
-
         }
       })
       this.props.hideModal('lesson')

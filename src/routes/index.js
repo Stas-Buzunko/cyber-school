@@ -4,7 +4,7 @@ import Home from './Home'
 import Admin from './Admin'
 import Courses from './Courses'
 import Disciplines from './Disciplines'
-
+import Course from './Course'
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
@@ -15,8 +15,8 @@ export const createRoutes = (store) => ({
   childRoutes : [
     Admin(store),
     Courses(store),
-    Disciplines(store)
-  ]
+    Disciplines(store),
+    Course(store)]
 })
 
 /*  Note: childRoutes can be chunked or otherwise loaded programmatically

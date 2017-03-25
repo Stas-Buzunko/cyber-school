@@ -113,7 +113,8 @@ class EditCourse extends Component {
                   <input
                     value={mainPhoto}
                     type='text'
-                    className='form-control' onChange={(e) => this.setState({ mainPhoto: e.target.value })} />
+                    className='form-control'
+                    onChange={(e) => this.setState({ mainPhoto: e.target.value })} />
                 </div>
               </div>
 
