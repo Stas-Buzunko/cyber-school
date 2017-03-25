@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { browserHistory } from 'react-router'
 import firebase from 'firebase'
 
 class MainView extends Component {
@@ -56,7 +55,7 @@ class MainView extends Component {
       })
     })
   })
-}
+  }
 
   renderLessonsList () {
     const { lessons } = this.state
@@ -70,54 +69,55 @@ class MainView extends Component {
               <label className='control-label col-xs-2'>Name:</label>
               <div> {item.name}</div>
             </div>
-              <label className='control-label col-xs-2'>Length:</label>
-              <div> {item.length}</div>
-            </div>
-
+            <label className='control-label col-xs-2'>Length:</label>
+            <div> {item.length}</div>
           </div>
+        </div>
       </li>
     )
   }
   render () {
     const { course } = this.state
-    console.log(this.state.course)
-  return (
-        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-xs-12 col-md-12'>
+    return (
+      <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
+        <div className='col-xs-12 col-md-12'>
 
-            <div className='col-xs-10' style={{ padding: '15px' }}>
-              <label className='control-label col-xs-2'>Main photo:</label>
-              <img src={course.mainPhoto} className="img-thumbnail" width="400px" height="250px"/>
-            </div>
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Name:</label>
-              <div> {course.name}</div>
-            </div>
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Description:</label>
-              <div> {course.description}</div>
-            </div>
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Duration:</label>
-              <div> {course.duration}</div>
-            </div>
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Price:</label>
-              <div> {course.price}</div>
-            </div>
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Discipline:</label>
-              <div> {course.discipline}</div>
-            </div>
+          <div className='col-xs-10' style={{ padding: '15px' }}>
+            <label className='control-label col-xs-2'>Main photo:</label>
+            <img src={course.mainPhoto} className='img-thumbnail' width='400px' height='250px' />
           </div>
-            <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-              <ul className='list-unstyled'>
-                {this.renderLessonsList()}
-              </ul>
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Name:</label>
+            <div> {course.name}</div>
+          </div>
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Description:</label>
+            <div> {course.description}</div>
+          </div>
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Duration:</label>
+            <div> {course.duration}</div>
+          </div>
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Price:</label>
+            <div> {course.price}</div>
+          </div>
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Discipline:</label>
+            <div> {course.discipline}</div>
           </div>
         </div>
-
+        <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
+          <ul className='list-unstyled'>
+            {this.renderLessonsList()}
+          </ul>
+        </div>
+      </div>
     )
   }
 }
+MainView.propTypes = {
+  params: React.PropTypes.obj
+}
+
 export default MainView

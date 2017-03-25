@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 import { browserHistory } from 'react-router'
-import MainView2 from  '../../Course/components/MainView'
 // import Dropzone from 'react-dropzone'
 class MainView extends Component {
   constructor (props) {
@@ -46,24 +45,24 @@ class MainView extends Component {
   }
 
   rederCourses () {
-    const { courses, discipline  } = this.state
+    const { courses, discipline } = this.state
     return courses.map((course, i) => (
       <div key={i}>
-          <div className="col-sm-6 col-md-4" >
-            <div className="thumbnail" style={{height: '300px'}}>
-              <img src={course.mainPhoto}   width="300px" height="250px"/>
-              <div className="caption">
-                <h5>{course.name} </h5>
-                <h5>{course.description}</h5>
-                <button
-                  type='button'
-                  className="btn btn-primary"
-                  onClick={() => { browserHistory.push({ pathname: `/discipline/${discipline}/${course.id}` }) }}
+        <div className='col-sm-6 col-md-4' >
+          <div className='thumbnail' style={{ height: '300px' }}>
+            <img src={course.mainPhoto} width='300px' height='250px' />
+            <div className='caption'>
+              <h5>{course.name} </h5>
+              <h5>{course.description}</h5>
+              <button
+                type='button'
+                className='btn btn-primary'
+                onClick={() => { browserHistory.push({ pathname: `/discipline/${discipline}/${course.id}` }) }}
                 >More details
               </button>
-              </div>
             </div>
           </div>
+        </div>
       </div>
     ))
   }
@@ -90,6 +89,9 @@ class MainView extends Component {
       </div>
     )
   }
+}
+MainView.propTypes = {
+  params: React.PropTypes.obj
 }
 
 export default MainView
