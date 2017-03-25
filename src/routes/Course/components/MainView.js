@@ -61,9 +61,9 @@ class MainView extends Component {
     const { lessons } = this.state
     return lessons.map((item, i) =>
       <li key={i}>
-        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
+        <div className='col-xs-12 col-md-12' >
           <div className='col-xs-12 col-md-8'>
-            <label className='control-label col-xs-12' style={{ padding: '15px' }}>Lessons: </label>
+
 
             <div className='col-xs-6'>
               <label className='control-label col-xs-2'>Name:</label>
@@ -108,6 +108,7 @@ class MainView extends Component {
           </div>
         </div>
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
+            <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
             {this.renderLessonsList()}
           </ul>
