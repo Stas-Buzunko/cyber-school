@@ -15,32 +15,25 @@ class CommentPopupComponent extends Component {
     this.saveCommentPopup = this.saveCommentPopup.bind(this)
   }
   componentWillMount () {
-    const { isCommentForLesson, id  } = this.props
+    const { isCommentForLesson, id } = this.props
     this.setState({
-          isCommentForLesson,
-          id
-        })
-  //   const lesson = this.props.item
-  //   if (!isNewLesson) {
-  //     this.setState({
-  //       comment: lesson.comments,
-  //       id: lesson.id
-  //     })
-  //   }
+      isCommentForLesson,
+      id
+    })
   }
   saveCommentPopup = () => {
-    const { comment, isCommentForLesson } = this.state
+    const { comment, isCommentForLesson, id } = this.state
     this.setState({ error: '' })
     if (!comment) {
-        toastr.error('Please, fill your comment')
-        return false
+      toastr.error('Please, fill your comment')
+      return false
     }
-    this.props.saveComment(comment, isCommentForLesson)
+    this.props.saveComment(comment, isCommentForLesson, id)
   }
 
   render () {
     const { handleHide, show } = this.props
-    const { comment, isCommentForLesson } = this.state
+    const { comment } = this.state
     return (
       <Modal
         backdrop={true}
@@ -80,9 +73,9 @@ class CommentPopupComponent extends Component {
 CommentPopupComponent.propTypes = {
   show: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
-  saveComment: React.PropTypes.func
-  // isNewLesson: React.PropTypes.bool,
-  // item: React.PropTypes.object
+  saveComment: React.PropTypes.func,
+  isCommentForLesson: React.PropTypes.bool,
+  id: React.PropTypes.string
 }
 
 export default connectModal({
