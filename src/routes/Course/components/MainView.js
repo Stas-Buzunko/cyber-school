@@ -14,10 +14,10 @@ class MainView extends Component {
 
   componentWillMount () {
     const { params } = this.props
-    this.fetchItems(params.id)
+    this.fetchItem(params.id)
   }
 
-  fetchItems (id) {
+  fetchItem (id) {
     this.setState({
       course: [],
       courseLoaded: false,
@@ -31,30 +31,28 @@ class MainView extends Component {
       const object = snapshot.val()
       if (object !== null) {
         const course = object
-        this.setState({ course, courseLoaded: true })
+        const promises = course.lessonsIds.map(id => {
+          return firebase.database().ref('lessons/' + id)
+          .once('value')
+          .then(snapshot => {
+            const object = snapshot.val()
+            const lessonFromId = object
+            lessonFromId.id = id
+            return (lessonFromId)
+          })
+        })
+        Promise.all(promises).then(result => {
+          this.setState({
+            lessons: result,
+            course,
+            courseLoaded: true,
+            lessonsLoaded: true
+          })
+        })
       } else {
         this.setState({ courseLoaded: true })
       }
-    }
-  )
-  .then(() => {
-    let newLessons = []
-    this.state.course.lessonsIds.forEach(id => {
-      firebase.database().ref('lessons/' + id)
-      .once('value')
-      .then(snapshot => {
-        const object = snapshot.val()
-        if (object !== null) {
-          const lessonFromId = object
-          lessonFromId.id = id
-          newLessons.push(lessonFromId)
-          this.setState({ lessons: newLessons, lessonsLoaded: true })
-        } else {
-          this.setState({ coursesLoaded: true })
-        }
-      })
     })
-  })
   }
 
   renderLessonsList () {
@@ -63,7 +61,6 @@ class MainView extends Component {
       <li key={i}>
         <div className='col-xs-12 col-md-12' >
           <div className='col-xs-12 col-md-8'>
-
 
             <div className='col-xs-6'>
               <label className='control-label col-xs-2'>Name:</label>
@@ -108,7 +105,7 @@ class MainView extends Component {
           </div>
         </div>
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
+          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
             {this.renderLessonsList()}
           </ul>
@@ -118,7 +115,7 @@ class MainView extends Component {
   }
 }
 MainView.propTypes = {
-  params: React.PropTypes.obj
+  params: React.PropTypes.object
 }
 
 export default MainView

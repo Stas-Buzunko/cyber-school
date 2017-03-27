@@ -8,22 +8,18 @@ class MainView extends Component {
 
     this.state = {
       courses: [],
-      coursesFetched: false,
-      discipline: ''
+      coursesFetched: false
     }
   }
 
   componentWillMount () {
     const { params } = this.props
     this.fetchCourses(params.discipline)
-    this.setState({ discipline:params.discipline })
-    console.log(params.discipline)
   }
 
   componentWillReceiveProps (nextProps) {
     if (this.props.params.discipline !== nextProps.params.discipline) {
       this.fetchCourses(nextProps.params.discipline)
-      this.setState({ discipline: nextProps.params.discipline })
     }
   }
 
@@ -45,7 +41,9 @@ class MainView extends Component {
   }
 
   rederCourses () {
-    const { courses, discipline } = this.state
+    const { courses } = this.state
+    const { discipline } = this.props
+
     return courses.map((course, i) => (
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
@@ -91,7 +89,8 @@ class MainView extends Component {
   }
 }
 MainView.propTypes = {
-  params: React.PropTypes.obj
+  params: React.PropTypes.object,
+  discipline: React.PropTypes.string
 }
 
 export default MainView

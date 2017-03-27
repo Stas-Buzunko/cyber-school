@@ -17,7 +17,7 @@ class LessonsList extends Component {
   }
 
   componentWillMount () {
-    const lessonsIds = this.props.lessonsIds
+    const { lessonsIds } = this.props
     this.fetchItems(lessonsIds)
   }
 
@@ -42,7 +42,7 @@ class LessonsList extends Component {
           newLessons.push(lessonFromId)
           this.setState({ lessons: newLessons, lessonsLoaded: true })
         } else {
-          this.setState({ coursesLoaded: true })
+          this.setState({ lessonsLoaded: true })
         }
       })
     })
@@ -55,31 +55,34 @@ class LessonsList extends Component {
 
   editLesson = (lesson) => {
     const lessonKey = lesson.id
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = lesson
     firebase.database().ref('lessons/' + lessonKey).update({
-      name:lesson.name,
-      description: lesson.description,
-      length:  lesson.length,
-      imageUrl:  lesson.imageUrl,
-      videoUrl: lesson.videoUrl,
-      isFree: lesson.isFree,
-      testId:  lesson.testId,
-      comments: lesson.comments
+      name, description, length, imageUrl, videoUrl, isFree, testId, comments
     })
     .then(() => {
+      const lessonKey = lesson.id
       const { lessons } = this.state
-      lessons.map(item => {
-        if (lessonKey === item.id) {
-          item.name = lesson.name
-          item.description = lesson.description
-          item.length = lesson.length
-          item.imageUrl = lesson.imageUrl
-          item.videoUrl = lesson.videoUrl
-          item.isFree = lesson.isFree
-          item.testId = lesson.testId
-          item.comments = lesson.comments
-          this.setState({lessons})
-        }
-      })
+      const indexItemToRemove = lessons.indexOf(item => { lessonKey === item.id })
+      console.log(indexItemToRemove)
+      const newArray = [
+        ...lessons.slice(0, indexItemToRemove),
+        ...lessons.slice(indexItemToRemove + 1),
+        lesson
+      ]
+      console.log(newArray)
+      this.setState({ lessons: newArray })
+      //   if (lessonKey === item.id) {
+      //     item.name = lesson.name
+      //     item.description = lesson.description
+      //     item.length = lesson.length
+      //     item.imageUrl = lesson.imageUrl
+      //     item.videoUrl = lesson.videoUrl
+      //     item.isFree = lesson.isFree
+      //     item.testId = lesson.testId
+      //     item.comments = lesson.comments
+      //     this.setState({ lessons })
+      //   }
+      // })
       this.props.hideModal('lesson')
       toastr.success('Your lesson saved!')
     })
