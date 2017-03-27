@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
+import { show, hide } from 'redux-modal'
+import { connect } from 'react-redux'
+import CommentPopupComponent from './CommentPopupComponent'
+import CommentList from './CommentList'
+import toastr from 'toastr'
 
 class MainView extends Component {
   constructor (props) {
@@ -10,7 +15,7 @@ class MainView extends Component {
       lessons: '',
       lessonsLoaded: false
     }
-  };
+  }
 
   componentWillMount () {
     const { params } = this.props
@@ -59,12 +64,11 @@ class MainView extends Component {
 
   renderLessonsList () {
     const { lessons } = this.state
+    const isCommentForLesson = true
     return lessons.map((item, i) =>
       <li key={i}>
-        <div className='col-xs-12 col-md-12' >
+        <div className='col-xs-12 col-md-12'>
           <div className='col-xs-12 col-md-8'>
-
-
             <div className='col-xs-6'>
               <label className='control-label col-xs-2'>Name:</label>
               <div> {item.name}</div>
@@ -72,12 +76,60 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>Length:</label>
             <div> {item.length}</div>
           </div>
+          <div className='col-xs-12 col-md-4'>
+            <ul className='list-unstyled'>
+              {this.renderCommentPopup(isCommentForLesson, item.id)}
+              {/* <CommentList
+                isCommentForLesson={isCommentForLesson}
+                lessonsIds={this.state.lessonsIds}
+              /> */}
+            </ul>
+          </div>
         </div>
       </li>
     )
   }
+
+  saveComment = (comment, isCommentForLesson) => {
+    const lessonKey = firebase.database().ref('lessons/').push().key
+    const { lessonsIds } = this.state
+    const newLessons = [...lessonsIds, lessonKey]
+    this.setState({ lessonsIds: newLessons })
+
+    firebase.database().ref('lessons/' + lessonKey).update({
+      name:lesson.name,
+      description: lesson.description,
+      length:  lesson.length,
+      imageUrl:  lesson.imageUrl,
+      videoUrl: lesson.videoUrl,
+      isFree: lesson.isFree,
+      testId:  lesson.testId,
+      comments: lesson.comments
+    })
+    .then(() => {
+      this.props.hideModal('comment')
+      toastr.success('Your comment saved!')
+    })
+  }
+
+  renderCommentPopup (isCommentForLesson, id) {
+    return (
+      <div>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          onClick={(e) => {
+            e.preventDefault()
+            this.props.openModal('comment', { isCommentForLesson, id })
+          }}>Add Comment
+        </button>
+      </div>
+    )
+  }
+
   render () {
     const { course } = this.state
+    const isCommentForLesson = false
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-12'>
@@ -107,18 +159,39 @@ class MainView extends Component {
             <div> {course.discipline}</div>
           </div>
         </div>
+        <div className='col-xs-12 col-md-10'>
+          <ul className='list-unstyled'>
+            {this.renderCommentPopup(isCommentForLesson, course.id) }
+             {/* <CommentList
+              isCommentForLesson={isCommentForLesson}
+              lessonsIds={this.state.lessonsIds}
+            /> */}
+          </ul>
+        </div>
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
+          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
             {this.renderLessonsList()}
           </ul>
         </div>
+        <CommentPopupComponent />
       </div>
     )
   }
 }
 MainView.propTypes = {
-  params: React.PropTypes.obj
+
+  params: React.PropTypes.object,
+  openModal: React.PropTypes.func,
+  hideModal: React.PropTypes.func
 }
 
-export default MainView
+const mapDispatchToProps = {
+  openModal: show,
+  hideModal: hide
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(MainView)
