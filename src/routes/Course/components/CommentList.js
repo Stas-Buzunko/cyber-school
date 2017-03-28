@@ -11,23 +11,25 @@ class CommentList extends Component {
 
     this.state = {
       comment: '',
-      isCommentForLesson: '',
-      comments:  ['1']
+      isCommentForLesson: ''
+      ,
+      comments:  []
     }
 
-      this.renderCommentList = this.renderCommentList.bind(this)
+  this.renderCommentList = this.renderCommentList.bind(this)
   }
 
   componentWillMount () {
     const { isCommentForLesson, comments } = this.props
-    this.setState({ comments })
+
+this.setState(comments)
   }
 
-  componentWillReceiveProps (nextProps) {
-  const { isCommentForLesson, comments } = this.props
-    this.props.comments !== nextProps.comments &&
-    this.setState({ comments })
-  }
+  // componentWillReceiveProps (nextProps) {
+  // const { isCommentForLesson, comments } = this.props
+  //   this.props.comments !== nextProps.comments &&
+  // this.renderCommentList (comments)
+  // }
 
   // renderLessonPopup (e, item) {
   //   e.preventDefault()
@@ -67,17 +69,15 @@ class CommentList extends Component {
   // }
 
   renderCommentList () {
-    // const { comments } = this.state
-    const comments =['1']
+    const { comments } = this.state
+    // const comments = ['1', '2']
 
     console.log('cl', comments)
-    return  comments.forEach((item, i) =>
-    <li key={i}>
-      <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-
+    return comments.map((item, i) =>
+      <li key={i}>
+        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-10 col-md-6'>
-
-            <div> {item}</div>
+            <div> {item} </div>
           </div>
         </div>
       </li>
