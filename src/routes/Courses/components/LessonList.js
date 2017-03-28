@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import toastr from 'toastr'
 import firebase from 'firebase'
-import { connectModal, show, hide } from 'redux-modal'
+import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
 
@@ -17,7 +17,7 @@ class LessonsList extends Component {
   }
 
   componentWillMount () {
-    const lessonsIds = this.props.lessonsIds
+    const { lessonsIds } = this.props
     this.fetchItems(lessonsIds)
   }
 
@@ -30,20 +30,20 @@ class LessonsList extends Component {
       lessons: [],
       lessonsLoaded: false
     })
-    let newLessons = []
-    lessonsIds.forEach(id => {
-      firebase.database().ref('lessons/' + id)
+    const promises = lessonsIds.map(id => {
+      return firebase.database().ref('lessons/' + id)
       .once('value')
       .then(snapshot => {
         const object = snapshot.val()
-        if (object !== null) {
-          const lessonFromId = object
-          lessonFromId.id = id
-          newLessons.push(lessonFromId)
-          this.setState({ lessons: newLessons, lessonsLoaded: true })
-        } else {
-          this.setState({ coursesLoaded: true })
-        }
+        const lessonFromId = object
+        lessonFromId.id = id
+        return (lessonFromId)
+      })
+    })
+    Promise.all(promises).then(result => {
+      this.setState({
+        lessons: result,
+        lessonsLoaded: true
       })
     })
   }
@@ -55,31 +55,21 @@ class LessonsList extends Component {
 
   editLesson = (lesson) => {
     const lessonKey = lesson.id
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = lesson
     firebase.database().ref('lessons/' + lessonKey).update({
-      name:lesson.name,
-      description: lesson.description,
-      length:  lesson.length,
-      imageUrl:  lesson.imageUrl,
-      videoUrl: lesson.videoUrl,
-      isFree: lesson.isFree,
-      testId:  lesson.testId,
-      comments: lesson.comments
+      name, description, length, imageUrl, videoUrl, isFree, testId, comments
     })
     .then(() => {
+      const lessonKey = lesson.id
       const { lessons } = this.state
-      lessons.map(item => {
-        if (lessonKey === item.id) {
-          item.name = lesson.name
-          item.description = lesson.description
-          item.length = lesson.length
-          item.imageUrl = lesson.imageUrl
-          item.videoUrl = lesson.videoUrl
-          item.isFree = lesson.isFree
-          item.testId = lesson.testId
-          item.comments = lesson.comments
-          this.setState({lessons})
-        }
-      })
+
+      const indexItemToRemove = lessons.findIndex(item => lessonKey === item.id)
+      const newArray = [
+        ...lessons.slice(0, indexItemToRemove),
+        ...lessons.slice(indexItemToRemove + 1),
+        lesson
+      ]
+      this.setState({ lessons: newArray })
       this.props.hideModal('lesson')
       toastr.success('Your lesson saved!')
     })

@@ -26,9 +26,6 @@ class NewCourse extends Component {
     }
   }
 
-  componentWillMount () {
-  }
-
   saveCourse () {
     const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds, comments } = this.state
     const dateUploaded = Date.now()

@@ -32,6 +32,7 @@ class EditCourse extends Component {
       .on('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
+<<<<<<< HEAD
           this.setState({
             name: object.name,
             description: object.description,
@@ -43,6 +44,10 @@ class EditCourse extends Component {
             lessonsIds: object.lessonsIds,
             comments: object.comments || ['First comment']
           })
+=======
+          const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = object
+          this.setState({ name, description, mainPhoto, duration, price, discipline, author, lessonsIds })
+>>>>>>> b985a65b78fcecad9e2db93e31d8eed9088957eb
         } else {
           this.setState({ error: true })
         }
@@ -157,7 +162,7 @@ class EditCourse extends Component {
                 type='button'
                 className='btn btn-success lg'
                 style={{ width:'50%', margin: '15px' }}
-                onClick={() => this.editCourse()}
+                onClick={this.editCourse}
               >Save changes
             </button>
             </div>

@@ -26,16 +26,9 @@ class LessonPopupComponent extends Component {
     const isNewLesson = this.props.isNewLesson
     const lesson = this.props.item
     if (!isNewLesson) {
+      const { name, description, length, imageUrl, videoUrl, isFree, testId, comments, id } = lesson
       this.setState({
-        name: lesson.name,
-        description: lesson.description,
-        length: lesson.length,
-        imageUrl: lesson.imageUrl,
-        videoUrl: lesson.videoUrl,
-        isFree: lesson.isFree,
-        testId: lesson.testId,
-        comments: lesson.comments,
-        id: lesson.id
+        name, description, length, imageUrl, videoUrl, isFree, testId, comments, id
       })
     }
   }
