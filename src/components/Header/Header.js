@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { IndexLink, Link } from 'react-router'
 import './Header.scss'
+import backend from '../../../config/apis'
 
 export const Header = ({ user }) => (
   <div>
@@ -30,7 +31,7 @@ export const Header = ({ user }) => (
     </Link>
     {' · '}
     {!user &&
-      <a href='http://localhost:3001/auth/steam'
+      <a href={`${backend}/auth/steam}`}
         className='button'>
         <i className='fa fa-steam fa-space-right' />Sign in with Steam
       </a>

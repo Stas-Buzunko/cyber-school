@@ -13,6 +13,10 @@ const passport = require('passport')
 app.use(passport.initialize())
 
 const serviceAccount = require('./key.json')
+const env = process.env.NODE_ENV || 'development'
+const front = env === 'development'
+? 'http://localhost:3000'
+: 'https://cyber-academy.firebaseapp.com'
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -101,7 +105,7 @@ app.get('/auth/steam/return', passport.authenticate('steam'),
       updateProfile(request.user)
       generateToken(request.user.steamId)
       .then(customToken =>
-        response.redirect(`http://localhost:3000/login?token=${customToken}`)
+        response.redirect(`${front}/login?token=${customToken}`)
       )
     } else {
       response.redirect('/?failed')
