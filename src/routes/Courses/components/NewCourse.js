@@ -21,13 +21,13 @@ class NewCourse extends Component {
       discipline:'',
       author:'',
       lessonsIds: [],
-      comments: [],
       error: ''
     }
   }
 
   saveCourse () {
-    const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds, comments } = this.state
+    const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = this.state
+
     const dateUploaded = Date.now()
     if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
       if (!name) {
@@ -57,6 +57,7 @@ class NewCourse extends Component {
       return false
     }
     this.setState({ error: '' })
+    const comments = ['course comment']
     firebase.database().ref('courses/').push({
       name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds, comments
     })
@@ -87,15 +88,10 @@ class NewCourse extends Component {
     const newLessons = [...lessonsIds, lessonKey]
     this.setState({ lessonsIds: newLessons })
 
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+    const comments = ['lesson comment']
     firebase.database().ref('lessons/' + lessonKey).update({
-      name:lesson.name,
-      description: lesson.description,
-      length:  lesson.length,
-      imageUrl:  lesson.imageUrl,
-      videoUrl: lesson.videoUrl,
-      isFree: lesson.isFree,
-      testId:  lesson.testId,
-      comments: lesson.comments
+      name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
     })
     .then(() => {
       this.props.hideModal('lesson')

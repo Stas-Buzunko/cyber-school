@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import { show, hide } from 'redux-modal'
+import toastr from 'toastr'
+import firebase from 'firebase'
+import { connectModal, show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
+import CommentPopupComponent from './CommentPopupComponent'
 
 class CommentList extends Component {
   constructor (props) {
@@ -10,18 +13,20 @@ class CommentList extends Component {
       comment: '',
       isCommentForLesson: '',
       comments: []
-    }
-    this.renderCommentList = this.renderCommentList.bind(this)
+}
+  this.renderCommentList = this.renderCommentList.bind(this)
   }
-
+  //
   componentWillMount () {
     const { comments } = this.props
-    this.setState({ comments })
+    this.setState({comments})
   }
 
   componentWillReceiveProps (nextProps) {
-    this.props.comments !== nextProps.comments && this.setState({ comments:nextProps.comments })
+    this.props.comments !== nextProps.comments && this.setState({comments:nextProps.comments})
   }
+
+
   renderCommentList () {
     const { comments } = this.state
     return comments.map((item, i) =>
@@ -35,6 +40,7 @@ class CommentList extends Component {
     )
   }
   render () {
+
     return (
       <div className='container'>
         <div className='row'>
@@ -51,6 +57,9 @@ class CommentList extends Component {
 }
 
 CommentList.propTypes = {
+  openModal: React.PropTypes.func,
+  hideModal: React.PropTypes.func,
+  isCommentForLesson: React.PropTypes.bool,
   comments: React.PropTypes.array
 }
 

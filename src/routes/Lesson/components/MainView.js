@@ -14,7 +14,8 @@ class MainView extends Component {
       courseLoaded: false,
       lessons: '',
       lessonsLoaded: false,
-      comments: []
+      lessonComments: [],
+      courseComments: []
     }
   }
 
@@ -51,7 +52,7 @@ class MainView extends Component {
           this.setState({
             lessons: result,
             course,
-            comments: course.comments,
+            courseComments: course.comments,
             courseLoaded: true,
             lessonsLoaded: true
           })
@@ -63,7 +64,10 @@ class MainView extends Component {
   }
 
   renderLessonsList () {
-    const { lessons } = this.state
+    const { lessons, lessonComments } = this.state
+    console.log(lessonComments,lessonComments)
+    const isFirst = (lessonComments === [])
+    const isCommentForLesson = true
     return lessons.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12'>
@@ -76,38 +80,75 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>Length:</label>
             <div> {item.length}</div>
           </div>
+          <div className='col-xs-6 col-md-4'>
+            {this.renderCommentPopup(isCommentForLesson, item.id)}
+          </div>
+        </div>
+        <div className='col-xs-12 col-md-12'>
+          <ul className='list-unstyled'>
+          <CommentList
+              isCommentForLesson={isCommentForLesson}
+              comments={item.comments}/> 
+          </ul>
         </div>
       </li>
     )
   }
 
-  saveComment = (comment) => {
-    const {id} = this.props.params
-    firebase.database().ref('courses/' + id)
-    .once('value')
-    .then(snapshot => {
-      const object = snapshot.val()
-      if (object !== null) {
-        const comments = object.comments
-        this.setState({ comments })
-      }
-    })
-    .then(() => {
-      const { comments } = this.state
-      const newComments = [ ...comments, comment ]
-      this.setState({ comments: newComments })
-    })
-    .then(() => {
-      const { comments } = this.state
-      firebase.database().ref('courses/' + id).update({ comments })
-    })
-    .then(() => {
-      this.props.hideModal('comment')
-      toastr.success('Your comment saved!')
-    })
+  saveComment = (comment, isCommentForLesson, id) => {
+    if (isCommentForLesson) {
+      firebase.database().ref('lessons/' + id)
+      .once('value')
+      .then(snapshot => {
+        const object = snapshot.val()
+        if (object !== null) {
+          const comments = object.comments
+          this.setState({ lessonComments:comments })
+        }
+      })
+
+      .then(() => {
+        const { lessonComments } = this.state
+        const newComments = [...lessonComments, comment]
+        this.setState({ lessonComments: newComments })
+      })
+      .then(() => {
+        const { lessonComments } = this.state
+        firebase.database().ref('lessons/' + id).update({ comments:lessonComments })
+      })
+      .then(() => {
+        this.props.hideModal('comment')
+        toastr.success('Your comment saved!')
+      })
+    }
+
+    if (!isCommentForLesson) {
+      firebase.database().ref('courses/' + id)
+      .once('value')
+      .then(snapshot => {
+        const object = snapshot.val()
+        if (object !== null) {
+          const comments = object.comments
+          this.setState({ courseComments:comments })
+        }
+      })
+      .then(() => {
+        const { courseComments } = this.state
+        const newComments = [ ...courseComments, comment ]
+        this.setState({ courseComments: newComments })
+      })
+      .then(() => {
+        const { courseComments } = this.state
+        firebase.database().ref('courses/' + id).update({ comments:courseComments })
+      })
+      .then(() => {
+        this.props.hideModal('comment')
+        toastr.success('Your comment saved!')
+      })
+    }
   }
 
-  renderCommentPopup () {
+  renderCommentPopup (isCommentForLesson, id) {
     return (
       <div>
         <button
@@ -115,7 +156,7 @@ class MainView extends Component {
           className='btn btn-success lg'
           onClick={(e) => {
             e.preventDefault()
-            this.props.openModal('comment')
+            this.props.openModal('comment', { isCommentForLesson, id })
           }}>Add Comment
         </button>
       </div>
@@ -123,7 +164,8 @@ class MainView extends Component {
   }
 
   render () {
-    const { course, comments } = this.state
+    const { course, courseComments } = this.state
+    const isCommentForLesson = false
     const { params } = this.props
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
@@ -156,9 +198,10 @@ class MainView extends Component {
         </div>
         <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
-            {this.renderCommentPopup(params.id) }
+            {this.renderCommentPopup(isCommentForLesson, params.id) }
             <CommentList
-              comments={comments}
+              isCommentForLesson={isCommentForLesson}
+              comments={courseComments}
             />
           </ul>
         </div>

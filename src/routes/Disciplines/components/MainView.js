@@ -55,7 +55,7 @@ class MainView extends Component {
               <button
                 type='button'
                 className='btn btn-primary'
-                onClick={() => { browserHistory.push({ pathname: `/discipline/${discipline}/${course.id}` }) }}
+                onClick={() => { browserHistory.push({ pathname: `/discipline/${course.discipline}/${course.id}` }) }}
                 >More details
               </button>
             </div>

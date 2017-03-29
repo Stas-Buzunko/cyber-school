@@ -18,7 +18,6 @@ class EditCourse extends Component {
       price:'',
       lessonsIds: [],
       id: this.props.params.id,
-      comments: [],
       error: ''
     }
     this.editCourse = this.editCourse.bind(this)
@@ -32,34 +31,20 @@ class EditCourse extends Component {
       .on('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
-<<<<<<< HEAD
-          this.setState({
-            name: object.name,
-            description: object.description,
-            mainPhoto: object.mainPhoto,
-            duration: object.duration,
-            price: object.price,
-            discipline: object.discipline,
-            author: object.author,
-            lessonsIds: object.lessonsIds,
-            comments: object.comments || ['First comment']
-          })
-=======
-          const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = object
-          this.setState({ name, description, mainPhoto, duration, price, discipline, author, lessonsIds })
->>>>>>> b985a65b78fcecad9e2db93e31d8eed9088957eb
+          const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds, id } = object
+          this.setState({ name, description, mainPhoto, duration, price, discipline, author, lessonsIds, id })
         } else {
           this.setState({ error: true })
         }
       })
   }
   editCourse () {
-    const { name, discipline, author, description, mainPhoto, duration, price, id, comments } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price, id } = this.state
     const dateUploaded = Date.now()
     this.setState({ error: '' })
     firebase.database().ref('courses/' + id)
     .update({
-      name, discipline, author, description, mainPhoto, duration, price, dateUploaded, comments, id })
+      name, discipline, author, description, mainPhoto, duration, price, dateUploaded, id })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)

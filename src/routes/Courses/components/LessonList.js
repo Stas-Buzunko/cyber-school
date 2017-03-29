@@ -55,9 +55,9 @@ class LessonsList extends Component {
 
   editLesson = (lesson) => {
     const lessonKey = lesson.id
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = lesson
+    const { name, description, length, imageUrl, videoUrl, isFree, testId } = lesson
     firebase.database().ref('lessons/' + lessonKey).update({
-      name, description, length, imageUrl, videoUrl, isFree, testId, comments
+      name, description, length, imageUrl, videoUrl, isFree, testId
     })
     .then(() => {
       const lessonKey = lesson.id
@@ -110,10 +110,6 @@ class LessonsList extends Component {
             { !!isNewLesson && <div className='col-xs-10'>
               <label className='control-label col-xs-2'>TestId:</label>
               <div> {item.testId}</div>
-            </div>}
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Comments:</label>
-              <div> {item.comments}</div>
             </div>}
           </div>
           { !isNewLesson && <div className='col-xs-12 col-md-4'>
