@@ -32,7 +32,7 @@ export const Header = ({ user }) =>
     </Link>
     {' · '}
     {!Object.keys(user).length &&
-      <a href={`${backend}/auth/steam}`}
+      <a href={`${backend}/auth/steam`}
         className='button'>
         <i className='fa fa-steam fa-space-right' />Sign in with Steam
       </a>
