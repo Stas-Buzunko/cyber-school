@@ -15,8 +15,12 @@ app.use(passport.initialize())
 const serviceAccount = require('./key.json')
 const env = process.env.NODE_ENV || 'development'
 const front = env === 'development'
-? 'http://localhost:3000'
-: 'https://cyber-academy.firebaseapp.com'
+  ? 'http://localhost:3000'
+  : 'https://cyber-academy.firebaseapp.com'
+
+const backend = env === 'development'
+  ? 'http://localhost:3001'
+  : 'https://cyber-academy.tk'
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -62,8 +66,8 @@ app.post('/charge', (req, res) => {
 const SteamStrategy = require('passport-steam').Strategy
 
 passport.use(new SteamStrategy({
-  returnURL: 'http://localhost:3001/auth/steam/return',
-  realm: 'http://localhost:3001/',
+  returnURL: `${backend}/auth/steam/return`,
+  realm: backend,
   apiKey: '36046F0A7375F30D33BBC38FE19C0225'
 },
   function (identifier, profile, done) {
