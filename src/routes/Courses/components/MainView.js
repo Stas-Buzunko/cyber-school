@@ -12,7 +12,9 @@ const MainView = (props) => {
       content = <NewCourse />
       break
     case 'edit':
-      content = <EditCourse />
+      content = <EditCourse
+        params={props.params}
+      />
       break
     default:
       content = <CoursesList />

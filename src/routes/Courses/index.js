@@ -26,6 +26,6 @@ export default (store) => ({
       cb(null, MainView)
 
     /* Webpack named bundle   */
-    }, 'admin/courses(/:action)')
+    }, 'admin/courses(/:action)(/:id)')
   }
 })
