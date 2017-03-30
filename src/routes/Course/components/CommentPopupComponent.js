@@ -14,21 +14,16 @@ class CommentPopupComponent extends Component {
 
     this.saveCommentPopup = this.saveCommentPopup.bind(this)
   }
-  componentWillMount () {
-    const { isCommentForLesson, id } = this.props
-    this.setState({
-      isCommentForLesson,
-      id
-    })
-  }
+
   saveCommentPopup = () => {
-    const { comment, isCommentForLesson, id } = this.state
+    const { comment } = this.state
+    const { isRespond, item } = this.props
     this.setState({ error: '' })
     if (!comment) {
       toastr.error('Please, fill your comment')
       return false
     }
-    this.props.saveComment(comment, isCommentForLesson, id)
+    this.props.saveComment(comment, isRespond, item)
   }
 
   render () {
@@ -73,9 +68,8 @@ class CommentPopupComponent extends Component {
 CommentPopupComponent.propTypes = {
   show: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
-  saveComment: React.PropTypes.func,
-  isCommentForLesson: React.PropTypes.bool,
-  id: React.PropTypes.string
+  saveComment: React.PropTypes.func
+
 }
 
 export default connectModal({

@@ -26,7 +26,6 @@ class CommentList extends Component {
     this.props.comments !== nextProps.comments && this.setState({comments:nextProps.comments})
   }
 
-
   renderCommentList () {
     const { comments } = this.state
     return comments.map((item, i) =>

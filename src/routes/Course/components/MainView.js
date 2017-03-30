@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import CommentPopupComponent from './CommentPopupComponent'
 import CommentList from './CommentList'
 import toastr from 'toastr'
+import { Link } from 'react-router'
 
 class MainView extends Component {
   constructor (props) {
@@ -14,7 +15,11 @@ class MainView extends Component {
       courseLoaded: false,
       lessons: '',
       lessonsLoaded: false,
-      comments: []
+      comments: [],
+      commentStructure:     {
+            text: 'first comment',
+            children: ['first respond', 'second respond']
+          }
     }
   }
 
@@ -64,25 +69,32 @@ class MainView extends Component {
 
   renderLessonsList () {
     const { lessons } = this.state
-    return lessons.map((item, i) =>
-      <li key={i}>
-        <div className='col-xs-12 col-md-12'>
-          <div className='col-xs-12 col-md-8'>
-
-            <div className='col-xs-6'>
-              <label className='control-label col-xs-2'>Name:</label>
-              <div> {item.name}</div>
-            </div>
-            <label className='control-label col-xs-2'>Length:</label>
-            <div> {item.length}</div>
-          </div>
+    return (
+      <div className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-8'>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Length</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lessons.map((item, i) =>
+                <tr key={i}>
+                  <td> <Link to='/lesson/`${lesson.id}' activeStyle={{ color: 'red' }}>{item.name}</Link> </td>
+                  <td> {item.length} </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </li>
+      </div>
     )
   }
 
   saveComment = (comment) => {
-    const {id} = this.props.params
+    const { id } = this.props.params
     firebase.database().ref('courses/' + id)
     .once('value')
     .then(snapshot => {
@@ -94,7 +106,10 @@ class MainView extends Component {
     })
     .then(() => {
       const { comments } = this.state
-      const newComments = [ ...comments, comment ]
+      const commentStructure = { text: comment,
+        children:['first respond', 'second respond'] }
+
+      const newComments = [ ...comments, commentStructure ]
       this.setState({ comments: newComments })
     })
     .then(() => {
@@ -156,9 +171,10 @@ class MainView extends Component {
         </div>
         <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
-            {this.renderCommentPopup(params.id) }
+            {this.renderCommentPopup() }
             <CommentList
               comments={comments}
+              courseId={params.id}
             />
           </ul>
         </div>

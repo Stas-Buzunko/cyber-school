@@ -57,7 +57,10 @@ class NewCourse extends Component {
       return false
     }
     this.setState({ error: '' })
-    const comments = ['course comment']
+    const comments = [{
+          text: 'first comment',
+          children: ['first respond', 'second respond']
+        }]
     firebase.database().ref('courses/').push({
       name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds, comments
     })

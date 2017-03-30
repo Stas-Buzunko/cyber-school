@@ -62,7 +62,6 @@ class LessonsList extends Component {
     .then(() => {
       const lessonKey = lesson.id
       const { lessons } = this.state
-
       const indexItemToRemove = lessons.findIndex(item => lessonKey === item.id)
       const newArray = [
         ...lessons.slice(0, indexItemToRemove),
@@ -70,6 +69,8 @@ class LessonsList extends Component {
         lesson
       ]
       this.setState({ lessons: newArray })
+    })
+    .then(() => {
       this.props.hideModal('lesson')
       toastr.success('Your lesson saved!')
     })
