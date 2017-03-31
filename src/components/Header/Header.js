@@ -11,26 +11,17 @@ export const Header = ({ user }) =>
       Home
     </IndexLink>
     {' · '}
-    <Link to='/disciplines/dota2'>
+    <Link to='/disciplines/dota2' activeClassName='route--active'>
        Dota 2
     </Link>
     {' · '}
-    <Link to='/disciplines/cs_go'>
+    <Link to='/disciplines/cs_go' activeClassName='route--active'>
       CS:GO
     </Link>
     {' · '}
-    <Link to='/disciplines/lol'>
+    <Link to='/disciplines/lol' activeClassName='route--active'>
       LOL
     </Link>
-    {' · '}
-    <Link to='/admin' activeClassName='route--active'>
-      Admin
-    </Link>
-    {' · '}
-    <Link to='/admin/courses' activeClassName='route--active'>
-      Courses
-    </Link>
-    {' · '}
     {!Object.keys(user).length &&
       <a href={`${backend}/auth/steam`}
         className='button'>
