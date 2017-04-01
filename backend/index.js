@@ -27,15 +27,32 @@ admin.initializeApp({
   databaseURL: 'https://cyber-academy.firebaseio.com'
 })
 
-function updateProfile (user) {
-  admin.database().ref('users/' + user.steamId).update(
-    {
-      avatar: user.profile._json.avatar,
-      profileurl: user.profile._json.profileurl,
-      timecreated: user.profile._json.timecreated,
-      displayName: user.profile.displayName
+function createOrUpdateProfile (user) {
+  admin.database().ref('users/' + user.steamId)
+  .once('value')
+  .then(snapshot => {
+    let updates
+
+    if (snapshot.val() !== null) {
+      // update
+      updates = {
+        avatar: user.profile._json.avatar,
+        profileurl: user.profile._json.profileurl,
+        displayName: user.profile.displayName
+      }
+    } else {
+      // create
+      updates = {
+        avatar: user.profile._json.avatar,
+        profileurl: user.profile._json.profileurl,
+        timecreated: user.profile._json.timecreated,
+        displayName: user.profile.displayName,
+        timeRegistered: Math.floor(Date.now() / 1000)
+      }
     }
-  )
+
+    admin.database().ref('users/' + user.steamId).update(updates)
+  })
 }
 
 function generateToken (steamId) {
@@ -106,7 +123,7 @@ app.get('/auth/steam',
 app.get('/auth/steam/return', passport.authenticate('steam'),
   function (request, response) {
     if (request.user) {
-      updateProfile(request.user)
+      createOrUpdateProfile(request.user)
       generateToken(request.user.steamId)
       .then(customToken =>
         response.redirect(`${front}/login?token=${customToken}`)
