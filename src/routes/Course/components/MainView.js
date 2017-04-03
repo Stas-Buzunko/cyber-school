@@ -17,8 +17,8 @@ class MainView extends Component {
       lessonsLoaded: false,
       comments: [],
       commentStructure:     {
-            text: 'first comment',
-            children: ['first respond', 'second respond']
+            text: '',
+            children: []
           }
     }
   }
@@ -82,57 +82,13 @@ class MainView extends Component {
             <tbody>
               {lessons.map((item, i) =>
                 <tr key={i}>
-                  <td> <Link to='/lesson/`${lesson.id}' activeStyle={{ color: 'red' }}>{item.name}</Link> </td>
+                  <td> <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> </td>
                   <td> {item.length} </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </div>
-    )
-  }
-
-  saveComment = (comment) => {
-    const { id } = this.props.params
-    firebase.database().ref('courses/' + id)
-    .once('value')
-    .then(snapshot => {
-      const object = snapshot.val()
-      if (object !== null) {
-        const comments = object.comments
-        this.setState({ comments })
-      }
-    })
-    .then(() => {
-      const { comments } = this.state
-      const commentStructure = { text: comment,
-        children:['first respond', 'second respond'] }
-
-      const newComments = [ ...comments, commentStructure ]
-      this.setState({ comments: newComments })
-    })
-    .then(() => {
-      const { comments } = this.state
-      firebase.database().ref('courses/' + id).update({ comments })
-    })
-    .then(() => {
-      this.props.hideModal('comment')
-      toastr.success('Your comment saved!')
-    })
-  }
-
-  renderCommentPopup () {
-    return (
-      <div>
-        <button
-          type='button'
-          className='btn btn-success lg'
-          onClick={(e) => {
-            e.preventDefault()
-            this.props.openModal('comment')
-          }}>Add Comment
-        </button>
       </div>
     )
   }
@@ -171,7 +127,6 @@ class MainView extends Component {
         </div>
         <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
-            {this.renderCommentPopup() }
             <CommentList
               comments={comments}
               courseId={params.id}

@@ -6,23 +6,21 @@ import { Modal } from 'react-bootstrap'
 class CommentPopupComponent extends Component {
   constructor (props) {
     super(props)
-
     this.state = {
       comment: ''
     }
-
     this.saveCommentPopup = this.saveCommentPopup.bind(this)
   }
-
+  
   saveCommentPopup = () => {
     const { comment } = this.state
-
+    const { isRespond, item } = this.props
     this.setState({ error: '' })
     if (!comment) {
       toastr.error('Please, fill your comment')
       return false
     }
-    this.props.saveComment(comment)
+    this.props.saveComment(comment, isRespond, item)
   }
 
   render () {
@@ -68,6 +66,7 @@ CommentPopupComponent.propTypes = {
   show: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
   saveComment: React.PropTypes.func
+
 }
 
 export default connectModal({

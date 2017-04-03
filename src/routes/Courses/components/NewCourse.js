@@ -92,7 +92,10 @@ class NewCourse extends Component {
     this.setState({ lessonsIds: newLessons })
 
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
-    const comments = ['lesson comment']
+    const comments = [{
+          text: 'first comment',
+          children: ['first respond', 'second respond']
+        }]
     firebase.database().ref('lessons/' + lessonKey).update({
       name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
     })
