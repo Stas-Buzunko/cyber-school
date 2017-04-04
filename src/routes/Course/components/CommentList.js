@@ -43,80 +43,63 @@ class CommentList extends Component {
       </div>
     )
   }
+
   saveComment = (comment, isRespond, item) => {
     this.setState({
       comments: []
     })
-    if (!isRespond) {
-      const { courseId } = this.props
-      firebase.database().ref('courses/' + courseId)
-       .once('value')
-        .then(snapshot => {
-          const object = snapshot.val()
-          if (object !== null) {
-            const comments = object.comments
-            this.setState({ comments })
-          }
-        })
-        .then(() => {
-          const { comments } = this.state
-          const commentStructure = { text: comment,
-            children:[] }
-          const newComments = [ ...comments, commentStructure ]
-          this.setState({ comments: newComments })
-        })
-          .then(() => {
-            const { comments } = this.state
-            firebase.database().ref('courses/' + courseId).update({ comments })
-          })
-          .then(() => {
-            this.props.hideModal('comment')
-            toastr.success('Your comment saved!')
-          })
-    } else {
-      const respond = comment
-      const { courseId } = this.props
-      firebase.database().ref('courses/' + courseId)
-        .once('value')
-          .then(snapshot => {
-            const object = snapshot.val()
-            if (object !== null) {
-              const comments = object.comments
-              this.setState({ comments })
-            }
-          })
-          .then(() => {
-            const { comments } = this.state
-            if (!item.children) {
-              item.children = []
-            }
-
-            const newCommentChildrenArray = [
-              ...item.children,
-              respond
-            ]
-            const indexItemToRemove = comments.findIndex(comment => item.text === comment.text)
-
-            const newComment = {
-              text : comments[indexItemToRemove].text,
-              children: newCommentChildrenArray
-            }
-            const newArray = [
-              ...comments.slice(0, indexItemToRemove),
-              newComment,
-              ...comments.slice(indexItemToRemove + 1)
-            ]
-            this.setState({ comments: newArray })
-          })
-          .then(() => {
-            const { comments } = this.state
-            firebase.database().ref('courses/' + courseId).update({ comments })
-          })
-          .then(() => {
-            this.props.hideModal('comment')
-            toastr.success('Your respond saved!')
-          })
-    }
+    const { courseId } = this.props
+    firebase.database().ref('courses/' + courseId)
+    .once('value')
+    .then(snapshot => {
+      const object = snapshot.val()
+      if (object !== null) {
+        const comments = object.comments
+        this.setState({ comments })
+      }
+    })
+    .then(() => {
+      const { comments = [] } = this.state
+      if (!isRespond) {
+        const commentStructure = {
+          text: comment,
+          children:[] }
+        const newComments = [ ...comments, commentStructure ]
+        this.setState({ comments: newComments })
+      } else {
+        const respond = comment
+        if (!item.children) {
+          item.children = []
+        }
+        const newCommentChildrenArray = [
+          ...item.children,
+          respond
+        ]
+        const indexItemToRemove = comments.findIndex(comment => item.text === comment.text)
+        const newComment = {
+          text : comments[indexItemToRemove].text,
+          children: newCommentChildrenArray
+        }
+        const newArray = [
+          ...comments.slice(0, indexItemToRemove),
+          newComment,
+          ...comments.slice(indexItemToRemove + 1)
+        ]
+        this.setState({ comments: newArray })
+      }
+    })
+      .then(() => {
+        const { comments } = this.state
+        firebase.database().ref('courses/' + courseId).update({ comments })
+      })
+      .then(() => {
+        this.props.hideModal('comment')
+        if (!isRespond) {
+          toastr.success('Your comment saved!')
+        } else {
+          toastr.success('Your respond saved!')
+        }
+      })
   }
 
   renderChildrenList (item) {
@@ -125,7 +108,7 @@ class CommentList extends Component {
   }
 
   renderCommentList () {
-    const { comments } = this.state
+    const { comments = [] } = this.state
     const isRespond = true
     return comments.map((item, i) =>
       <li key={i}>

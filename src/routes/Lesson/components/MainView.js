@@ -29,7 +29,7 @@ class MainView extends Component {
       if (object !== null) {
         const lesson = object
         lesson.id = id
-        this.setState({ lesson })
+        this.setState({ lesson, lessonLoaded: true })
       } else {
         this.setState({ lessonLoaded: true })
       }

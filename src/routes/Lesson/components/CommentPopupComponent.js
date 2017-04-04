@@ -11,7 +11,7 @@ class CommentPopupComponent extends Component {
     }
     this.saveCommentPopup = this.saveCommentPopup.bind(this)
   }
-  
+
   saveCommentPopup = () => {
     const { comment } = this.state
     const { isRespond, item } = this.props
@@ -64,6 +64,8 @@ class CommentPopupComponent extends Component {
 
 CommentPopupComponent.propTypes = {
   show: React.PropTypes.bool,
+  item: React.PropTypes.object,
+  isRespond: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
   saveComment: React.PropTypes.func
 
