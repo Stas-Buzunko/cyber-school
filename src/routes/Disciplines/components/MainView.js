@@ -42,7 +42,7 @@ class MainView extends Component {
 
   rederCourses () {
     const { courses } = this.state
-    const { discipline } = this.props
+    const { discipline } = this.props.params
 
     return courses.map((course, i) => (
       <div key={i}>
