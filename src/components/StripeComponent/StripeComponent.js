@@ -1,12 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import { PUBLISHABLE_KEY as stripePk } from '../../env'
+import { connect } from 'react-redux'
+import { pay } from '../../api/payment-api'
 
-export default class StripeComponent extends Component {
+class StripeComponent extends Component {
   static propTypes = {
     amount: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     buttonText: PropTypes.string.isRequired,
-    pay: PropTypes.func.isRequired
+    pay: PropTypes.func.isRequired,
+    courseId: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired
   }
 
   componentDidMount () {
@@ -22,18 +26,19 @@ export default class StripeComponent extends Component {
     })
   }
 
-  onOpenStripe = (e) => {
+  onOpenStripe = e => {
     e.preventDefault()
     this.stripe.open()
   }
 
-  receiveToken = (token) => {
-    const { pay, amount } = this.props
-    pay({ token: token.id, amount })
+  receiveToken = token => {
+    const { pay, amount, courseId, userId } = this.props
+    pay({ token: token.id, amount, courseId, userId })
   }
 
   render () {
     const { buttonText } = this.props
+
     return (
       <div className='flex'>
         <button onClick={this.onOpenStripe}>{buttonText}</button>
@@ -41,3 +46,12 @@ export default class StripeComponent extends Component {
     )
   }
 }
+
+const mapDispatchToProps = {
+  pay
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(StripeComponent)
