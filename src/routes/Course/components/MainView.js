@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 import StripeComponent from '../../../components/StripeComponent'
+import backend from '../../../../config/apis'
 
 class MainView extends Component {
   constructor (props) {
@@ -77,7 +78,7 @@ class MainView extends Component {
     const { user } = this.props
 
     if (!Object.keys(user).length) {
-      return (<a href=''>Login to Apply</a>)
+      return (<a href={`${backend}/auth/steam`}>Login to Apply</a>)
     }
 
     if (courseLoaded && course.name) {
