@@ -61,7 +61,8 @@ function generateToken (steamId) {
 }
 
 app.post('/charge', (req, res) => {
-  const { token, amount } = req.body
+  const { token, amount, courseId, userId } = req.body
+
   stripe.charges.create({
     amount, // Amount in cents
     currency: 'usd',
@@ -71,6 +72,29 @@ app.post('/charge', (req, res) => {
     if (charge.status === 'succeeded') {
       // everything is ok
       console.log('charge is successful')
+
+      // add access to course
+      // read course length in the future
+      admin.database().ref('users/' + userId).once('value')
+      .then(snapshot => {
+
+        const user = snapshot.val()
+        if (user !== null) {
+          const { userCourses = [] } = user
+
+          admin.database().ref('users/' + userId).update({
+            userCourses: [
+              ...userCourses,
+              {
+                courseId,
+                validFrom: Math.floor(Date.now() / 1000),
+                validUntil: Math.floor(Date.now() / 1000) + 2 * 30 * 24 * 60 * 60
+              }
+            ]
+          })
+        }
+      })
+
       res.sendStatus(200)
     } else {
       // something went wrong
