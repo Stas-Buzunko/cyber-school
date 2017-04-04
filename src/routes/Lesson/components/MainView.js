@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
-import { show, hide } from 'redux-modal'
-import { connect } from 'react-redux'
-import CommentPopupComponent from './CommentPopupComponent'
 import CommentList from './CommentList'
-import toastr from 'toastr'
 
 class MainView extends Component {
   constructor (props) {
@@ -96,7 +92,7 @@ class MainView extends Component {
           <ul className='list-unstyled'>
             <CommentList
               comments={lesson.comments}
-              courseId={params.id}
+              lessonId={params.id}
             />
           </ul>
         </div>
@@ -105,19 +101,7 @@ class MainView extends Component {
   }
 }
 MainView.propTypes = {
-  params: React.PropTypes.object,
-  openModal: React.PropTypes.func,
-  hideModal: React.PropTypes.func,
-  saveComment: React.PropTypes.func
+  params: React.PropTypes.object
 }
 
-const mapDispatchToProps = {
-  openModal: show,
-  hideModal: hide
-
-}
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(MainView)
+export default MainView
