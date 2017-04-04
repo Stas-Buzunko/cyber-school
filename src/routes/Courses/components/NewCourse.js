@@ -27,6 +27,7 @@ class NewCourse extends Component {
 
   saveCourse () {
     const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = this.state
+
     const dateUploaded = Date.now()
     if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
       if (!name) {
@@ -56,8 +57,9 @@ class NewCourse extends Component {
       return false
     }
     this.setState({ error: '' })
+    const comments = []
     firebase.database().ref('courses/').push({
-      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds
+      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds, comments
     })
       .then(() => {
         toastr.success('Your course saved!')
@@ -86,15 +88,10 @@ class NewCourse extends Component {
     const newLessons = [...lessonsIds, lessonKey]
     this.setState({ lessonsIds: newLessons })
 
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+    const comments = []
     firebase.database().ref('lessons/' + lessonKey).update({
-      name:lesson.name,
-      description: lesson.description,
-      length:  lesson.length,
-      imageUrl:  lesson.imageUrl,
-      videoUrl: lesson.videoUrl,
-      isFree: lesson.isFree,
-      testId:  lesson.testId,
-      comments: lesson.comments
+      name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
     })
     .then(() => {
       this.props.hideModal('lesson')
@@ -129,11 +126,6 @@ class NewCourse extends Component {
               <div className='form-group'>
                 <label className='control-label col-xs-2'>MainPhoto</label>
                 <div className='col-xs-10 col-md-6'>
-                  {/* <Dropzone
-                    onDrop={this.onDrop}
-                    className='dropzone-container' >
-                    <div className='drop-text'>Drop your images here</div>
-                  </Dropzone> */}
                   <input
                     type='text'
                     className='form-control'

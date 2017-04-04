@@ -15,7 +15,6 @@ class LessonPopupComponent extends Component {
       videoUrl: '',
       isFree: '',
       testId: '',
-      comments: '',
       id: '',
       error: ''
     }
@@ -26,16 +25,16 @@ class LessonPopupComponent extends Component {
     const isNewLesson = this.props.isNewLesson
     const lesson = this.props.item
     if (!isNewLesson) {
-      const { name, description, length, imageUrl, videoUrl, isFree, testId, comments, id } = lesson
+      const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
       this.setState({
-        name, description, length, imageUrl, videoUrl, isFree, testId, comments, id
+        name, description, length, imageUrl, videoUrl, isFree, testId, id
       })
     }
   }
   saveLessonPopup = () => {
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments, id } = this.state
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = this.state
     this.setState({ error: '' })
-    if (!name || !description || !length || !imageUrl || !videoUrl || !isFree || !testId || !comments) {
+    if (!name || !description || !length || !imageUrl || !videoUrl || !isFree || !testId) {
       if (!name) {
         toastr.error('Please, fill name')
       };
@@ -57,18 +56,15 @@ class LessonPopupComponent extends Component {
       if (!testId) {
         toastr.error('Please, fill testId')
       };
-      if (!comments) {
-        toastr.error('Please, fill comments')
-      };
       return false
     }
-    const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, comments, id }
+    const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, id }
     this.props.saveLesson(lesson)
   }
 
   render () {
     const { handleHide, show } = this.props
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, comments } = this.state
+    const { name, description, length, imageUrl, videoUrl, isFree, testId } = this.state
     return (
       <Modal
         backdrop={true}
@@ -159,18 +155,6 @@ class LessonPopupComponent extends Component {
                 className='form-control'
                 onChange={(e) => this.setState({
                   testId: e.target.value })} />
-            </div>
-          </div>
-
-          <div className='form-group'>
-            <label className='control-label col-xs-12'>Comments </label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={comments}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  comments: e.target.value })} />
             </div>
           </div>
 
