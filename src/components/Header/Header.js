@@ -22,6 +22,11 @@ export const Header = ({ user }) =>
     <Link to='/disciplines/lol' activeClassName='route--active'>
       LOL
     </Link>
+    {' · '}
+    <Link to='/MyCourses' activeClassName='route--active'>
+      MyCourses
+    </Link>
+    {' · '}
     {!Object.keys(user).length &&
       <a href={`${backend}/auth/steam`}
         className='button'>

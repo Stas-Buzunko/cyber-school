@@ -65,6 +65,7 @@ class MainView extends Component {
 
   renderLessonsList () {
     const { lessons } = this.state
+console.log(lessons)
     return (
       <div className='col-xs-12 col-md-12'>
         <div className='col-xs-12 col-md-8'>
@@ -78,7 +79,12 @@ class MainView extends Component {
             <tbody>
               {lessons.map((item, i) =>
                 <tr key={i}>
-                  <td> <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> </td>
+                  <td>
+                    {item.isFree &&
+                      <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
+                    {!item.isFree &&
+                      <div>{item.name}</div> }
+                  </td>
                   <td> {item.length} </td>
                 </tr>
               )}

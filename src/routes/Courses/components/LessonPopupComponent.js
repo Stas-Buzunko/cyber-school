@@ -13,7 +13,7 @@ class LessonPopupComponent extends Component {
       length: '',
       imageUrl: '',
       videoUrl: '',
-      isFree: '',
+      isFree: false,
       testId: '',
       id: '',
       error: ''
@@ -34,7 +34,7 @@ class LessonPopupComponent extends Component {
   saveLessonPopup = () => {
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = this.state
     this.setState({ error: '' })
-    if (!name || !description || !length || !imageUrl || !videoUrl || !isFree || !testId) {
+    if (!name || !description || !length || !imageUrl || !videoUrl || !testId) {
       if (!name) {
         toastr.error('Please, fill name')
       };
@@ -49,9 +49,6 @@ class LessonPopupComponent extends Component {
       };
       if (!videoUrl) {
         toastr.error('Please, fill videoUrl')
-      };
-      if (!isFree) {
-        toastr.error('Please, fill isFree')
       };
       if (!testId) {
         toastr.error('Please, fill testId')
@@ -137,12 +134,10 @@ class LessonPopupComponent extends Component {
           <div className='form-group'>
             <label className='control-label col-xs-12'> isFree </label>
             <div className='col-xs-10 col-md-6'>
-              <input
-                value={isFree}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  isFree: e.target.value })} />
+              <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+                <input type='checkbox' checked={isFree} onChange={(e) =>
+                  this.setState({ isFree: !isFree })} />
+              </label>
             </div>
           </div>
 

@@ -58,9 +58,9 @@ class NewCourse extends Component {
     }
     this.setState({ error: '' })
     const comments = [{
-          text: 'first comment',
-          children: ['first respond', 'second respond']
-        }]
+      text: '',
+      children: []
+    }]
     firebase.database().ref('courses/').push({
       name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds, comments
     })
@@ -93,9 +93,9 @@ class NewCourse extends Component {
 
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
     const comments = [{
-          text: 'first comment',
-          children: ['first respond', 'second respond']
-        }]
+      text: '',
+      children: []
+    }]
     firebase.database().ref('lessons/' + lessonKey).update({
       name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
     })
@@ -132,11 +132,6 @@ class NewCourse extends Component {
               <div className='form-group'>
                 <label className='control-label col-xs-2'>MainPhoto</label>
                 <div className='col-xs-10 col-md-6'>
-                  {/* <Dropzone
-                    onDrop={this.onDrop}
-                    className='dropzone-container' >
-                    <div className='drop-text'>Drop your images here</div>
-                  </Dropzone> */}
                   <input
                     type='text'
                     className='form-control'
