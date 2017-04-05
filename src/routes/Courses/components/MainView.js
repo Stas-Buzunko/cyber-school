@@ -19,7 +19,6 @@ const MainView = (props) => {
     default:
       content = <CoursesList />
   }
-
   return (
     <div>
       <Link to='/admin/courses' activeClassName='route--active'>Courses List</Link>

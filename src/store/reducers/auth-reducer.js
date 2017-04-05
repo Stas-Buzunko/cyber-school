@@ -1,12 +1,16 @@
 import {
   ON_LOGIN_SUCCESS,
-  ON_LOGOUT_SUCCESS
+  ON_LOGOUT_SUCCESS,
+  ON_STEAM_LOGIN
 } from '../../actions/auth-actions'
 const authFromStorage = localStorage.getItem('cyber-academy-authenticated')
 const authenticated = authFromStorage ? JSON.parse(authFromStorage) : false
+const userFromStorage = localStorage.getItem('cyber-academy-user')
+const user = userFromStorage ? JSON.parse(userFromStorage) : {}
 
 const initialState = {
-  authenticated
+  authenticated,
+  user
 }
 
 export default function authReducer (state = initialState, action) {
@@ -19,7 +23,13 @@ export default function authReducer (state = initialState, action) {
     case ON_LOGOUT_SUCCESS:
       return {
         ...state,
-        authenticated:false
+        authenticated:false,
+        user: {}
+      }
+    case ON_STEAM_LOGIN:
+      return {
+        ...state,
+        user: action.payload
       }
     default:
       return state
