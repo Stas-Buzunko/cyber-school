@@ -4,8 +4,10 @@ const bodyParser = require('body-parser')
 const admin = require('firebase-admin')
 const stripeToken = 'sk_test_mokQLE90JDfe8foUzMRby89E'
 const stripe = require('stripe')(stripeToken)
-
+const Long = require('long')
 const app = express()
+const request = require('request')
+
 app.use(cors({ credentials: true, origin: true }))
 app.use(bodyParser.json())
 
@@ -27,6 +29,16 @@ admin.initializeApp({
   databaseURL: 'https://cyber-academy.firebaseio.com'
 })
 
+// function getDotaSta(dotaId) {
+//   request(`http://api.opendota.com/api/players/${dotaId}`, (error, response, body) => {
+//     return body
+//   })
+// }
+
+function toDotaId(steamId) {
+  return new Long.fromString(steamId).sub('76561197960265728').toNumber()
+}
+
 function createOrUpdateProfile (user) {
   admin.database().ref('users/' + user.steamId)
   .once('value')
@@ -42,12 +54,15 @@ function createOrUpdateProfile (user) {
       }
     } else {
       // create
+      const dotaId = toDotaId(user.steamId)
+
       updates = {
         avatar: user.profile._json.avatar,
         profileurl: user.profile._json.profileurl,
         timecreated: user.profile._json.timecreated,
         displayName: user.profile.displayName,
-        timeRegistered: Math.floor(Date.now() / 1000)
+        timeRegistered: Math.floor(Date.now() / 1000),
+        dotaId
       }
     }
 
