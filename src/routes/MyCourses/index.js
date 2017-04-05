@@ -1,4 +1,4 @@
-import { injectReducer } from '../../store/reducers'
+// import { injectReducer } from '../../store/reducers'
 import { CourseRoute } from './routes/Course'
 
 export default (store) => ({
@@ -13,10 +13,10 @@ export default (store) => ({
         dependencies for bundling   */
 
         const MainView = require('./containers/MainViewContainer').default
-        const reducer = require('./modules/counter').default
+        // const reducer = require('./modules/counter').default
 
         /*  Add the reducer to the store on key 'counter'  */
-        injectReducer(store, { key: 'myCourses', reducer })
+        // injectReducer(store, { key: 'myCourses', reducer })
 
         /*  Return getComponent   */
         cb(null, MainView)

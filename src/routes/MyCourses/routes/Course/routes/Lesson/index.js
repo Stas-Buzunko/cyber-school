@@ -1,4 +1,4 @@
-// import { injectReducer } from '../../store/reducers'
+// import { injectReducer } from '../../../../store/reducers'
 
 export const LessonRoute = (store) => ({
   path : 'lesson/:id',
@@ -20,6 +20,6 @@ export const LessonRoute = (store) => ({
       cb(null, MainView)
 
     /* Webpack named bundle   */
-    }, 'lesson/:id')
+  }, 'lesson/:id')
   }
 })

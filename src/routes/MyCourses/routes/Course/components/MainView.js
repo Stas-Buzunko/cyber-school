@@ -55,7 +55,7 @@ class MainView extends Component {
     })
   }
 
-  renderLessonsList () {
+  renderLessonsList (courseId) {
     const { lessons } = this.state
     return (
       <div className='col-xs-12 col-md-12'>
@@ -72,7 +72,8 @@ class MainView extends Component {
                 <tr key={i}>
                   <td>
                     {item.isFree &&
-                      <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
+                      <Link to={{ pathname: `/myCourses/course/${courseId}/lesson/${item.id}` }}>
+                        {item.name}</Link> }
                     {!item.isFree &&
                       <div>{item.name}</div> }
                   </td>
@@ -128,7 +129,7 @@ class MainView extends Component {
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
-            {this.renderLessonsList()}
+            {this.renderLessonsList(params.id)}
           </ul>
         </div>
       </div>
