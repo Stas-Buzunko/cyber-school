@@ -6,9 +6,12 @@ import { Modal } from 'react-bootstrap'
 class CommentPopupComponent extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
-      comment: ''
+      comment: '',
+      isCommentForLesson: false
     }
+
     this.saveCommentPopup = this.saveCommentPopup.bind(this)
   }
 
@@ -64,8 +67,6 @@ class CommentPopupComponent extends Component {
 
 CommentPopupComponent.propTypes = {
   show: React.PropTypes.bool,
-  item: React.PropTypes.object,
-  isRespond: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
   saveComment: React.PropTypes.func
 

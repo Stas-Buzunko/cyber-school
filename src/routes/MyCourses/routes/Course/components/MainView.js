@@ -3,10 +3,6 @@ import firebase from 'firebase'
 import CommentList from './CommentList'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import StripeComponent from '../../../components/StripeComponent'
-import backend from '../../../../config/apis'
-
-
 
 class MainView extends Component {
   constructor (props) {
@@ -90,28 +86,6 @@ class MainView extends Component {
     )
   }
 
-  renderBuyButton () {
-    const { course, courseLoaded } = this.state
-    const { user } = this.props
-
-    if (!Object.keys(user).length) {
-      return (<a href={`${backend}/auth/steam`}>Login to Apply</a>)
-    }
-
-    if (courseLoaded && course.name) {
-      return (
-        <StripeComponent
-          amount={course.price * 100}
-          buttonText='Buy course'
-          courseId={course.id}
-          description={course.name}
-          userId={user.uid} />
-      )
-    }
-
-    return false
-  }
-
   render () {
     const { course, comments } = this.state
     const { params } = this.props
@@ -122,8 +96,6 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>Name:</label>
             <div> {course.name}</div>
           </div>
-          {this.renderBuyButton()}
-
           <div className='col-xs-10' style={{ padding: '15px' }}>
             <label className='control-label col-xs-2'>Main photo:</label>
             <img src={course.mainPhoto} className='img-thumbnail' width='400px' height='250px' />

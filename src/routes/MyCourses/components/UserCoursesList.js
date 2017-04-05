@@ -8,12 +8,12 @@ class UserCoursesList extends Component {
 
     this.state = {
       courses: [],
-      coursesFetched: false
+      coursesLoaded: false
     }
   }
 
   componentWillMount () {
-    const { userCourses } = this.props
+    const { userCourses } = this.props.auth.user
     this.fetchCourses(userCourses)
   }
 
@@ -22,11 +22,13 @@ class UserCoursesList extends Component {
       courses: [],
       coursesLoaded: false
     })
+
     const promises = userCourses.map(item => {
-      return firebase.database().ref('courses/' + item.id)
+      return firebase.database().ref('courses/' + item.courseId)
       .once('value')
       .then(snapshot => {
         const object = snapshot.val()
+        object.id = item.courseId
         return (object)
       })
     })
@@ -38,9 +40,8 @@ class UserCoursesList extends Component {
     })
   }
 
-  rederCourses () {
+  renderCourses () {
     const { courses } = this.state
-
     return courses.map((course, i) => (
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
@@ -52,7 +53,7 @@ class UserCoursesList extends Component {
               <button
                 type='button'
                 className='btn btn-primary'
-                onClick={() => { browserHistory.push({ pathname: `/discipline/${course.discipline}/${course.id}` }) }}
+                onClick={() => { browserHistory.push({ pathname: `/myCourses/course/${course.id}` }) }}
                 >More details
               </button>
             </div>
@@ -63,20 +64,17 @@ class UserCoursesList extends Component {
   }
 
   render () {
-    const { coursesFetched, courses } = this.state
-
-    if (!coursesFetched) {
+    const { coursesLoaded, courses } = this.state
+    if (!coursesLoaded) {
       return (<div>Loading...</div>)
     }
-
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-sm-12 col-md-12'>
             <h4>You have {courses.length} paid courses</h4>
             <div>
-              {this.rederCourses()}
-
+              {this.renderCourses()}
             </div>
           </div>
         </div>
@@ -85,7 +83,9 @@ class UserCoursesList extends Component {
   }
 }
 UserCoursesList.propTypes = {
-  userCourses: React.PropTypes.object
+  userCourses: React.PropTypes.array,
+  auth: React.PropTypes.object,
+  user: React.PropTypes.object
 }
 
 export default UserCoursesList

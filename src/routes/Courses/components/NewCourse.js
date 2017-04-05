@@ -57,10 +57,7 @@ class NewCourse extends Component {
       return false
     }
     this.setState({ error: '' })
-    const comments = [{
-      text: '',
-      children: []
-    }]
+    const comments = []
     firebase.database().ref('courses/').push({
       name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds, comments
     })
@@ -92,10 +89,7 @@ class NewCourse extends Component {
     this.setState({ lessonsIds: newLessons })
 
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
-    const comments = [{
-      text: '',
-      children: []
-    }]
+    const comments = []
     firebase.database().ref('lessons/' + lessonKey).update({
       name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
     })

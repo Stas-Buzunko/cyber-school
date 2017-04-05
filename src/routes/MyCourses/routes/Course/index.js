@@ -1,8 +1,8 @@
-import { injectReducer } from '../../store/reducers'
-import { CourseRoute } from './routes/Course'
+import { injectReducer } from '../../../../store/reducers'
+import { LessonRoute } from './routes/Lesson'
 
-export default (store) => ({
-  path : 'myCourses',
+export const CourseRoute = (store) => ({
+  path : 'course/:id',
   /*  Async getComponent is only invoked when route matches   */
   indexRoute: {
     getComponent (nextState, cb) {
@@ -12,20 +12,20 @@ export default (store) => ({
         /*  Webpack - use require callback to define
         dependencies for bundling   */
 
-        const MainView = require('./containers/MainViewContainer').default
+        const MainView = require('./components/MainView').default
         const reducer = require('./modules/counter').default
 
         /*  Add the reducer to the store on key 'counter'  */
-        injectReducer(store, { key: 'myCourses', reducer })
+        injectReducer(store, { key: 'myLesson', reducer })
 
         /*  Return getComponent   */
         cb(null, MainView)
 
         /* Webpack named bundle   */
-      }, 'myCourses')
+      }, 'course/:id')
     }
   },
   childRoutes: [
-    CourseRoute(store)
+    LessonRoute(store)
   ]
 })
