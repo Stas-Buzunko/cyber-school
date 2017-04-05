@@ -31,8 +31,8 @@ class EditCourse extends Component {
       .on('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
-          const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = object
-          this.setState({ name, description, mainPhoto, duration, price, discipline, author, lessonsIds })
+          const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds, id } = object
+          this.setState({ name, description, mainPhoto, duration, price, discipline, author, lessonsIds, id })
         } else {
           this.setState({ error: true })
         }
@@ -44,7 +44,7 @@ class EditCourse extends Component {
     this.setState({ error: '' })
     firebase.database().ref('courses/' + id)
     .update({
-      name, discipline, author, description, mainPhoto, duration, price, dateUploaded })
+      name, discipline, author, description, mainPhoto, duration, price, dateUploaded, id })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)

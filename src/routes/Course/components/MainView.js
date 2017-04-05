@@ -1,8 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
+import CommentList from './CommentList'
+import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import StripeComponent from '../../../components/StripeComponent'
 import backend from '../../../../config/apis'
+
 
 class MainView extends Component {
   constructor (props) {
@@ -13,7 +16,7 @@ class MainView extends Component {
       lessons: [],
       lessonsLoaded: false
     }
-  };
+  }
 
   componentWillMount () {
     const { params } = this.props
@@ -43,6 +46,7 @@ class MainView extends Component {
           this.setState({
             lessons,
             course,
+            comments: course.comments,
             courseLoaded: true,
             lessonsLoaded: true
           })
@@ -55,21 +59,27 @@ class MainView extends Component {
 
   renderLessonsList () {
     const { lessons } = this.state
-
-    return lessons.map((item, i) =>
-      <li key={i}>
-        <div className='col-xs-12 col-md-12' >
-          <div className='col-xs-12 col-md-8'>
-
-            <div className='col-xs-6'>
-              <label className='control-label col-xs-2'>Name:</label>
-              <div> {item.name}</div>
-            </div>
-            <label className='control-label col-xs-2'>Length:</label>
-            <div> {item.length}</div>
-          </div>
+    return (
+      <div className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-8'>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Length</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lessons.map((item, i) =>
+                <tr key={i}>
+                  <td> <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> </td>
+                  <td> {item.length} </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </li>
+      </div>
     )
   }
 
@@ -96,8 +106,8 @@ class MainView extends Component {
   }
 
   render () {
-    const { course } = this.state
-
+    const { course, comments } = this.state
+    const { params } = this.props
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-12'>
@@ -127,6 +137,14 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>Discipline:</label>
             <div> {course.discipline}</div>
           </div>
+        </div>
+        <div className='col-xs-12 col-md-10'>
+          <ul className='list-unstyled'>
+            <CommentList
+              comments={comments}
+              courseId={params.id}
+            />
+          </ul>
         </div>
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
