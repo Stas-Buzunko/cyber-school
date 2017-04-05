@@ -48,9 +48,9 @@ class LessonsList extends Component {
     })
   }
 
-  renderLessonPopup (e, item, sectionName) {
+  renderLessonPopup (e, item) {
     e.preventDefault()
-    this.props.openModal('lesson', { item, sectionName })
+    this.props.openModal('lesson', { item })
   }
 
   editLesson = (lesson) => {
@@ -118,7 +118,7 @@ class LessonsList extends Component {
               type='button'
               className='btn btn-primary lg'
               onClick={(e) => {
-                this.renderLessonPopup(e, item, sectionName)
+                this.renderLessonPopup(e, item)
               }}
               >Edit lesson
             </button>
