@@ -3,9 +3,9 @@ import toastr from 'toastr'
 import firebase from 'firebase'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
-import LessonPopupComponent from './LessonPopupComponent'
+import QuestionPopupComponent from './QuestionPopupComponent'
 
-class LessonsList extends Component {
+class TestList extends Component {
   constructor (props) {
     super(props)
 
@@ -77,8 +77,8 @@ class LessonsList extends Component {
   }
 
   renderLessonsList () {
-    const { lessons = [] } = this.state
-    const { isNewLesson} = this.props
+    const { lessons= [] } = this.state
+    const { isNewLesson, sectionName } = this.props
     return lessons.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
@@ -147,7 +147,7 @@ class LessonsList extends Component {
   }
 }
 
-LessonsList.propTypes = {
+TestList.propTypes = {
   openModal: React.PropTypes.func,
   lessonsIds: React.PropTypes.array,
   isNewLesson: React.PropTypes.bool,
@@ -162,4 +162,4 @@ const mapDispatchToProps = {
 export default connect(
   null,
   mapDispatchToProps
-)(LessonsList)
+)(TestList)

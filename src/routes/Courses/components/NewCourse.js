@@ -2,10 +2,8 @@ import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import toastr from 'toastr'
 import firebase from 'firebase'
-import { show, hide } from 'redux-modal'
-import { connect } from 'react-redux'
-import LessonPopupComponent from './LessonPopupComponent'
-import LessonsList from './LessonList'
+import SectionsList from './SectionsList'
+import NewSection from './NewSection'
 
 class NewCourse extends Component {
   constructor (props) {
@@ -21,12 +19,16 @@ class NewCourse extends Component {
       discipline:'',
       author:'',
       lessonsIds: [],
+      sections:[],
       error: ''
     }
+    this.saveSection = this.saveSection.bind(this)
+    this.saveCourse = this.saveCourse.bind(this)
+
   }
 
   saveCourse () {
-    const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds } = this.state
+    const { name, description, mainPhoto, duration, price, discipline, author, sections } = this.state
 
     const dateUploaded = Date.now()
     if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
@@ -59,7 +61,7 @@ class NewCourse extends Component {
     this.setState({ error: '' })
     const comments = []
     firebase.database().ref('courses/').push({
-      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, lessonsIds, comments
+      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, sections, comments
     })
       .then(() => {
         toastr.success('Your course saved!')
@@ -67,36 +69,10 @@ class NewCourse extends Component {
       })
   }
 
-  renderLessonPopup () {
-    return (
-      <div>
-        <button
-          type='button'
-          className='btn btn-success lg'
-          onClick={(e) => {
-            e.preventDefault()
-            this.props.openModal('lesson')
-          }}>Add Lesson
-        </button>
-      </div>
-    )
-  }
-
-  saveLesson = (lesson) => {
-    const lessonKey = firebase.database().ref('lessons/').push().key
-    const { lessonsIds } = this.state
-    const newLessons = [...lessonsIds, lessonKey]
-    this.setState({ lessonsIds: newLessons })
-
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
-    const comments = []
-    firebase.database().ref('lessons/' + lessonKey).update({
-      name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
-    })
-    .then(() => {
-      this.props.hideModal('lesson')
-      toastr.success('Your lesson saved!')
-    })
+  saveSection = (section) => {
+    const { sections = [] } = this.state
+    const newSections = [...sections, section]
+    this.setState({ sections: newSections })
   }
 
   render () {
@@ -173,15 +149,16 @@ class NewCourse extends Component {
                 </div>
               </div>
 
-              <label className='control-label col-xs-2 col-md-4'>Lessons: </label>
-              <div className='col-xs-2 col-md-10'>
-                <ul className='list-unstyled'>
-                  {this.renderLessonPopup()}
-                  <LessonsList
-                    isNewLesson={true}
-                    lessonsIds={this.state.lessonsIds}
-                  />
-                </ul>
+              <label className='control-label col-xs-2 col-md-4' style={{ padding: '15px' }}>Sections: </label>
+              <div className='col-xs-2 col-md-12'>
+                  <ul className='list-unstyled'>
+                <SectionsList
+                  sections={this.state.sections}
+                />
+                <NewSection
+                  saveSection={this.saveSection }
+                />
+              </ul>
               </div>
             </form>
 
@@ -197,26 +174,9 @@ class NewCourse extends Component {
             <p />
           </div>
         </div>
-        <LessonPopupComponent
-          saveLesson={this.saveLesson}
-          isNewLesson={true}
-         />
       </div>
     )
   }
 }
 
-const mapDispatchToProps = {
-  openModal: show,
-  hideModal: hide
-}
-
-NewCourse.propTypes = {
-  openModal: React.PropTypes.func,
-  hideModal: React.PropTypes.func
-}
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(NewCourse)
+export default NewCourse
