@@ -28,8 +28,10 @@ class UserCoursesList extends Component {
       .once('value')
       .then(snapshot => {
         const object = snapshot.val()
-        object.id = item.courseId
-        return (object)
+        if (object !== null) {
+          object.id = item.courseId
+          return (object)
+        }
       })
     })
     Promise.all(promises).then(result => {

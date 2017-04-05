@@ -13,10 +13,8 @@ export default (store) => ({
         dependencies for bundling   */
 
         const MainView = require('./containers/MainViewContainer').default
-        // const reducer = require('./modules/counter').default
 
         /*  Add the reducer to the store on key 'counter'  */
-        // injectReducer(store, { key: 'myCourses', reducer })
 
         /*  Return getComponent   */
         cb(null, MainView)

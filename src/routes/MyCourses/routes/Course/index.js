@@ -13,7 +13,6 @@ export const CourseRoute = (store) => ({
         dependencies for bundling   */
 
         const MainView = require('./components/MainView').default
-        // const reducer = require('./modules/counter').default
 
         /*  Add the reducer to the store on key 'counter'  */
 
