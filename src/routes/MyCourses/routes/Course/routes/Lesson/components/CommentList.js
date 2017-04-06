@@ -155,7 +155,7 @@ CommentList.propTypes = {
   comments: React.PropTypes.array,
   openModal: React.PropTypes.func,
   hideModal: React.PropTypes.func,
-  lessonId: React.PropTypes.string
+  lessonId: React.PropTypes.array
 }
 
 const mapDispatchToProps = {
