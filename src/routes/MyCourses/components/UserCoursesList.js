@@ -14,6 +14,7 @@ class UserCoursesList extends Component {
 
   componentWillMount () {
     const { userCourses } = this.props.auth.user
+
     this.fetchCourses(userCourses)
   }
 
