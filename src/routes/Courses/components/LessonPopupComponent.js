@@ -178,9 +178,7 @@ LessonPopupComponent.propTypes = {
   handleHide: React.PropTypes.func,
   saveLesson: React.PropTypes.func,
   isNewLesson: React.PropTypes.bool,
-  item: React.PropTypes.object,
-  sectionName: React.PropTypes.string
-
+  item: React.PropTypes.object
 }
 
 export default connectModal({

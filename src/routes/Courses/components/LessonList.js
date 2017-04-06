@@ -78,7 +78,7 @@ class LessonsList extends Component {
 
   renderLessonsList () {
     const { lessons = [] } = this.state
-    const { isNewLesson} = this.props
+    const { isNewLesson } = this.props
     return lessons.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >

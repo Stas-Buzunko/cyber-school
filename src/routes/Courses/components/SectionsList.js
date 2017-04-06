@@ -26,7 +26,7 @@ class SectionsList extends Component {
       <div className='col-xs-2 col-md-10'>
         <ul className='list-unstyled'>
           <TestList
-            isNewTest={true}
+            isNewTest={false}
             testsIds={item.testsIds}
           />
         </ul>

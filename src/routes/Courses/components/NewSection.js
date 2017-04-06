@@ -4,7 +4,8 @@ import firebase from 'firebase'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
-import LessonsList from './LessonList'
+import TestList from './TestList'
+import LessonList from './LessonList'
 
 class NewSection extends Component {
   constructor (props) {
@@ -13,11 +14,15 @@ class NewSection extends Component {
     this.state = {
       name: '',
       lessonsIds: [],
-      error: ''
+      testsIds: [],
+      isAddNewTest: false,
+      error: '',
+      isNewTest: true
     }
     this.saveNewSection = this.saveNewSection.bind(this)
     this.saveLesson = this.saveLesson.bind(this)
     this.renderLessonPopup = this.renderLessonPopup.bind(this)
+    this.renderButtonAddNewTest = this.renderButtonAddNewTest.bind(this)
   }
 
   renderLessonPopup () {
@@ -34,19 +39,33 @@ class NewSection extends Component {
       </div>
     )
   }
+  renderButtonAddNewTest () {
+    return (
+      <div>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          onClick={() => {
+            this.setState({ isAddNewTest: true,  isNewTest: true  })
+          }}>Add Test
+        </button>
+      </div>
+    )
+  }
   saveNewSection = () => {
-    const { name, lessonsIds } = this.state
-    const section = { name, lessonsIds }
+    const { name, lessonsIds, testsIds } = this.state
+    const section = { name, lessonsIds, testsIds }
     this.props.saveSection(section)
     this.setState({
       name: '',
-      lessonsIds: []
-     })
+      lessonsIds: [],
+      testsIds: []
+    })
   }
 
   saveLesson = (lesson) => {
     const lessonKey = firebase.database().ref('lessons/').push().key
-    const { lessonsIds } = this.state
+    const { lessonsIds = [] } = this.state
     const newLessons = [...lessonsIds, lessonKey]
     this.setState({ lessonsIds: newLessons })
 
@@ -61,8 +80,24 @@ class NewSection extends Component {
     })
   }
 
+  saveTest = (test) => {
+    const testKey = firebase.database().ref('tests/').push().key
+    const { testsIds = [] } = this.state
+    const newTests = [...testsIds, testKey]
+    this.setState({ testsIds: newTests })
+
+    const { name, questions } = test
+    firebase.database().ref('tests/' + testKey).update({
+      name, questions
+    })
+    .then(() => {
+      toastr.success('Your test saved!')
+      this.setState({ isNewTest: false })
+
+    })
+  }
   render () {
-    const { name } = this.state
+    const { name, isAddNewTest, isNewTest } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -90,10 +125,22 @@ class NewSection extends Component {
           <div className='col-xs-2 col-md-10'>
             <ul className='list-unstyled'>
               {this.renderLessonPopup()}
-              <LessonsList
-               isNewLesson={true}
+              <LessonList
+                isNewLesson={true}
                 lessonsIds={this.state.lessonsIds}
               />
+            </ul>
+          </div>
+          <p />
+          <label className='control-label col-xs-2 col-md-4'>Test: </label>
+          <div className='col-xs-2 col-md-10'>
+            <ul className='list-unstyled'>
+              {this.renderButtonAddNewTest()}
+              {!!isAddNewTest && <div><TestList
+                isNewTest={isNewTest}
+                testsIds={this.state.testsIds}
+                saveTest={this.saveTest}
+              /></div> }
             </ul>
           </div>
         </div>

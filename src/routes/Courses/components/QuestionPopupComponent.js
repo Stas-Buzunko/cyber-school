@@ -3,68 +3,56 @@ import toastr from 'toastr'
 import { connectModal } from 'redux-modal'
 import { Modal } from 'react-bootstrap'
 
-class LessonPopupComponent extends Component {
+class QuestionPopupComponent extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      name: '',
-      description: '',
-      length: '',
-      imageUrl: '',
-      videoUrl: '',
-      isFree: '',
-      testId: '',
-      id: '',
-      error: ''
+      question:'',
+      text: '',
+      answers: [],
+      rightAnswers: []
     }
 
-    this.saveLessonPopup = this.saveLessonPopup.bind(this)
+    this.saveQuestionPopup = this.saveQuestionPopup.bind(this)
   }
   componentWillMount () {
-    const isNewLesson = this.props.isNewLesson
-    const lesson = this.props.item
-    if (!isNewLesson) {
-      const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+    const isNewQuestion = this.props.isNewQuestion
+    const question = this.props.question
+    if (!isNewQuestion) {
+      const { text, answers, rightAnswers } = question
       this.setState({
-        name, description, length, imageUrl, videoUrl, isFree, testId, id
+        text, answers, rightAnswers
       })
     }
   }
-  saveLessonPopup = () => {
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = this.state
+  saveQuestionPopup = () => {
+    const { text, answers, rightAnswers } = this.state
     this.setState({ error: '' })
-    if (!name || !description || !length || !imageUrl || !videoUrl || !isFree || !testId) {
-      if (!name) {
-        toastr.error('Please, fill name')
+    if (!text || !answers || !rightAnswers) {
+      if (!text) {
+        toastr.error('Please, fill question text')
       };
-      if (!description) {
-        toastr.error('Please, fill description')
+      if (!answers) {
+        toastr.error('Please, add one answer')
       };
-      if (!length) {
-        toastr.error('Please, fill length')
-      };
-      if (!imageUrl) {
-        toastr.error('Please, fill imageUrl')
-      };
-      if (!videoUrl) {
-        toastr.error('Please, fill videoUrl')
-      };
-      if (!isFree) {
-        toastr.error('Please, fill isFree')
-      };
-      if (!testId) {
-        toastr.error('Please, fill testId')
+      if (!rightAnswers) {
+        toastr.error('Please, add right answer')
       };
       return false
     }
-    const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, id }
-    this.props.saveLesson(lesson)
+    const question = { text, answers, rightAnswers }
+    this.props.saveQuestion(question)
+    this.setState({
+      text: '',
+      answers: [],
+      rightAnswers: []
+    })
   }
 
   render () {
     const { handleHide, show } = this.props
-    const { name, description, length, imageUrl, videoUrl, isFree, testId } = this.state
+    const { text, answers, rightAnswers } = this.state
     return (
       <Modal
         backdrop={true}
@@ -75,86 +63,38 @@ class LessonPopupComponent extends Component {
         <Modal.Body>
 
           <div className='form-group'>
-            <label className='control-label col-xs-12'>Name </label>
+            <label className='control-label col-xs-12'>Question text</label>
             <div className='col-xs-10 col-md-6'>
               <input
-                value={name}
+                value={text}
                 type='text'
                 className='form-control'
                 onChange={(e) => this.setState({
-                  name: e.target.value })} />
+                  text: e.target.value })} />
             </div>
           </div>
 
           <div className='form-group'>
-            <label className='control-label col-xs-12'>Description </label>
+            <label className='control-label col-xs-12'>Answers </label>
             <div className='col-xs-10 col-md-6'>
               <input
-                value={description}
+                value={answers}
                 type='text'
                 className='form-control'
                 onChange={(e) => this.setState({
-                  description: e.target.value })} />
+                  answers: e.target.value })} />
             </div>
           </div>
 
           <div className='form-group'>
-            <label className='control-label col-xs-12'>Length</label>
+            <label className='control-label col-xs-12'>Right Answers</label>
             <div className='col-xs-10 col-md-6'>
               <input
-                value={length}
+                value={rightAnswers}
                 type='text'
                 className='form-control'
                 onChange={(e) => this.setState({
-                  length: e.target.value })} />
-            </div>
-          </div>
-
-          <div className='form-group'>
-            <label className='control-label col-xs-12'>ImageUrl</label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={imageUrl}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  imageUrl: e.target.value })} />
-            </div>
-          </div>
-
-          <div className='form-group'>
-            <label className='control-label col-xs-12'>VideoUrl</label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={videoUrl}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  videoUrl: e.target.value })} />
-            </div>
-          </div>
-
-          <div className='form-group'>
-            <label className='control-label col-xs-12'> isFree </label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={isFree}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  isFree: e.target.value })} />
-            </div>
-          </div>
-
-          <div className='form-group'>
-            <label className='control-label col-xs-12'>TestId </label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={testId}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  testId: e.target.value })} />
+                  rightAnswers: e.target.value })} />
             </div>
           </div>
 
@@ -164,8 +104,8 @@ class LessonPopupComponent extends Component {
             type='button'
             style={{ width:'50%', margin: '15px' }}
             className='btn btn-success lg'
-            onClick={this.saveLessonPopup}
-              >Save lesson
+            onClick={this.saveQuestionPopup}
+              >Save Question
           </button>
         </Modal.Footer>
       </Modal>
@@ -173,16 +113,15 @@ class LessonPopupComponent extends Component {
   }
 }
 
-LessonPopupComponent.propTypes = {
+QuestionPopupComponent.propTypes = {
   show: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
-  saveLesson: React.PropTypes.func,
-  isNewLesson: React.PropTypes.bool,
-  item: React.PropTypes.object,
-  sectionName: React.PropTypes.string
+  isNewQuestion: React.PropTypes.bool,
+  saveQuestion: React.PropTypes.func,
+  question: React.PropTypes.object
 
 }
 
 export default connectModal({
-  name: 'lesson'
-})(LessonPopupComponent)
+  name: 'question'
+})(QuestionPopupComponent)

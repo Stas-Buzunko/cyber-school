@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import toastr from 'toastr'
+import QuestionsList from './QuestionsList'
 import firebase from 'firebase'
+import toastr from 'toastr'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import QuestionPopupComponent from './QuestionPopupComponent'
@@ -10,135 +11,155 @@ class TestList extends Component {
     super(props)
 
     this.state = {
-      lessons: [],
-      lessonsIds: [],
-      lessonsLoaded: false
+      test: '',
+      tests: [],
+      testsIds: [],
+      questions: [],
+      name: '',
+      testsLoaded: false
     }
-  }
 
+    this.saveQuestion = this.saveQuestion.bind(this)
+    this.saveNewTest = this.saveNewTest.bind(this)
+    this.renderQuestionPopup = this.renderQuestionPopup.bind(this)
+  }
   componentWillMount () {
-    const { lessonsIds } = this.props
-    this.fetchItems(lessonsIds)
+    const { testsIds } = this.props
+    this.fetchItems(testsIds)
   }
 
   componentWillReceiveProps (nextProps) {
-    this.props.lessonsIds !== nextProps.lessonsIds && this.fetchItems(nextProps.lessonsIds)
+    this.props.testsIds !== nextProps.testsIds && this.fetchItems(nextProps.testsIds)
   }
 
-  fetchItems (lessonsIds) {
+  fetchItems (testsIds) {
     this.setState({
-      lessons: [],
-      lessonsLoaded: false
+      tests: [],
+      testsLoaded: false
     })
-    const promises = lessonsIds.map(id => {
-      return firebase.database().ref('lessons/' + id)
+    const promises = testsIds.map(id => {
+      return firebase.database().ref('tests/' + id)
       .once('value')
       .then(snapshot => {
         const object = snapshot.val()
-        const lessonFromId = object
-        lessonFromId.id = id
-        return (lessonFromId)
+        const testsFromId = object
+        testsFromId.id = id
+        return (testsFromId)
       })
     })
     Promise.all(promises).then(result => {
       this.setState({
-        lessons: result,
-        lessonsLoaded: true
+        tests: result,
+        testsLoaded: true
       })
     })
   }
 
-  renderLessonPopup (e, item, sectionName) {
-    e.preventDefault()
-    this.props.openModal('lesson', { item, sectionName })
-  }
-
-  editLesson = (lesson) => {
-    const lessonKey = lesson.id
-    const { name, description, length, imageUrl, videoUrl, isFree, testId } = lesson
-    firebase.database().ref('lessons/' + lessonKey).update({
-      name, description, length, imageUrl, videoUrl, isFree, testId
-    })
-    .then(() => {
-      const lessonKey = lesson.id
-      const { lessons } = this.state
-      const indexItemToRemove = lessons.findIndex(item => lessonKey === item.id)
-      const newArray = [
-        ...lessons.slice(0, indexItemToRemove),
-        ...lessons.slice(indexItemToRemove + 1),
-        lesson
-      ]
-      this.setState({ lessons: newArray })
-    })
-    .then(() => {
-      this.props.hideModal('lesson')
-      toastr.success('Your lesson saved!')
+  saveNewTest () {
+    const { questions, name } = this.state
+    const test = { name, questions }
+    this.props.saveTest(test)
+    this.setState({
+      name: '',
+      questions: []
     })
   }
 
-  renderLessonsList () {
-    const { lessons= [] } = this.state
-    const { isNewLesson, sectionName } = this.props
-    return lessons.map((item, i) =>
-      <li key={i}>
-        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-xs-12 col-md-8'>
-
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Name:</label>
-              <div> {item.name}</div>
-            </div>
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Description:</label>
-              <div> {item.description}</div>
-            </div>}
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Length:</label>
-              <div> {item.length}</div>
-            </div>}
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>ImageUrl:</label>
-              <div> {item.imageUrl}</div>
-            </div>}
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>VideoUrl:</label>
-              <div> {item.videoUrl}</div>
-            </div>}
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>IsFree:</label>
-              <div> {item.isFree}</div>
-            </div>}
-            { !!isNewLesson && <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>TestId:</label>
-              <div> {item.testId}</div>
-            </div>}
+  saveQuestion = (question) => {
+    const { questions = [] } = this.state
+    const newQuestions = [ ...questions, question ]
+    this.setState({ questions: newQuestions })
+    this.props.hideModal('question')
+    toastr.success('Your question saved!')
+  }
+  renderQuestionPopup () {
+    return (
+      <div>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          onClick={(e) => {
+            e.preventDefault()
+            this.props.openModal('question')
+          }}>Add Question
+        </button>
+      </div>
+    )
+  }
+  renderNewTest () {
+    const { questions, name } = this.state
+    return (
+      <div className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-12'>
+          <label className='control-label col-xs-2 col-md-3'>Test name: </label>
+          <div className='col-xs-6 col-md-3'>
+            <input
+              value={name}
+              type='text'
+              className='form-control'
+              onChange={(e) => this.setState({ name: e.target.value })} />
           </div>
-          { !isNewLesson && <div className='col-xs-12 col-md-4'>
+          <div className='col-xs-6 col-md-3'>
             <button
               type='button'
-              className='btn btn-primary lg'
-              onClick={(e) => {
-                this.renderLessonPopup(e, item, sectionName)
-              }}
-              >Edit lesson
+              className='btn btn-success lg'
+              onClick={(e) => { this.saveNewTest() }}
+              >Save test
             </button>
-            <LessonPopupComponent
-              isNewLesson={false}
-              saveLesson={this.editLesson}
+          </div>
+        </div>
+        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
+          <label className='col-xs-2 col-md-3'>Questions: </label>
+          <div className='col-xs-2 col-md-9'>
+            <ul className='list-unstyled'>
+              {this.renderQuestionPopup()}
+            </ul>
+            <QuestionPopupComponent
+              saveQuestion={this.saveQuestion}
+              isNewQuestion={true}
+            />
+          </div>
+        </div>
+        <div className='col-xs-2 col-md-4'>
+          <QuestionsList
+            questions={this.state.questions}
+          />
+        </div>
+      </div>
+    )
+  }
+  renderTestList () {
+    const { tests = [] } = this.state
+    const { isNewTest } = this.props
+    return tests.map((item, i) =>
+      <li key={i}>
+        <div className='col-xs-12 col-md-12'>
+          <div className='col-xs-12 col-md-6' style={{ padding: '15px' }} >
+            <label>Test: {item.name}</label>
+          </div>
+        </div>
 
-              />
-          </div> }
+        <label className='col-xs-2 col-md-9'>Questions: </label>
+        <div className='col-xs-2 col-md-10'>
+          <ul className='list-unstyled'>
+            <QuestionsList
+              questions={item.questions}
+              isNewTest={isNewTest}
+            />
+          </ul>
         </div>
       </li>
     )
   }
   render () {
+    const { isNewTest } = this.props
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
             <ul className='list-unstyled'>
-              {this.renderLessonsList()}
+              {this.renderTestList()}
+              { !!isNewTest && this.renderNewTest()}
             </ul>
           </div>
         </div>
@@ -147,18 +168,18 @@ class TestList extends Component {
   }
 }
 
-TestList.propTypes = {
-  openModal: React.PropTypes.func,
-  lessonsIds: React.PropTypes.array,
-  isNewLesson: React.PropTypes.bool,
-  hideModal: React.PropTypes.func
-}
-
 const mapDispatchToProps = {
   openModal: show,
   hideModal: hide
 }
 
+TestList.propTypes = {
+  openModal: React.PropTypes.func,
+  hideModal: React.PropTypes.func,
+  testsIds: React.PropTypes.array,
+  isNewTest: React.PropTypes.bool,
+  saveTest: React.PropTypes.func
+}
 export default connect(
   null,
   mapDispatchToProps

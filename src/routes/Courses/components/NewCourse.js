@@ -18,14 +18,13 @@ class NewCourse extends Component {
       price:'',
       discipline:'',
       author:'',
-      lessonsIds: [],
       sections:[],
       error: ''
     }
     this.saveSection = this.saveSection.bind(this)
     this.saveCourse = this.saveCourse.bind(this)
 
-  }
+}
 
   saveCourse () {
     const { name, description, mainPhoto, duration, price, discipline, author, sections } = this.state
@@ -149,16 +148,16 @@ class NewCourse extends Component {
                 </div>
               </div>
 
-              <label className='control-label col-xs-2 col-md-4' style={{ padding: '15px' }}>Sections: </label>
+              <label className='control-label col-xs-2 col-md-2' style={{ padding: '15px' }}>Sections: </label>
               <div className='col-xs-2 col-md-12'>
-                  <ul className='list-unstyled'>
-                <SectionsList
-                  sections={this.state.sections}
-                />
-                <NewSection
-                  saveSection={this.saveSection }
-                />
-              </ul>
+                <ul className='list-unstyled'>
+                  <SectionsList
+                    sections={this.state.sections}
+                  />
+                  <NewSection
+                    saveSection={this.saveSection}
+                  />
+                </ul>
               </div>
             </form>
 
