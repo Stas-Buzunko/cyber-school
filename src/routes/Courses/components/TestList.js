@@ -122,7 +122,7 @@ class TestList extends Component {
         </div>
         <div className='col-xs-2 col-md-4'>
           <QuestionsList
-            questions={this.state.questions}
+            questions={questions}
           />
         </div>
       </div>

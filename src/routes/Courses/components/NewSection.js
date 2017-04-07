@@ -46,7 +46,7 @@ class NewSection extends Component {
           type='button'
           className='btn btn-success lg'
           onClick={() => {
-            this.setState({ isAddNewTest: true,  isNewTest: true  })
+            this.setState({ isAddNewTest: true,  isNewTest: true })
           }}>Add Test
         </button>
       </div>

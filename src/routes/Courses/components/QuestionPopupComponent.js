@@ -11,6 +11,14 @@ class QuestionPopupComponent extends Component {
       question:'',
       text: '',
       answers: [],
+      answer1: '',
+      isRightAnswer1: true,
+      answer2: '',
+      isRightAnswer2: false,
+      answer3: '',
+      isRightAnswer3: false,
+      answer4: '',
+      isRightAnswer4: false,
       rightAnswers: []
     }
 
@@ -27,32 +35,124 @@ class QuestionPopupComponent extends Component {
     }
   }
   saveQuestionPopup = () => {
-    const { text, answers, rightAnswers } = this.state
+    const { text, answer1, isRightAnswer1, answer2, isRightAnswer2, answer3, isRightAnswer3,
+    answer4, isRightAnswer4 } = this.state
     this.setState({ error: '' })
-    if (!text || !answers || !rightAnswers) {
+    const isOneAnswer = (answer1.length || answer2.length || answer3.length || answer4.length)
+    const haveRightAnswer = (isRightAnswer1 || isRightAnswer2 || isRightAnswer3 || isRightAnswer4)
+    if (!text || !isOneAnswer || !haveRightAnswer) {
       if (!text) {
         toastr.error('Please, fill question text')
       };
-      if (!answers) {
+      if (!isOneAnswer) {
         toastr.error('Please, add one answer')
       };
-      if (!rightAnswers) {
+      if (!haveRightAnswer) {
         toastr.error('Please, add right answer')
       };
       return false
     }
-    const question = { text, answers, rightAnswers }
+    const question = {
+      text,
+      answers: [
+        { answer: answer1, isRight: isRightAnswer1 },
+        { answer: answer2, isRight: isRightAnswer2 },
+        { answer: answer3, isRight: isRightAnswer3 },
+        { answer: answer4, isRight: isRightAnswer4 }
+      ]
+    }
     this.props.saveQuestion(question)
     this.setState({
       text: '',
-      answers: [],
-      rightAnswers: []
+      answer1: '',
+      isRightAnswer1: true,
+      answer2: '',
+      isRightAnswer2: false,
+      answer3: '',
+      isRightAnswer3: false,
+      answer4: '',
+      isRightAnswer4: false
     })
+  }
+  renderAnswers = () => {
+    const { isRightAnswer1, isRightAnswer2, isRightAnswer3, isRightAnswer4 } = this.state
+    return (
+      <div>
+        <div className='col-md-12'>
+          <label className='control-label col-xs-1'>1</label>
+          <div className='col-xs-10 col-md-9'>
+            <input
+              type='text'
+              className='form-control'
+              onChange={(e) => this.setState({
+                answer1: e.target.value })} />
+          </div>
+          <div className='col-xs-10 col-md-2'>
+            <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+              <input type='checkbox' checked={isRightAnswer1} onChange={(e) =>
+                this.setState({ isRightAnswer1: !isRightAnswer1 })} />
+            </label>
+          </div>
+        </div>
+
+        <div className='col-md-12'>
+          <label className='control-label col-xs-1'>2</label>
+          <div className='col-xs-10 col-md-9'>
+            <input
+              type='text'
+              className='form-control'
+              onChange={(e) => this.setState({
+                answer2: e.target.value })} />
+          </div>
+          <div className='col-xs-10 col-md-2'>
+            <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+              <input type='checkbox' checked={isRightAnswer2} onChange={(e) =>
+                this.setState({ isRightAnswer2: !isRightAnswer2 })} />
+            </label>
+          </div>
+        </div>
+
+        <div className='col-md-12'>
+          <label className='control-label col-xs-1'>3</label>
+          <div className='col-xs-10 col-md-9'>
+            <input
+              type='text'
+              className='form-control'
+              onChange={(e) => this.setState({
+                answer3: e.target.value })} />
+          </div>
+          <div className='col-xs-10 col-md-2'>
+            <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+              <input type='checkbox' checked={isRightAnswer3} onChange={(e) =>
+                this.setState({ isRightAnswer3: !isRightAnswer3 })} />
+            </label>
+          </div>
+        </div>
+
+        <div className='col-md-12'>
+          <label className='control-label col-xs-1'>4</label>
+          <div className='col-xs-10 col-md-9'>
+            <input
+              type='text'
+              className='form-control'
+              onChange={(e) => this.setState({
+                answer4: e.target.value })} />
+          </div>
+          <div className='col-xs-10 col-md-2'>
+            <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+              <input type='checkbox' checked={isRightAnswer4} onChange={(e) =>
+                this.setState({ isRightAnswer4: !isRightAnswer4 })} />
+            </label>
+          </div>
+        </div>
+
+      </div>
+    )
   }
 
   render () {
     const { handleHide, show } = this.props
-    const { text, answers, rightAnswers } = this.state
+    const { text, answers } = this.state
     return (
       <Modal
         backdrop={true}
@@ -64,37 +164,23 @@ class QuestionPopupComponent extends Component {
 
           <div className='form-group'>
             <label className='control-label col-xs-12'>Question text</label>
-            <div className='col-xs-10 col-md-6'>
+            <div className='col-xs-10 col-md-12'>
               <input
                 value={text}
                 type='text'
                 className='form-control'
                 onChange={(e) => this.setState({
                   text: e.target.value })} />
-            </div>
-          </div>
+                </div>
+              </div>
 
           <div className='form-group'>
-            <label className='control-label col-xs-12'>Answers </label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={answers}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  answers: e.target.value })} />
-            </div>
-          </div>
-
-          <div className='form-group'>
-            <label className='control-label col-xs-12'>Right Answers</label>
-            <div className='col-xs-10 col-md-6'>
-              <input
-                value={rightAnswers}
-                type='text'
-                className='form-control'
-                onChange={(e) => this.setState({
-                  rightAnswers: e.target.value })} />
+            <label className='control-label col-md-9'>Answers </label>
+            <label className='control-label col-md-3'>Right answer </label>
+            <div className='col-xs-10 col-md-12'>
+              <ul className='list-unstyled'>
+                {this.renderAnswers()}
+              </ul>
             </div>
           </div>
 
