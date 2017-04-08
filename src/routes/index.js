@@ -7,6 +7,7 @@ import Disciplines from './Disciplines'
 import Login from './Login'
 import Course from './Course'
 import Lesson from './Lesson'
+import MyCourses from './MyCourses'
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
@@ -20,7 +21,8 @@ export const createRoutes = (store) => ({
     Disciplines(store),
     Login(),
     Course(store),
-    Lesson(store)
+    Lesson(store),
+    MyCourses(store)
   ]
 })
 
