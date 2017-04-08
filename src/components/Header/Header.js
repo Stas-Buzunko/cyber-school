@@ -22,6 +22,8 @@ export const Header = ({ user }) =>
     <Link to='/disciplines/lol' activeClassName='route--active'>
       LOL
     </Link>
+    {' · '}
+
     {!Object.keys(user).length &&
       <a href={`${backend}/auth/steam`}
         className='button'>
@@ -30,6 +32,10 @@ export const Header = ({ user }) =>
     }
     {Boolean(Object.keys(user).length) &&
       <div>
+        <Link to='/MyCourses' activeClassName='route--active'>
+          MyCourses
+        </Link>
+        {' · '}
         <p>{user.displayName}</p>
         <img src={user.avatar} alt='' />
         <a onClick={() => firebase.auth().signOut()}>Log out</a>
