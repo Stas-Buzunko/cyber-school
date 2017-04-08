@@ -29,44 +29,47 @@ admin.initializeApp({
   databaseURL: 'https://cyber-academy.firebaseio.com'
 })
 
-// function getDotaSta(dotaId) {
-//   request(`http://api.opendota.com/api/players/${dotaId}`, (error, response, body) => {
-//     return body
-//   })
-// }
+function getDotaStatistics(dotaId) {
+  request(`http://api.opendota.com/api/players/${dotaId}`, (error, response, body) => {
+    return body
+  })
+}
 
 function toDotaId(steamId) {
   return new Long.fromString(steamId).sub('76561197960265728').toNumber()
 }
 
 function createOrUpdateProfile (user) {
-  admin.database().ref('users/' + user.steamId)
+  return admin.database().ref('users/' + user.steamId)
   .once('value')
   .then(snapshot => {
     let updates
+ 
+    const dotaId = toDotaId(user.steamId)
+    getDotaStatistics(dotaId)
+    .then(statistics => {
+      if (snapshot.val() !== null) {
+        // update
+        updates = {
+          avatar: user.profile._json.avatar,
+          profileurl: user.profile._json.profileurl,
+          displayName: user.profile.displayName
+        }
+      } else {
+        // create
 
-    if (snapshot.val() !== null) {
-      // update
-      updates = {
-        avatar: user.profile._json.avatar,
-        profileurl: user.profile._json.profileurl,
-        displayName: user.profile.displayName
+        updates = {
+          avatar: user.profile._json.avatar,
+          profileurl: user.profile._json.profileurl,
+          timecreated: user.profile._json.timecreated,
+          displayName: user.profile.displayName,
+          timeRegistered: Math.floor(Date.now() / 1000),
+          dotaId
+        }
       }
-    } else {
-      // create
-      const dotaId = toDotaId(user.steamId)
 
-      updates = {
-        avatar: user.profile._json.avatar,
-        profileurl: user.profile._json.profileurl,
-        timecreated: user.profile._json.timecreated,
-        displayName: user.profile.displayName,
-        timeRegistered: Math.floor(Date.now() / 1000),
-        dotaId
-      }
-    }
-
-    admin.database().ref('users/' + user.steamId).update(updates)
+      admin.database().ref('users/' + user.steamId).update(updates)
+    })
   })
 }
 
@@ -162,10 +165,14 @@ app.get('/auth/steam',
 app.get('/auth/steam/return', passport.authenticate('steam'),
   function (request, response) {
     if (request.user) {
-      createOrUpdateProfile(request.user)
-      generateToken(request.user.steamId)
-      .then(customToken =>
-        response.redirect(`${front}/login?token=${customToken}`)
+      Promise.all([
+        createOrUpdateProfile(request.user),
+        generateToken(request.user.steamId)
+      ])
+      .then(result => {
+        console.log(result)
+        // response.redirect(`${front}/login?token=${customToken}`)
+      }
       )
     } else {
       response.redirect('/?failed')
