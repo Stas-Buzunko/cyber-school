@@ -15,7 +15,7 @@ const passport = require('passport')
 app.use(passport.initialize())
 
 const serviceAccount = require('./key.json')
-const env = process.env.NODE_ENV || 'development'
+const env = process.env.NODE_ENV
 const front = env === 'development'
   ? 'http://localhost:3000'
   : 'https://cyber-academy.firebaseapp.com'
