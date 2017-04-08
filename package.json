@@ -18,7 +18,7 @@
     "test:dev": "npm run test -- --watch",
     "deploy": "better-npm-run deploy",
     "deploy:dev": "better-npm-run deploy:dev",
-    "deploy:prod": "better-npm-run deploy:prod",
+    "deploy:prod": "better-npm-run deploy:prod && firebase deploy",
     "codecov": "cat coverage/*/lcov.info | codecov"
   },
   "betterScripts": {

@@ -6,7 +6,7 @@ const stripeToken = 'sk_test_mokQLE90JDfe8foUzMRby89E'
 const stripe = require('stripe')(stripeToken)
 const Long = require('long')
 const app = express()
-const request = require('request')
+const axios = require('axios')
 
 app.use(cors({ credentials: true, origin: true }))
 app.use(bodyParser.json())
@@ -30,9 +30,8 @@ admin.initializeApp({
 })
 
 function getDotaStatistics(dotaId) {
-  request(`http://api.opendota.com/api/players/${dotaId}`, (error, response, body) => {
-    return body
-  })
+  return axios.get(`http://api.opendota.com/api/players/${dotaId}`)
+  .then(response => response.data)
 }
 
 function toDotaId(steamId) {
@@ -44,7 +43,7 @@ function createOrUpdateProfile (user) {
   .once('value')
   .then(snapshot => {
     let updates
- 
+
     const dotaId = toDotaId(user.steamId)
     getDotaStatistics(dotaId)
     .then(statistics => {
@@ -53,7 +52,8 @@ function createOrUpdateProfile (user) {
         updates = {
           avatar: user.profile._json.avatar,
           profileurl: user.profile._json.profileurl,
-          displayName: user.profile.displayName
+          displayName: user.profile.displayName,
+          statistics
         }
       } else {
         // create
@@ -64,7 +64,8 @@ function createOrUpdateProfile (user) {
           timecreated: user.profile._json.timecreated,
           displayName: user.profile.displayName,
           timeRegistered: Math.floor(Date.now() / 1000),
-          dotaId
+          dotaId,
+          statistics
         }
       }
 
