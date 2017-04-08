@@ -1,6 +1,14 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    ".write": "auth != null",
+    "users": {
+      ".read": "auth != null"
+    },
+    "courses": {
+      ".read": true
+    },
+    "lessons": {
+      ".read": true
+    }
   }
 }
