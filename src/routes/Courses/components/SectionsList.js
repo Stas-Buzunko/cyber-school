@@ -5,33 +5,35 @@ import TestList from './TestList'
 class SectionsList extends Component {
 
   renderSectionsList () {
-    const { sections = [] } = this.props
+    const { sections = [], isNewSection } = this.props
     return sections.map((item, i) =>
-    <li key={i}>
-      <div className='col-xs-12 col-md-12'>
-        <div className='col-xs-12 col-md-6' style={{ padding: '15px' }} >
-          <label>Section: {item.name}</label>
+      <li key={i}>
+        <div className='col-xs-12 col-md-12'>
+          <div className='col-xs-12 col-md-6' style={{ padding: '15px' }} >
+            <label>Section: {item.name}</label>
+          </div>
         </div>
-      </div>
-      <label className='col-xs-2 col-md-4'>Lessons: </label>
-      <div className='col-xs-2 col-md-10'>
-        <ul className='list-unstyled'>
-          <LessonsList
-            isNewLesson={true}
-            lessonsIds={item.lessonsIds}
-          />
-        </ul>
-      </div>
-      <label className='col-xs-2 col-md-4'>Tests: </label>
-      <div className='col-xs-2 col-md-10'>
-        <ul className='list-unstyled'>
-          <TestList
-            isNewTest={false}
-            testsIds={item.testsIds}
-          />
-        </ul>
-      </div>
-    </li>
+        <label className='col-xs-2 col-md-4'>Lessons: </label>
+        <div className='col-xs-2 col-md-10'>
+          <ul className='list-unstyled'>
+            <LessonsList
+              isNewLesson={isNewSection}
+              lessonsIds={item.lessonsIds}
+              sections={sections}
+            />
+          </ul>
+        </div>
+        <label className='col-xs-2 col-md-4'>Tests: </label>
+        <div className='col-xs-2 col-md-10'>
+          <ul className='list-unstyled'>
+            <TestList
+              isNewTest={isNewSection}
+              testsIds={item.testsIds}
+              section={item}
+            />
+          </ul>
+        </div>
+      </li>
     )
   }
 
@@ -41,7 +43,7 @@ class SectionsList extends Component {
         <div className='row'>
           <div className='col-xs-12 col-md-10'>
             <div className='col-xs-2 col-md-12'>
-                {this.renderSectionsList()}
+              {this.renderSectionsList()}
             </div>
           </div>
         </div>
@@ -51,7 +53,8 @@ class SectionsList extends Component {
 }
 
 SectionsList.propTypes = {
-  sections: React.PropTypes.array
+  sections: React.PropTypes.array,
+  isNewSection: React.PropTypes.bool
 }
 
 export default SectionsList

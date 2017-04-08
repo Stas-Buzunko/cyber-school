@@ -23,8 +23,7 @@ class NewCourse extends Component {
     }
     this.saveSection = this.saveSection.bind(this)
     this.saveCourse = this.saveCourse.bind(this)
-
-}
+  }
 
   saveCourse () {
     const { name, description, mainPhoto, duration, price, discipline, author, sections } = this.state
@@ -153,9 +152,11 @@ class NewCourse extends Component {
                 <ul className='list-unstyled'>
                   <SectionsList
                     sections={this.state.sections}
+                    isNewSection={true}
                   />
                   <NewSection
                     saveSection={this.saveSection}
+                    sectionNumber={this.state.sections.lenght}
                   />
                 </ul>
               </div>

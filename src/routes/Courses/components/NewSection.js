@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
 import TestList from './TestList'
 import LessonList from './LessonList'
+import NewTest from './NewTest'
 
 class NewSection extends Component {
   constructor (props) {
@@ -46,15 +47,16 @@ class NewSection extends Component {
           type='button'
           className='btn btn-success lg'
           onClick={() => {
-            this.setState({ isAddNewTest: true,  isNewTest: true })
+            this.setState({ isAddNewTest: true, isNewTest: true })
           }}>Add Test
         </button>
       </div>
     )
   }
   saveNewSection = () => {
+    const { sectionNumber = 0 } = this.props
     const { name, lessonsIds, testsIds } = this.state
-    const section = { name, lessonsIds, testsIds }
+    const section = { name, lessonsIds, testsIds, sectionNumber }
     this.props.saveSection(section)
     this.setState({
       name: '',
@@ -92,8 +94,7 @@ class NewSection extends Component {
     })
     .then(() => {
       toastr.success('Your test saved!')
-      this.setState({ isNewTest: false })
-
+      this.setState({ isNewTest: false, isAddNewTest: false })
     })
   }
   render () {
@@ -136,11 +137,21 @@ class NewSection extends Component {
           <div className='col-xs-2 col-md-10'>
             <ul className='list-unstyled'>
               {this.renderButtonAddNewTest()}
-              {!!isAddNewTest && <div><TestList
-                isNewTest={isNewTest}
-                testsIds={this.state.testsIds}
-                saveTest={this.saveTest}
-              /></div> }
+                <div>
+                  <TestList
+                    isShowEditButton={false}
+                    isNewTest={isNewTest}
+                    testsIds={this.state.testsIds}
+                    saveTest={this.saveTest}
+                  />
+              </div>
+              {!!isAddNewTest &&
+                <div>
+                  <NewTest
+                    saveTest={this.saveTest}
+                  />
+                </div>
+              }
             </ul>
           </div>
         </div>
@@ -161,7 +172,8 @@ const mapDispatchToProps = {
 NewSection.propTypes = {
   openModal: React.PropTypes.func,
   hideModal: React.PropTypes.func,
-  saveSection: React.PropTypes.func
+  saveSection: React.PropTypes.func,
+  sectionNumber: React.PropTypes.number
 }
 
 export default connect(

@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import firebase from 'firebase'
 import toastr from 'toastr'
-import LessonsList from './LessonList'
+import SectionsListEdit from './SectionsListEdit'
+import NewSection from './NewSection'
 
 class EditCourse extends Component {
   constructor (props) {
@@ -16,11 +17,17 @@ class EditCourse extends Component {
       mainPhoto:'',
       duration:'',
       price:'',
-      lessonsIds: [],
+      sections: [],
       id: this.props.params.id,
-      error: ''
+      error: '',
+      isAddNewSectionOpen: false
     }
     this.editCourse = this.editCourse.bind(this)
+    this.addNewSection = this.addNewSection.bind(this)
+    this.saveSections = this.saveSections.bind(this)
+    this.addSectionButton = this.addSectionButton.bind(this)
+
+
   }
   componentWillMount () {
     this.fetchCourse(this.state.id)
@@ -31,27 +38,43 @@ class EditCourse extends Component {
       .on('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
-          const { name, description, mainPhoto, duration, price, discipline, author, lessonsIds, id } = object
-          this.setState({ name, description, mainPhoto, duration, price, discipline, author, lessonsIds, id })
+          const { name, description, mainPhoto, duration, price, discipline, author, sections, id } = object
+          this.setState({ name, description, mainPhoto, duration, price, discipline, author, sections, id })
         } else {
           this.setState({ error: true })
         }
       })
   }
   editCourse () {
-    const { name, discipline, author, description, mainPhoto, duration, price, id } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price, id, sections } = this.state
     const dateUploaded = Date.now()
     this.setState({ error: '' })
     firebase.database().ref('courses/' + id)
     .update({
-      name, discipline, author, description, mainPhoto, duration, price, dateUploaded, id })
+      name, discipline, author, description, mainPhoto, duration, price, dateUploaded, id, sections })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
       })
   }
+
+  addSectionButton = () => {
+    this.setState({ isAddNewSectionOpen: true })
+  }
+
+  addNewSection = (section) => {
+    const { sections = [] } = this.state
+    const newSections = [...sections, section]
+    this.setState({ sections: newSections, isAddNewSectionOpen: false })
+  }
+
+  saveSections = (sections) => {
+    this.setState({ sections })
+  }
+
   render () {
-    const { name, discipline, author, description, mainPhoto, duration, price, lessonsIds } = this.state
+    const { name, discipline, author, description, mainPhoto, duration,
+    price, sections, isAddNewSectionOpen } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -133,12 +156,28 @@ class EditCourse extends Component {
                 </div>
               </div>
               <div className='col-xs-12 col-md-12'>
-                <label className='control-label col-xs-2 col-md-4'>Lesson List </label>
-
-                <LessonsList
-                  isNewLesson={false}
-                  lessonsIds={lessonsIds}
-                />
+                <label className='control-label col-xs-2 col-md-4'>Sections: </label>
+                <ul className='list-unstyled'>
+                  <SectionsListEdit
+                    isNewSection={false}
+                    sections={sections}
+                    saveSections={this.saveSections}
+                  />
+                  <div className='col-xs-12 col-md-10'>
+                    <button
+                      type='button'
+                      className='btn btn-success lg'
+                      style={{ width:'30%', margin: '15px' }}
+                      onClick={this.addSectionButton}
+                    >Add new section
+                  </button>
+                  </div>
+                  {!!isAddNewSectionOpen &&
+                    <NewSection
+                      saveSection={this.addNewSection}
+                  />
+                  }
+                </ul>
               </div>
             </form>
 

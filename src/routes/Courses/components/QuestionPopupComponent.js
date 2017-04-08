@@ -26,15 +26,25 @@ class QuestionPopupComponent extends Component {
   }
   componentWillMount () {
     const isNewQuestion = this.props.isNewQuestion
-    const question = this.props.question
+    console.log('isNewQuestion',isNewQuestion)
     if (!isNewQuestion) {
-      const { text, answers, rightAnswers } = question
+      const { text, questionNumber = 0, answers } = this.props.question
       this.setState({
-        text, answers, rightAnswers
+        questionNumber,
+        text,
+        answer1: answers[0].answer,
+        isRightAnswer1: answers[0].isRight,
+        answer2: answers[1].answer,
+        isRightAnswer2: answers[1].isRight,
+        answer3:answers[2].answer,
+        isRightAnswer3: answers[2].isRight,
+        answer4: answers[3].answer,
+        isRightAnswer4: answers[3].isRight
       })
     }
   }
   saveQuestionPopup = () => {
+    const { questionNumber = 0 } = this.props
     const { text, answer1, isRightAnswer1, answer2, isRightAnswer2, answer3, isRightAnswer3,
     answer4, isRightAnswer4 } = this.state
     this.setState({ error: '' })
@@ -53,6 +63,7 @@ class QuestionPopupComponent extends Component {
       return false
     }
     const question = {
+      questionNumber,
       text,
       answers: [
         { answer: answer1, isRight: isRightAnswer1 },
@@ -75,13 +86,15 @@ class QuestionPopupComponent extends Component {
     })
   }
   renderAnswers = () => {
-    const { isRightAnswer1, isRightAnswer2, isRightAnswer3, isRightAnswer4 } = this.state
+    const { answer1, answer2, answer3, answer4,
+    isRightAnswer1, isRightAnswer2, isRightAnswer3, isRightAnswer4 } = this.state
     return (
       <div>
         <div className='col-md-12'>
           <label className='control-label col-xs-1'>1</label>
           <div className='col-xs-10 col-md-9'>
             <input
+              value={answer1}
               type='text'
               className='form-control'
               onChange={(e) => this.setState({
@@ -99,6 +112,7 @@ class QuestionPopupComponent extends Component {
           <label className='control-label col-xs-1'>2</label>
           <div className='col-xs-10 col-md-9'>
             <input
+              value={answer2}
               type='text'
               className='form-control'
               onChange={(e) => this.setState({
@@ -116,6 +130,7 @@ class QuestionPopupComponent extends Component {
           <label className='control-label col-xs-1'>3</label>
           <div className='col-xs-10 col-md-9'>
             <input
+              value={answer3}
               type='text'
               className='form-control'
               onChange={(e) => this.setState({
@@ -133,6 +148,7 @@ class QuestionPopupComponent extends Component {
           <label className='control-label col-xs-1'>4</label>
           <div className='col-xs-10 col-md-9'>
             <input
+              value={answer4}
               type='text'
               className='form-control'
               onChange={(e) => this.setState({
@@ -145,14 +161,13 @@ class QuestionPopupComponent extends Component {
             </label>
           </div>
         </div>
-
       </div>
     )
   }
 
   render () {
     const { handleHide, show } = this.props
-    const { text, answers } = this.state
+    const { text } = this.state
     return (
       <Modal
         backdrop={true}
@@ -204,7 +219,8 @@ QuestionPopupComponent.propTypes = {
   handleHide: React.PropTypes.func,
   isNewQuestion: React.PropTypes.bool,
   saveQuestion: React.PropTypes.func,
-  question: React.PropTypes.object
+  question: React.PropTypes.object,
+  questionNumber: React.PropTypes.number
 
 }
 

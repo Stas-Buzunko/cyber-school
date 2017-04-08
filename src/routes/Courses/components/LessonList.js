@@ -17,7 +17,7 @@ class LessonsList extends Component {
   }
 
   componentWillMount () {
-    const { lessonsIds } = this.props
+    const { lessonsIds = [] } = this.props
     this.fetchItems(lessonsIds)
   }
 
@@ -51,6 +51,7 @@ class LessonsList extends Component {
   renderLessonPopup (e, item) {
     e.preventDefault()
     this.props.openModal('lesson', { item })
+    console.log(item)
   }
 
   editLesson = (lesson) => {
@@ -65,10 +66,12 @@ class LessonsList extends Component {
       const indexItemToRemove = lessons.findIndex(item => lessonKey === item.id)
       const newArray = [
         ...lessons.slice(0, indexItemToRemove),
-        ...lessons.slice(indexItemToRemove + 1),
-        lesson
+        lesson,
+        ...lessons.slice(indexItemToRemove + 1)
+
       ]
       this.setState({ lessons: newArray })
+      console.log(lessons)
     })
     .then(() => {
       this.props.hideModal('lesson')
