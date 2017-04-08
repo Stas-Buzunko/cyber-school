@@ -17,7 +17,7 @@ class LessonsList extends Component {
   }
 
   componentWillMount () {
-    const { lessonsIds } = this.props
+    const { lessonsIds = [] } = this.props
     this.fetchItems(lessonsIds)
   }
 
@@ -65,8 +65,9 @@ class LessonsList extends Component {
       const indexItemToRemove = lessons.findIndex(item => lessonKey === item.id)
       const newArray = [
         ...lessons.slice(0, indexItemToRemove),
-        ...lessons.slice(indexItemToRemove + 1),
-        lesson
+        lesson,
+        ...lessons.slice(indexItemToRemove + 1)
+
       ]
       this.setState({ lessons: newArray })
     })
@@ -77,8 +78,8 @@ class LessonsList extends Component {
   }
 
   renderLessonsList () {
-    const { lessons } = this.state
-    const isNewLesson = this.props.isNewLesson
+    const { lessons = [] } = this.state
+    const { isNewLesson } = this.props
     return lessons.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >

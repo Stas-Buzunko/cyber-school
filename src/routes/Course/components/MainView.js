@@ -6,8 +6,6 @@ import { connect } from 'react-redux'
 import StripeComponent from '../../../components/StripeComponent'
 import backend from '../../../../config/apis'
 
-
-
 class MainView extends Component {
   constructor (props) {
     super(props)
