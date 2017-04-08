@@ -165,15 +165,13 @@ app.get('/auth/steam',
 app.get('/auth/steam/return', passport.authenticate('steam'),
   function (request, response) {
     if (request.user) {
-      Promise.all([
-        createOrUpdateProfile(request.user),
-        generateToken(request.user.steamId)
-      ])
-      .then(result => {
-        console.log(result)
-        // response.redirect(`${front}/login?token=${customToken}`)
-      }
-      )
+      // Promise.all([
+      createOrUpdateProfile(request.user)
+      generateToken(request.user.steamId)
+      .then(customToken => {
+      // console.log(result)
+        response.redirect(`${front}/login?token=${customToken}`)
+      })
     } else {
       response.redirect('/?failed')
     }
