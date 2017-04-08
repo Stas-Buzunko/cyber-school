@@ -43,7 +43,7 @@ class SectionsListEdit extends Component {
 
   renderSectionsList () {
     const { sections = [], isNewSection } = this.props
-    const { isEditSection, isShowEditButton } = this.state
+    const { isShowEditButton } = this.state
     return sections.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12'>
@@ -51,35 +51,35 @@ class SectionsListEdit extends Component {
             <label>Section:{item.name}</label>
           </div>
 
-            <div className='col-xs-2 col-md-12'>
-              <label className='col-xs-2 col-md-2'>Lessons: </label>
-              <div className='col-xs-2 col-md-4'>
-                <LessonsList
-                  isNewLesson={true}
-                  lessonsIds={item.lessonsIds}
-                  editLesson={this.editLesson}
-                />
-              </div>
+          <div className='col-xs-2 col-md-12'>
+            <label className='col-xs-2 col-md-2'>Lessons: </label>
+            <div className='col-xs-2 col-md-4'>
+              <LessonsList
+                isNewLesson={true}
+                lessonsIds={item.lessonsIds}
+                editLesson={this.editLesson}
+              />
             </div>
-
-            <div className='col-xs-2 col-md-12'>
-              <label className='col-xs-2 col-md-2'>Tests: </label>
-              <div className='col-xs-2 col-md-4'>
-                <TestList
-                  isNewTest={isNewSection}
-                  testsIds={item.testsIds}
-                  isShowEditButton={isShowEditButton}
-                />
-              </div>
-              </div>
-
-            <button
-              type='button'
-              className='btn btn-primary lg'
-              onClick={() => { this.editSectionButton(item) }}
-              >Edit section
-            </button>
           </div>
+
+          <div className='col-xs-2 col-md-12'>
+            <label className='col-xs-2 col-md-2'>Tests: </label>
+            <div className='col-xs-2 col-md-4'>
+              <TestList
+                isNewTest={isNewSection}
+                testsIds={item.testsIds}
+                isShowEditButton={isShowEditButton}
+              />
+            </div>
+          </div>
+
+          <button
+            type='button'
+            className='btn btn-primary lg'
+            onClick={() => { this.editSectionButton(item) }}
+            >Edit section
+          </button>
+        </div>
       </li>
     )
   }

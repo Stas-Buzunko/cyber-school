@@ -26,8 +26,6 @@ class EditCourse extends Component {
     this.addNewSection = this.addNewSection.bind(this)
     this.saveSections = this.saveSections.bind(this)
     this.addSectionButton = this.addSectionButton.bind(this)
-
-
   }
   componentWillMount () {
     this.fetchCourse(this.state.id)

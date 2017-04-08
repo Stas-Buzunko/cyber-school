@@ -51,7 +51,6 @@ class LessonsList extends Component {
   renderLessonPopup (e, item) {
     e.preventDefault()
     this.props.openModal('lesson', { item })
-    console.log(item)
   }
 
   editLesson = (lesson) => {
@@ -71,7 +70,6 @@ class LessonsList extends Component {
 
       ]
       this.setState({ lessons: newArray })
-      console.log(lessons)
     })
     .then(() => {
       this.props.hideModal('lesson')

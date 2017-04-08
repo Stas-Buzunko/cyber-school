@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import QuestionsList from './QuestionsList'
-import firebase from 'firebase'
 import toastr from 'toastr'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
@@ -36,7 +35,6 @@ class TestList extends Component {
   }
 
   saveQuestion = (question) => {
-    console.log('saveQuestion')
     const { questions = [] } = this.state
     const newQuestions = [ ...questions, question ]
     this.setState({ questions: newQuestions })
@@ -61,7 +59,6 @@ class TestList extends Component {
   }
   renderNewTest () {
     const { questions = [], name } = this.state
-    console.log(questions)
     return (
       <div className='col-xs-12 col-md-12'>
         <div className='col-xs-12 col-md-12'>
@@ -104,7 +101,6 @@ class TestList extends Component {
     )
   }
   render () {
-    console.log('renderNewTest')
     return (
       <div className='container'>
         <div className='row'>

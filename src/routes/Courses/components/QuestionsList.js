@@ -15,17 +15,13 @@ class QuestionsList extends Component {
     this.renderAnswers = this.renderAnswers.bind(this)
   }
   editQuestion = (question) => {
-    console.log(question)
     const { questions = [], test } = this.props
-    console.log(questions, test )
     const indexItemToRemove = questions.findIndex(item => question.questionNumber === item.questionNumber)
-    console.log(indexItemToRemove)
     const newArray = [
       ...questions.slice(0, indexItemToRemove),
       question,
       ...questions.slice(indexItemToRemove + 1)
     ]
-    console.log(newArray)
     this.setState({ questions: newArray })
     this.props.hideModal('question')
     this.props.editQuestionsInTest(newArray, test)
@@ -91,7 +87,6 @@ class QuestionsList extends Component {
               </div>
             }
           </div>
-
         </div>
       </li>
     )

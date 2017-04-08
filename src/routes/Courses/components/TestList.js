@@ -52,11 +52,7 @@ class TestList extends Component {
   }
 
   editTest = (test) => {
-    const { name, tests = [], questions } = this.state
-    console.log(questions)
-    console.log(test)
-    console.log(tests)
-
+    const { name, tests = [] } = this.state
     test.name = name
     const indexItemToRemove = tests.findIndex(item => test.id === item.id)
     const newArray = [
@@ -84,23 +80,14 @@ class TestList extends Component {
   }
 
   editQuestionsInTest = (questions, test) => {
-    console.log(questions, test)
     const { tests = [], name } = this.state
-    console.log(tests, name)
-
     test.questions = questions
-    console.log(questions, test.questions)
-
     const indexItemToRemove = tests.findIndex(item => test.id === item.id)
-    console.log(indexItemToRemove)
-
     const newArray = [
       ...tests.slice(0, indexItemToRemove),
       test,
       ...tests.slice(indexItemToRemove + 1)
     ]
-    console.log(newArray)
-
     firebase.database().ref('tests/' + test.id).update({
       name, questions
     })
@@ -184,9 +171,7 @@ class TestList extends Component {
 
 TestList.propTypes = {
   testsIds: React.PropTypes.array,
-  isNewTest: React.PropTypes.bool,
-  isShowEditButton: React.PropTypes.bool,
-  saveTest: React.PropTypes.func
+  isShowEditButton: React.PropTypes.bool
 }
 
 export default TestList
