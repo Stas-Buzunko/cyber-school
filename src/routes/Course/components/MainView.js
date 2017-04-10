@@ -68,22 +68,28 @@ class MainView extends Component {
 
   renderLessonsList (lessons = []) {
     return (
-
-    <tbody>
+      <table>
+        <thead>
+          <tr>
+            <th className='col-xs-12 col-md-8'>Name </th>
+            <th className='col-xs-12 col-md-8'>Length</th>
+          </tr>
+        </thead>
+        <tbody>
           {lessons.map((item, i) =>
-<tr>
-                <td>
-                  {item.isFree &&
-                    <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
-                    {!item.isFree &&
-                      <div>{item.name}</div> }
-                    </td>
-                    <td> {item.length} </td>
+            <tr key={i} className='col-xs-12 col-md-8'>
+              <td>
+                {item.isFree &&
+                  <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
+                  {!item.isFree &&
+                    <div>{item.name}</div> }
+                  </td>
+                  <td> {item.length} </td>
 
-</tr>
+                </tr>
               )}
-  </tbody>
-
+            </tbody>
+          </table>
         )
       }
 
@@ -99,7 +105,9 @@ class MainView extends Component {
                     <th>Length</th>
                   </tr>
                 </thead>
-                {sections.map((item, i) =>
+              </table>
+              {sections.map((item, i) =>
+                <div>
                   <table className='table'>
                     <tbody key={i}>
                       <tr >
@@ -109,12 +117,12 @@ class MainView extends Component {
                         <td>  </td>
                       </tr>
                     </tbody>
-                  <table>
-                      {this.renderLessonsList(item.lessons)}
-</table>
                   </table>
-                )}
-              </table>
+                  <div>
+                    {this.renderLessonsList(item.lessons)}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )
