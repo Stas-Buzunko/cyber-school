@@ -67,58 +67,47 @@ class MainView extends Component {
   }
 
   renderLessonsList (lessons = []) {
+    return lessons.map((item, i) =>
+      <tr key={i}>
+        <td>
+          {item.isFree &&
+          <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
+          {!item.isFree &&
+          <div>{item.name}</div> }
+        </td>
+        <td> {item.length} </td>
+      </tr>
+    )
+  }
+
+  renderSectionsList () {
+    const { sections = [] } = this.state
     return (
-
-    <tbody>
-          {lessons.map((item, i) =>
-<tr>
-                <td>
-                  {item.isFree &&
-                    <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
-                    {!item.isFree &&
-                      <div>{item.name}</div> }
-                    </td>
-                    <td> {item.length} </td>
-
-</tr>
-              )}
-  </tbody>
-
-        )
-      }
-
-      renderSectionsList () {
-        const { sections = [] } = this.state
-        return (
-          <div className='col-xs-12 col-md-12'>
-            <div className='col-xs-12 col-md-8'>
-              <table className='table'>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Length</th>
-                  </tr>
-                </thead>
-                {sections.map((item, i) =>
-                  <table className='table'>
-                    <tbody key={i}>
-                      <tr >
-                        <td>
-                          <div>{item.name}</div>
-                        </td>
-                        <td>  </td>
-                      </tr>
-                    </tbody>
-                  <table>
-                      {this.renderLessonsList(item.lessons)}
-</table>
-                  </table>
-                )}
-              </table>
-            </div>
-          </div>
-        )
-      }
+      <div className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-8'>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Length</th>
+              </tr>
+            </thead>
+            {sections.map((item, i) =>
+              <tbody key={i}>
+                <tr>
+                  <td>
+                    <div>{item.name}</div>
+                  </td>
+                  <td />
+                </tr>
+                {this.renderLessonsList(item.lessons)}
+              </tbody>
+            )}
+          </table>
+        </div>
+      </div>
+    )
+  }
 
   renderBuyButton () {
     const { course, courseLoaded } = this.state
