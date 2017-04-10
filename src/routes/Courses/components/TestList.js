@@ -28,7 +28,7 @@ class TestList extends Component {
     this.props.testsIds !== nextProps.testsIds && this.fetchItems(nextProps.testsIds)
   }
 
-  fetchItems (testsIds) {
+  fetchItems (testsIds = []) {
     this.setState({
       tests: [],
       testsLoaded: false
