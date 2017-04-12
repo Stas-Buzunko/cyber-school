@@ -8,71 +8,6 @@ class QuestionPopupComponent extends Component {
     super(props)
 
     this.state = {
-      question:'',
-      text: '',
-      answers: [],
-      answer1: '',
-      isRightAnswer1: true,
-      answer2: '',
-      isRightAnswer2: false,
-      answer3: '',
-      isRightAnswer3: false,
-      answer4: '',
-      isRightAnswer4: false,
-      rightAnswers: []
-    }
-
-    this.saveQuestionPopup = this.saveQuestionPopup.bind(this)
-  }
-  componentWillMount () {
-    const isNewQuestion = this.props.isNewQuestion
-    if (!isNewQuestion) {
-      const { text, questionNumber = 0, answers } = this.props.question
-      this.setState({
-        questionNumber,
-        text,
-        answer1: answers[0].answer,
-        isRightAnswer1: answers[0].isRight,
-        answer2: answers[1].answer,
-        isRightAnswer2: answers[1].isRight,
-        answer3:answers[2].answer,
-        isRightAnswer3: answers[2].isRight,
-        answer4: answers[3].answer,
-        isRightAnswer4: answers[3].isRight
-      })
-    }
-  }
-  saveQuestionPopup = () => {
-    const { questionNumber = 0 } = this.props
-    const { text, answer1, isRightAnswer1, answer2, isRightAnswer2, answer3, isRightAnswer3,
-    answer4, isRightAnswer4 } = this.state
-    this.setState({ error: '' })
-    const isOneAnswer = (answer1.length || answer2.length || answer3.length || answer4.length)
-    const haveRightAnswer = (isRightAnswer1 || isRightAnswer2 || isRightAnswer3 || isRightAnswer4)
-    if (!text || !isOneAnswer || !haveRightAnswer) {
-      if (!text) {
-        toastr.error('Please, fill question text')
-      };
-      if (!isOneAnswer) {
-        toastr.error('Please, add one answer')
-      };
-      if (!haveRightAnswer) {
-        toastr.error('Please, add right answer')
-      };
-      return false
-    }
-    const question = {
-      questionNumber,
-      text,
-      answers: [
-        { answer: answer1, isRight: isRightAnswer1 },
-        { answer: answer2, isRight: isRightAnswer2 },
-        { answer: answer3, isRight: isRightAnswer3 },
-        { answer: answer4, isRight: isRightAnswer4 }
-      ]
-    }
-    this.props.saveQuestion(question)
-    this.setState({
       text: '',
       answer1: '',
       isRightAnswer1: true,
@@ -82,7 +17,26 @@ class QuestionPopupComponent extends Component {
       isRightAnswer3: false,
       answer4: '',
       isRightAnswer4: false
+    }
+
+    this.renderNextButton = this.renderNextButton.bind(this)
+  }
+  componentWillMount () {
+    const { text, answers } = this.props.question
+    this.setState({
+      text,
+      answer1: answers[0].answer,
+      isRightAnswer1: answers[0].isRight,
+      answer2: answers[1].answer,
+      isRightAnswer2: answers[1].isRight,
+      answer3:answers[2].answer,
+      isRightAnswer3: answers[2].isRight,
+      answer4: answers[3].answer,
+      isRightAnswer4: answers[3].isRight
     })
+  }
+  renderNextButton () {
+
   }
   renderAnswers = () => {
     const { answer1, answer2, answer3, answer4,
@@ -190,7 +144,7 @@ class QuestionPopupComponent extends Component {
 
           <div className='form-group'>
             <label className='control-label col-md-9'>Answers </label>
-            <label className='control-label col-md-3'>Right answer </label>
+            <label className='control-label col-md-3'>Your answer </label>
             <div className='col-xs-10 col-md-12'>
               <ul className='list-unstyled'>
                 {this.renderAnswers()}
@@ -204,8 +158,8 @@ class QuestionPopupComponent extends Component {
             type='button'
             style={{ width:'50%', margin: '15px' }}
             className='btn btn-success lg'
-            onClick={this.saveQuestionPopup}
-              >Save Question
+            onClick={this.renderNextButton}
+              >Next
           </button>
         </Modal.Footer>
       </Modal>
