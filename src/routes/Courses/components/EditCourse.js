@@ -173,6 +173,7 @@ class EditCourse extends Component {
                   </div>
                   {!!isAddNewSectionOpen &&
                     <NewSection
+                      sectionNumber={sections.length}
                       saveSection={this.addNewSection}
                   />
                   }

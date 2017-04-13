@@ -99,28 +99,12 @@ class TestList extends Component {
       tests: newArray
     })
   }
-
-  renderTestList () {
+  renderTestEdit () {
     const { isShowEditButton } = this.props
-    const { tests = [], name, isTestEdit } = this.state
-    return tests.map((item, i) =>
-      <li key={i}>
-
-        {!isTestEdit && <div className='col-xs-12 col-md-12'>
-          <div className='col-xs-12 col-md-4' style={{ padding: '15px' }} >
-            <label>Test: {item.name}</label>
-          </div>
-          { !!isShowEditButton && <div className='col-xs-10 col-md-4'>
-            <button
-              type='button'
-              className='btn btn-primary lg'
-              onClick={() => { this.editTestButton(item) }}
-              >Edit Test
-            </button>
-          </div>}
-        </div> }
-
-        {isTestEdit && <div className='col-xs-12 col-md-12'>
+    const { tests = [], name, isTestEdit, test } = this.state
+    return (
+    <div>
+      <div className='col-xs-12 col-md-12'>
           <div className='form-group col-xs-10 col-md-4' style={{ padding: '15px' }}>
             <label className='control-label col-xs-4 col-md-2'>Test:</label>
             <div className='col-xs-10 col-md-4'>
@@ -134,12 +118,44 @@ class TestList extends Component {
             <button
               type='button'
               className='btn btn-primary lg'
-              onClick={() => { this.editTest(item) }}
+              onClick={() => { this.editTest(test) }}
               >Save Test
             </button>
           </div>
-        </div> }
+        </div>
 
+        <label className='col-xs-2 col-md-6'>Questions: </label>
+        <div className='col-xs-2 col-md-12'>
+          <ul className='list-unstyled'>
+            <QuestionsList
+              test={test}
+              questions={test.questions}
+              isTestEdit={isTestEdit}
+              editQuestionsInTest={this.editQuestionsInTest}
+            />
+          </ul>
+        </div>
+    </div>
+    )
+  }
+  renderTestList () {
+    const { isShowEditButton } = this.props
+    const { tests = [], isTestEdit } = this.state
+    return tests.map((item, i) =>
+      <li key={i}>
+       <div className='col-xs-12 col-md-12'>
+          <div className='col-xs-12 col-md-4' style={{ padding: '15px' }} >
+            <label>Test: {item.name}</label>
+          </div>
+        { !!isShowEditButton && <div className='col-xs-10 col-md-4'>
+            <button
+              type='button'
+              className='btn btn-primary lg'
+              onClick={() => { this.editTestButton(item) }}
+              >Edit Test
+            </button>
+          </div>}
+        </div>
         <label className='col-xs-2 col-md-6'>Questions: </label>
         <div className='col-xs-2 col-md-12'>
           <ul className='list-unstyled'>
@@ -155,12 +171,14 @@ class TestList extends Component {
     )
   }
   render () {
+     const { isTestEdit } = this.state
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
             <ul className='list-unstyled'>
-              {this.renderTestList()}
+              {!isTestEdit && this.renderTestList()}
+              {isTestEdit && this.renderTestEdit()}
             </ul>
           </div>
         </div>

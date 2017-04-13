@@ -74,6 +74,7 @@ class NewCourse extends Component {
   }
 
   render () {
+    const { sections } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -151,12 +152,12 @@ class NewCourse extends Component {
               <div className='col-xs-2 col-md-12'>
                 <ul className='list-unstyled'>
                   <SectionsList
-                    sections={this.state.sections}
+                    sections={sections}
                     isNewSection={true}
                   />
                   <NewSection
                     saveSection={this.saveSection}
-                    sectionNumber={this.state.sections.lenght}
+                    sectionNumber={sections.length}
                   />
                 </ul>
               </div>

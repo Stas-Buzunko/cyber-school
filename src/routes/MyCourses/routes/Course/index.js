@@ -1,7 +1,7 @@
 // import { injectReducer } from '../../../store/reducers'
 import { LessonRoute } from './routes/Lesson'
 import { TestRoute } from './routes/Test'
-
+import { TestAnswersRoute } from './routes/TestAnswers'
 export const CourseRoute = (store) => ({
   path : 'course/:id',
   /*  Async getComponent is only invoked when route matches   */
@@ -26,6 +26,7 @@ export const CourseRoute = (store) => ({
   },
   childRoutes: [
     LessonRoute(store),
-    TestRoute(store)
+    TestRoute(store),
+    TestAnswersRoute(store)
   ]
 })

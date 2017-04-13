@@ -37,12 +37,15 @@ class SectionsListEdit extends Component {
   editSectionButton = (item) => {
     const { sections = [] } = this.props
     const editSectionNumber = item.sectionNumber
+
     const section = sections.find(itemSection => editSectionNumber === itemSection.sectionNumber)
+    console.log(editSectionNumber, section)
     this.setState({ isEditSection: true, isShowEditButton: true, section, name: section.name })
   }
 
   renderSectionsList () {
     const { sections = [], isNewSection } = this.props
+    console.log(sections)
     const { isShowEditButton } = this.state
     return sections.map((item, i) =>
       <li key={i}>

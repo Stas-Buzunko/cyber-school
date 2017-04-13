@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import firebase from 'firebase'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
 
 class MainView extends Component {
   constructor (props) {
@@ -100,16 +99,15 @@ class MainView extends Component {
       </div>
     )
   }
-  renderButtonSaveTestAnswers () {
-    const { params } = this.props
-
+  renderButtonSaveTest () {
     return (
       <div>
         <button
           type='button'
           className='btn btn-success lg'
-          onClick={() => { browserHistory.push({ pathname: `/${params.id[1]}/answers` }) }}
-          >Save
+          onClick={() => {
+            this.setState({ isAddNewTest: true, isNewTest: true })
+          }}>Add Test
         </button>
       </div>
     )
@@ -138,9 +136,6 @@ class MainView extends Component {
                 </li>
               )}
             </ul>
-          </div>
-          <div className='col-xs-12 col-md-8'>
-          {this.renderButtonSaveTestAnswers()}
           </div>
         </div>
       </div>
