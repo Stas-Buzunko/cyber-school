@@ -21,7 +21,7 @@ export const CourseRoute = (store) => ({
         cb(null, MainView)
 
         /* Webpack named bundle   */
-      }, 'course/:id/')
+      }, 'course/:id')
     }
   },
   childRoutes: [

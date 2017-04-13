@@ -44,7 +44,6 @@ class MainView extends Component {
           )
           return Promise.all(promisesLessons).then(lessons => {
             section = { ...section, lessons }
-            console.log('section', section)
             return (section)
           })
         })
@@ -65,7 +64,6 @@ class MainView extends Component {
             )
             return Promise.all(promisesTests).then(tests => {
               section = { ...section, tests }
-              console.log('section', section)
               return (section)
             })
           })
@@ -83,23 +81,24 @@ class MainView extends Component {
   }
 
   renderLessonsList (lessons = []) {
-    const { params } = this.props
-    console.log(this.props)
+    const { location } = this.props
+
     return lessons.map((item, i) =>
       <tr key={i}>
         <td>
-          <Link to={{ pathname: `lesson/${item.id}` }}>{item.name}</Link>
+          <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link>
         </td>
         <td> {item.length} </td>
       </tr>
     )
   }
   renderTestsList (tests = []) {
-    const { params } = this.props
+    const { location } = this.props
+
     return tests.map((item, i) =>
       <tr key={i}>
         <td>
-          <Link to={{ pathname: `${params.id}/test/${item.id}` }}>{item.name}</Link>
+          <Link to={{ pathname: `${location.pathname}/test/${item.id}` }}>{item.name}</Link>
         </td>
         <td> </td>
       </tr>
