@@ -154,5 +154,15 @@
     "sinon-chai": "^2.8.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.2"
+  },
+  "bugs": {
+    "url": "https://github.com/davezuko/react-redux-starter-kit/issues"
+  },
+  "homepage": "https://github.com/davezuko/react-redux-starter-kit#readme",
+  "bin": {
+    "react-redux-starter-kit": "compile.js"
+  },
+  "directories": {
+    "test": "tests"
   }
 }

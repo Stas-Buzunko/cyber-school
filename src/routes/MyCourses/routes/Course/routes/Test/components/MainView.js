@@ -8,17 +8,18 @@ class MainView extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      test: [],
       testLoaded: false,
-      userAnswers: [],
-      answer1: '',
-      isRightAnswer1: false,
-      answer2: '',
-      isRightAnswer2: false,
-      answer3: '',
-      isRightAnswer3: false,
-      answer4: '',
-      isRightAnswer4: false
+      test: {
+        name: '',
+        questions: [
+          {
+            text: '',
+            answers: [],
+            rightAnswers: [],
+            userAnswers: []
+          }
+        ]
+      }
     }
   }
 
@@ -46,42 +47,27 @@ class MainView extends Component {
     })
   }
 
-test {
-  name
-  questions [
-    {
-    text
-    answers []
-    rightAnswers []
-    userAnswers []
-  }
-  ]
-}
   onCheckBoxClick (question, i) {
     const { test = {} } = this.state
-    const indexItemToRemove = test.questions.findIndex(item => question.text === item.text)
-    const newUserAnswers = test.questions[indexItemToRemove].userAnswers
+    const { questions, name } = test
+    const indexItemToRemove = questions.findIndex(item => question.text === item.text)
+    const newUserAnswers = questions[indexItemToRemove].userAnswers
     const indexOfAnswer = newUserAnswers.indexOf(item => item === i)
-    if (!!indexOfAnswer) {
-      newUserAnswers.splice(indexOfAnswer, 1 )
+    if (indexOfAnswer >= 0) {
+      newUserAnswers.splice(indexOfAnswer, 1)
     } else {
       newUserAnswers.push(i)
     }
-    const newUserAnswers
-    
-     test.questions.
-     const newArray = [
-       ...questions.slice(0, indexItemToRemove),
-       section,
-       ...questions.slice(indexItemToRemove + 1)
-     ]
-    // check if option is already in
-    // if chosen = remove
-    // if not chosen = add
-    setState({
-    const newUserAnswers: [
-        ...answers, i
-      ]
+    const { text, answers, rightAnswers } = questions[indexItemToRemove]
+    const newQuestion = { text, answers, rightAnswers, newUserAnswers }
+    const newArrayQuestions = [
+      ...questions.slice(0, indexItemToRemove),
+      newQuestion,
+      ...questions.slice(indexItemToRemove + 1)
+    ]
+    const newTest = { name, newArrayQuestions }
+    this.setState({
+      test: newTest
     })
   }
 
