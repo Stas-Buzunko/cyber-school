@@ -120,7 +120,7 @@ class MainView extends Component {
     })
     return newRightUserAnswers
   }
-  closeAnswer() {
+  closeAnswer () {
     const { userQuestions = [] } = this.state
     const { params } = this.props
     const rightUserAnswers = this.countRightUserAnswers()
@@ -137,7 +137,7 @@ class MainView extends Component {
     this.setState({ userQuestions: NewUserQuestions, rightUserAnswers: 0 })
   }
 
-  closeAnswerPopup() {
+  closeAnswerPopup () {
     this.props.hideModal('answer')
     this.closeAnswer()
   }

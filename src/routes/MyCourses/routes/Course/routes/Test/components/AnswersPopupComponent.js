@@ -3,17 +3,6 @@ import { connectModal } from 'redux-modal'
 import { Modal } from 'react-bootstrap'
 
 class AnswersPopupComponent extends Component {
-  constructor (props) {
-    super(props)
-
-
-
-    // this.closeAnswerPopup = this.closeAnswerPopup.bind(this)
-  }
-  closePopup (isAllTestPassed) {
-    // this.props.closeAnswerPopup(isAllTestPassed)
-  }
-
   render () {
     const { handleHide, show } = this.props
     const { rightUserAnswers, numberOfQuestions } = this.props
