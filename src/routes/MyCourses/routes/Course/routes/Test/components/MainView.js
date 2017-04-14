@@ -3,13 +3,16 @@ import firebase from 'firebase'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
+import AnswersPopupComponent from './AnswersPopupComponent'
+import toastr from 'toastr'
 
 class MainView extends Component {
   constructor (props) {
     super(props)
     this.state = {
       testLoaded: false,
-      userQuestions: '',
+      userQuestions: [],
+      rightUserAnswers: 0,
       test: {
         name: '',
         questions: [
@@ -22,6 +25,11 @@ class MainView extends Component {
         ]
       }
     }
+    this.closeAnswerPopup = this.closeAnswerPopup.bind(this)
+    this.onCheckBoxClick = this.onCheckBoxClick.bind(this)
+    this.countRightUserAnswers = this.countRightUserAnswers.bind(this)
+    this.closeAnswerPopup = this.closeAnswerPopup.bind(this)
+    this.renderButtonSaveTestAnswers = this.renderButtonSaveTestAnswers.bind(this)
   }
 
   componentWillMount () {
@@ -100,23 +108,67 @@ class MainView extends Component {
       </div>
     )
   }
-  renderButtonSaveTestAnswers () {
+
+  countRightUserAnswers () {
+    const { userQuestions = [] } = this.state
+    let newRightUserAnswers = 0
+    userQuestions.forEach(item => {
+      const isRightAnswer = JSON.stringify(item.userAnswers) === JSON.stringify(item.rightAnswers)
+      if (isRightAnswer) {
+        newRightUserAnswers = newRightUserAnswers + 1
+      }
+    })
+    return newRightUserAnswers
+  }
+  closeAnswer() {
+    const { userQuestions = [] } = this.state
     const { params } = this.props
+    const rightUserAnswers = this.countRightUserAnswers()
+    const isAllTestPassed = rightUserAnswers === userQuestions.length
+    if (isAllTestPassed) {
+      browserHistory.push({ pathname : `/myCourses/course/${params.id[0]}` })
+    } else {
+      toastr.success('Would you like to try one more time?')
+    }
+    const NewUserQuestions = userQuestions
+    NewUserQuestions.forEach(item => {
+      item.userAnswers = []
+    })
+    this.setState({ userQuestions: NewUserQuestions, rightUserAnswers: 0 })
+  }
+
+  closeAnswerPopup() {
+    this.props.hideModal('answer')
+    this.closeAnswer()
+  }
+
+  renderButtonSaveTestAnswers () {
+    const { userQuestions } = this.state
+    const numberOfQuestions = userQuestions.length
+    const rightUserAnswers = this.countRightUserAnswers()
 
     return (
       <div>
         <button
           type='button'
           className='btn btn-success lg'
-          onClick={() => { browserHistory.push({ pathname: `/${params.id[1]}/answers` }) }}
-          >Save
+          onClick={(e) => {
+            e.preventDefault()
+            this.props.openModal('answer')
+          }}>Save
         </button>
+
+        <AnswersPopupComponent
+          closeAnswerPopup={this.closeAnswerPopup}
+          rightUserAnswers={rightUserAnswers}
+          numberOfQuestions={numberOfQuestions}
+          />
+
       </div>
     )
   }
   render () {
     const { questions = [], name } = this.state.test
-    const { params } = this.props
     return (
       <div className='container'>
         <div className='row'>
@@ -140,7 +192,7 @@ class MainView extends Component {
             </ul>
           </div>
           <div className='col-xs-12 col-md-8'>
-          {this.renderButtonSaveTestAnswers()}
+            {this.renderButtonSaveTestAnswers()}
           </div>
         </div>
       </div>
