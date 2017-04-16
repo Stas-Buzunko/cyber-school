@@ -111,24 +111,12 @@ class CommentList extends Component {
       })
   }
 
-  fetchUserForComment (uid) {
-    firebase.database().ref('users/' + uid)
-    .once('value')
-    .then(snapshot => {
-      const object = snapshot.val()
-      if (object !== null) {
-        const user = object
-        return user
-      }
-    })
-  }
-
   renderChildrenList (item) {
     return item.children.map((child, i) =>
-      <div key={i}  className='col-xs-12 col-md-12'>
+      <div key={i} className='col-xs-12 col-md-12'>
         <div className='col-xs-12 col-md-4'>
-        <div className='col-xs-12 col-md-4'>{child.displayName}</div>
-        <div className='col-xs-12 col-md-4'><img  style={{ borderRadius: '50%'}} src={child.avatar}/> </div>
+          <div className='col-xs-12 col-md-4'>{child.displayName}</div>
+          <div className='col-xs-12 col-md-4'><img style={{borderRadius:'50%'}} src={child.avatar} /> </div>
         </div>
         <div className='col-xs-12 col-md-3'>{child.comment} </div>
       </div>)
@@ -141,13 +129,12 @@ class CommentList extends Component {
     const isRespond = true
     return comments.map((item, i) =>
       <li key={i}>
-      <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-
+        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-10 col-md-3'>
             <div className='col-xs-10 col-md-3'>{item.displayName}</div>
             <div className='col-xs-10 col-md-3'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
-            </div>
-            <div className='col-xs-10 col-md-3' tyle={{ borderRadius:'50%' }}>{item.text} </div>
+          </div>
+          <div className='col-xs-10 col-md-3' tyle={{ borderRadius:'50%' }}>{item.text} </div>
           <div className='col-xs-6 col-md-4'>
             {this.renderCommentPopup(isRespond, item) }
           </div>
@@ -164,23 +151,16 @@ class CommentList extends Component {
   )
   }
   render () {
-    console.log(this.props.auth)
-    console.log(this.props.auth.user.avatar)
-    console.log(this.props.auth.user.displayName)
-  console.log(this.props.auth.user.uid)
-
     const isRespond = false
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
             <label className='control-label col-xs-2 col-md-2'>Comments:</label>
-            {/* <div className='col-xs-12 col-md-12'> */}
-              <ul className='list-unstyled'>
-                {this.renderCommentPopup(isRespond, {}) }
-                {this.renderCommentList()}
-              </ul>
-            {/* </div> */}
+            <ul className='list-unstyled'>
+              {this.renderCommentPopup(isRespond, {}) }
+              {this.renderCommentList()}
+            </ul>
           </div>
         </div>
       </div>

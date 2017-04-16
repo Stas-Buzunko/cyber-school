@@ -12,7 +12,6 @@ class QuestionPopupComponent extends Component {
       text: '',
       answers: ['', '', '', ''],
       rightAnswers: [0],
-      ert: false,
       newAnswer: '',
       test: {
         name: '',
@@ -25,7 +24,6 @@ class QuestionPopupComponent extends Component {
           }
         ]
       }
-
 
     }
 
@@ -89,18 +87,18 @@ class QuestionPopupComponent extends Component {
     })
   }
 
-  // addAnswerButton () {
-  //   const { answers, ert } = this.state
-  //   return (
-  //     <button
-  //       type='button'
-  //       style={{ width:'20%', margin: '15px' }}
-  //       className='btn btn-success lg'
-  //       onClick={ }
-  //       >Add Answer
-  //     </button>
-  //   )
-  // }
+  addAnswerButton () {
+    const { answers } = this.state
+    return (
+      <button
+        type='button'
+        style={{ width:'20%', margin: '15px' }}
+        className='btn btn-success lg'
+        onClick={() => this.answerChange('', answers.length)}
+        >Add Answer
+      </button>
+    )
+  }
 
   isRightAnswer (i) {
     const { rightAnswers } = this.state
@@ -188,9 +186,9 @@ class QuestionPopupComponent extends Component {
                 {this.renderAnswers()}
               </ul>
             </div>
-            {/* <div className='col-xs-10 col-md-12'>
+            <div className='col-xs-10 col-md-12'>
               {this.addAnswerButton()}
-            </div> */}
+            </div>
           </div>
 
         </Modal.Body>

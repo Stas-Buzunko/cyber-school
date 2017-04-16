@@ -18,7 +18,7 @@ class MainView extends Component {
 
   componentWillMount () {
     const { params } = this.props
-    this.fetchItem(params.id)
+    this.fetchItem(params.courseId)
   }
 
   fetchItem (id) {
