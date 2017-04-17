@@ -118,7 +118,7 @@ class CommentList extends Component {
           <div className='col-xs-12 col-md-4'>{child.displayName}</div>
           <div className='col-xs-12 col-md-4'><img style={{borderRadius:'50%'}} src={child.avatar} /> </div>
         </div>
-        <div className='col-xs-12 col-md-3'>{child.comment.text} </div>
+        <div className='col-xs-12 col-md-3'>{child.comment} </div>
       </div>)
   }
 
