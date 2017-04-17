@@ -14,8 +14,13 @@ class UserCoursesList extends Component {
 
   componentWillMount () {
     const { userCourses } = this.props.auth.user
-
-    this.fetchCourses(userCourses)
+    if (userCourses) {
+      this.fetchCourses(userCourses)
+    } else {
+      this.setState({
+        coursesLoaded: true
+      })
+    }
   }
 
   fetchCourses (userCourses) {

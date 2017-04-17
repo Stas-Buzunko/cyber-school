@@ -134,7 +134,7 @@ class CommentList extends Component {
             <div className='col-xs-10 col-md-3'>{item.displayName}</div>
             <div className='col-xs-10 col-md-3'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
           </div>
-          <div className='col-xs-10 col-md-3' tyle={{ borderRadius:'50%' }}>{item.text} </div>
+          <div className='col-xs-10 col-md-3' style={{ borderRadius:'50%' }}>{item.text} </div>
           <div className='col-xs-6 col-md-4'>
             {this.renderCommentPopup(isRespond, item) }
           </div>

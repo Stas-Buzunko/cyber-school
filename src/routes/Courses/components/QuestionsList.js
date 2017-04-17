@@ -51,7 +51,7 @@ class QuestionsList extends Component {
             </div>
             <div className='col-xs-10 col-md-2'>
               <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
-                <input type='checkbox' checked={this.isRightAnswer(i,rightAnswers)} />
+                <input type='checkbox' checked={this.isRightAnswer(i, rightAnswers)} />
               </label>
             </div>
           </div>
