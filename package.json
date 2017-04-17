@@ -103,6 +103,7 @@
     "moment": "^2.18.1",
     "normalize.css": "^5.0.0",
     "postcss-loader": "^1.1.0",
+    "prop-types": "^15.5.8",
     "react": "^15.0.0",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.0.0",
@@ -153,6 +154,5 @@
     "sinon-chai": "^2.8.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.2"
-
   }
 }
