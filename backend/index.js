@@ -18,11 +18,11 @@ const serviceAccount = require('./key.json')
 const env = process.env.NODE_ENV
 const front = env === 'development'
   ? 'http://localhost:3000'
-  : 'https://cyber-academy.firebaseapp.com'
+  : 'https://cyber-academy.net'
 
 const backend = env === 'development'
   ? 'http://localhost:3001'
-  : 'https://cyber-academy.tk'
+  : 'https://server.cyber-academy.net'
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

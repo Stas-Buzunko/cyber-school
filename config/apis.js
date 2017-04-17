@@ -4,7 +4,7 @@ const env = process.env.NODE_ENV || 'development'
 
 const backend = {
   development: 'http://localhost:3001',
-  production: 'https://cyber-academy.tk'
+  production: 'https://server.cyber-academy.net/'
 }
 
 module.exports = backend[env]
