@@ -34,7 +34,7 @@ class MainView extends Component {
 
   componentWillMount () {
     const { params } = this.props
-    this.fetchItem(params.id[1])
+    this.fetchItem(params.testId)
   }
 
   fetchItem (id) {
@@ -120,13 +120,13 @@ class MainView extends Component {
     })
     return newRightUserAnswers
   }
-  closeAnswer() {
+  closeAnswer () {
     const { userQuestions = [] } = this.state
     const { params } = this.props
     const rightUserAnswers = this.countRightUserAnswers()
     const isAllTestPassed = rightUserAnswers === userQuestions.length
     if (isAllTestPassed) {
-      browserHistory.push({ pathname : `/myCourses/course/${params.id[0]}` })
+      browserHistory.push({ pathname : `/myCourses/course/${params.courseId}` })
     } else {
       toastr.success('Would you like to try one more time?')
     }
@@ -137,7 +137,7 @@ class MainView extends Component {
     this.setState({ userQuestions: NewUserQuestions, rightUserAnswers: 0 })
   }
 
-  closeAnswerPopup() {
+  closeAnswerPopup () {
     this.props.hideModal('answer')
     this.closeAnswer()
   }

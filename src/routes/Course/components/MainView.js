@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
-import CommentList from './CommentList'
+import CommentList from '../containers/CommentListContainer'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import StripeComponent from '../../../components/StripeComponent'
