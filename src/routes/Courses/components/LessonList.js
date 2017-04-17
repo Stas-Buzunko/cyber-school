@@ -25,7 +25,7 @@ class LessonsList extends Component {
     this.props.lessonsIds !== nextProps.lessonsIds && this.fetchItems(nextProps.lessonsIds)
   }
 
-  fetchItems (lessonsIds) {
+  fetchItems (lessonsIds = []) {
     this.setState({
       lessons: [],
       lessonsLoaded: false

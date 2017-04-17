@@ -18,7 +18,7 @@ class MainView extends Component {
 
   componentWillMount () {
     const { params } = this.props
-    this.fetchItem(params.id)
+    this.fetchItem(params.courseId)
   }
 
   fetchItem (id) {
@@ -35,18 +35,43 @@ class MainView extends Component {
       const object = snapshot.val()
       if (object !== null) {
         const course = { ...snapshot.val(), id }
-        const promises = course.lessonsIds.map(id =>
-          firebase.database().ref('lessons/' + id)
-          .once('value')
-          .then(snapshot2 => ({ ...snapshot2.val(), id }))
-        )
-        Promise.all(promises).then(lessons => {
+        const { sections } = course
+        const newSectionsLessons = sections.map(section => {
+          const promisesLessons = section.lessonsIds.map(id =>
+            firebase.database().ref('lessons/' + id)
+            .once('value')
+            .then(snapshot2 => ({ ...snapshot2.val(), id }))
+          )
+          return Promise.all(promisesLessons).then(lessons => {
+            section = { ...section, lessons }
+            return (section)
+          })
+        })
+        Promise.all(newSectionsLessons).then(result => {
           this.setState({
-            lessons,
+            sections: result,
             course,
             comments: course.comments,
             courseLoaded: true,
             lessonsLoaded: true
+          })
+          const { sections } = this.state
+          const newSectionsTests = sections.map(section => {
+            const promisesTests = section.testsIds.map(id =>
+              firebase.database().ref('tests/' + id)
+              .once('value')
+              .then(snapshot3 => ({ ...snapshot3.val(), id }))
+            )
+            return Promise.all(promisesTests).then(tests => {
+              section = { ...section, tests }
+              return (section)
+            })
+          })
+          Promise.all(newSectionsTests).then(result => {
+            this.setState({
+              sections: result,
+              testsLoaded: true
+            })
           })
         })
       } else {
@@ -55,8 +80,33 @@ class MainView extends Component {
     })
   }
 
-  renderLessonsList (courseId) {
-    const { lessons } = this.state
+  renderLessonsList (lessons = []) {
+    const { location } = this.props
+
+    return lessons.map((item, i) =>
+      <tr key={i}>
+        <td>
+          <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link>
+        </td>
+        <td> {item.length} </td>
+      </tr>
+    )
+  }
+  renderTestsList (tests = []) {
+    const { location } = this.props
+
+    return tests.map((item, i) =>
+      <tr key={i}>
+        <td>
+          <Link to={{ pathname: `${location.pathname}/test/${item.id}` }}>{item.name}</Link>
+        </td>
+        <td> </td>
+      </tr>
+    )
+  }
+
+  renderSectionsList () {
+    const { sections = [] } = this.state
     return (
       <div className='col-xs-12 col-md-12'>
         <div className='col-xs-12 col-md-8'>
@@ -67,20 +117,18 @@ class MainView extends Component {
                 <th>Length</th>
               </tr>
             </thead>
-            <tbody>
-              {lessons.map((item, i) =>
-                <tr key={i}>
+            {sections.map((item, i) =>
+              <tbody key={i}>
+                <tr>
                   <td>
-                    {item.isFree &&
-                      <Link to={{ pathname: `/myCourses/course/${courseId}/lesson/${item.id}` }}>
-                        {item.name}</Link> }
-                    {!item.isFree &&
-                      <div>{item.name}</div> }
+                    <div className='col-xs-12 col-md-4'>{item.name}</div>
                   </td>
-                  <td> {item.length} </td>
+                  <td />
                 </tr>
-              )}
-            </tbody>
+                {this.renderLessonsList(item.lessons)}
+                {this.renderTestsList(item.tests)}
+              </tbody>
+            )}
           </table>
         </div>
       </div>
@@ -129,7 +177,7 @@ class MainView extends Component {
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
-            {this.renderLessonsList(params.id)}
+            {this.renderSectionsList()}
           </ul>
         </div>
       </div>
@@ -138,8 +186,7 @@ class MainView extends Component {
 }
 
 MainView.propTypes = {
-  params: PropTypes.object,
-  user: PropTypes.object
+  params: PropTypes.object
 }
 
 const mapStateToProps = state => ({

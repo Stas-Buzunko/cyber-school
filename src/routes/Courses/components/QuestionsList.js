@@ -31,18 +31,27 @@ class QuestionsList extends Component {
     this.props.openModal('question', { question })
   }
 
-  renderAnswers (answers) {
+  isRightAnswer (i, rightAnswers) {
+    const index = rightAnswers.indexOf(i)
+    if (index === -1) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  renderAnswers (answers, rightAnswers) {
     return answers.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-md-12'>
             <label className='control-label col-xs-1'>{i + 1}</label>
             <div className='col-xs-10 col-md-9'>
-              {item.answer}
+              {item}
             </div>
             <div className='col-xs-10 col-md-2'>
               <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
-                <input type='checkbox' checked={item.isRight} />
+                <input type='checkbox' checked={this.isRightAnswer(i,rightAnswers)} />
               </label>
             </div>
           </div>
@@ -67,7 +76,7 @@ class QuestionsList extends Component {
               <div className='col-xs-10'>
                 <label className='control-label col-xs-2'>Answers:</label>
                 <ul className='list-unstyled'>
-                  <div> {this.renderAnswers(item.answers)}</div>
+                  <div> {this.renderAnswers(item.answers, item.rightAnswers)}</div>
                 </ul>
               </div>
             }

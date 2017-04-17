@@ -88,7 +88,7 @@ class TestList extends Component {
             <QuestionPopupComponent
               saveQuestion={this.saveQuestion}
               isNewQuestion={true}
-              questionNumber={this.state.questions.lenght}
+              questionNumber={this.state.questions.length}
             />
           </div>
         </div>

@@ -11,7 +11,10 @@ class CommentList extends Component {
 
     this.state = {
       comment: '',
-      comments: []
+      comments: [],
+      user: {},
+      userLoaded: false
+
     }
     this.renderCommentList = this.renderCommentList.bind(this)
     this.renderChildrenList = this.renderChildrenList.bind(this)
@@ -45,6 +48,8 @@ class CommentList extends Component {
   }
 
   saveComment = (comment, isRespond, item) => {
+    console.log(comment)
+    const { user } = this.props.auth
     this.setState({
       comments: []
     })
@@ -63,11 +68,15 @@ class CommentList extends Component {
       if (!isRespond) {
         const commentStructure = {
           text: comment,
-          children:[] }
+          children:[],
+          uid: user.uid,
+          displayName: user.displayName,
+          avatar: user.avatar
+        }
         const newComments = [ ...comments, commentStructure ]
         this.setState({ comments: newComments })
       } else {
-        const respond = comment
+        const respond = { comment, uid: user.uid, displayName: user.displayName, avatar: user.avatar }
         if (!item.children) {
           item.children = []
         }
@@ -104,23 +113,34 @@ class CommentList extends Component {
 
   renderChildrenList (item) {
     return item.children.map((child, i) =>
-      <div key={i}> {child} </div>)
+      <div key={i} className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-4'>
+          <div className='col-xs-12 col-md-4'>{child.displayName}</div>
+          <div className='col-xs-12 col-md-4'><img style={{borderRadius:'50%'}} src={child.avatar} /> </div>
+        </div>
+        <div className='col-xs-12 col-md-3'>{child.comment} </div>
+      </div>)
   }
 
   renderCommentList () {
     const { comments = [] } = this.state
+    console.log(comments)
+
     const isRespond = true
     return comments.map((item, i) =>
       <li key={i}>
-        <div className='col-xs-12 col-md-10' style={{ padding: '15px' }} >
-          <div className='col-xs-10 col-md-4'>
-            <div> {item.text} </div>
+        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
+          <div className='col-xs-10 col-md-3'>
+            <div className='col-xs-10 col-md-3'>{item.displayName}</div>
+            <div className='col-xs-10 col-md-3'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
           </div>
+          <div className='col-xs-10 col-md-3' tyle={{ borderRadius:'50%' }}>{item.text} </div>
           <div className='col-xs-6 col-md-4'>
             {this.renderCommentPopup(isRespond, item) }
           </div>
         </div>
-        { item.children && <div className='col-xs-12 col-md-10' style={{ padding: '15px' }} >
+
+        { item.children && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-12 col-md-2'>
           </div>
           <div className='col-xs-10 col-md-8'>
@@ -152,7 +172,8 @@ CommentList.propTypes = {
   comments: React.PropTypes.array,
   openModal: React.PropTypes.func,
   hideModal: React.PropTypes.func,
-  courseId: React.PropTypes.string
+  courseId: React.PropTypes.string,
+  auth: React.PropTypes.object
 }
 
 const mapDispatchToProps = {

@@ -54,7 +54,7 @@ class NewSection extends Component {
     )
   }
   saveNewSection = () => {
-    const { sectionNumber = 0 } = this.props
+    const { sectionNumber } = this.props
     const { name, lessonsIds, testsIds } = this.state
     const section = { name, lessonsIds, testsIds, sectionNumber }
     this.props.saveSection(section)

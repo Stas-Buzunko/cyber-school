@@ -1,8 +1,9 @@
 // import { injectReducer } from '../../../store/reducers'
 import { LessonRoute } from './routes/Lesson'
-
+import { TestRoute } from './routes/Test'
+import { TestAnswersRoute } from './routes/TestAnswers'
 export const CourseRoute = (store) => ({
-  path : 'course/:id',
+  path : 'course/:courseId',
   /*  Async getComponent is only invoked when route matches   */
   indexRoute: {
     getComponent (nextState, cb) {
@@ -20,10 +21,12 @@ export const CourseRoute = (store) => ({
         cb(null, MainView)
 
         /* Webpack named bundle   */
-      }, 'course/:id')
+      }, 'course/:courseId')
     }
   },
   childRoutes: [
-    LessonRoute(store)
+    LessonRoute(store),
+    TestRoute(store),
+    TestAnswersRoute(store)
   ]
 })

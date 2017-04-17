@@ -44,7 +44,8 @@ class EditCourse extends Component {
       })
   }
   editCourse () {
-    const { name, discipline, author, description, mainPhoto, duration, price, id, sections } = this.state
+    const { id } = this.props.params
+    const { name, discipline, author, description, mainPhoto, duration, price, sections } = this.state
     const dateUploaded = Date.now()
     this.setState({ error: '' })
     firebase.database().ref('courses/' + id)
@@ -172,6 +173,7 @@ class EditCourse extends Component {
                   </div>
                   {!!isAddNewSectionOpen &&
                     <NewSection
+                      sectionNumber={sections.length}
                       saveSection={this.addNewSection}
                   />
                   }

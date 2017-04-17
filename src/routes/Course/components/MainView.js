@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
-import CommentList from './CommentList'
+import CommentList from '../containers/CommentListContainer'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import StripeComponent from '../../../components/StripeComponent'
@@ -13,9 +13,11 @@ class MainView extends Component {
       course: {},
       courseLoaded: false,
       lessons: [],
-      lessonsLoaded: false
-
+      lessonsLoaded: false,
+      sections: [],
+      courseLessons: []
     }
+    this.renderSectionsList = this.renderSectionsList.bind(this)
   }
 
   componentWillMount () {
@@ -37,14 +39,21 @@ class MainView extends Component {
       const object = snapshot.val()
       if (object !== null) {
         const course = { ...snapshot.val(), id }
-        const promises = course.lessonsIds.map(id =>
-          firebase.database().ref('lessons/' + id)
-          .once('value')
-          .then(snapshot2 => ({ ...snapshot2.val(), id }))
-        )
-        Promise.all(promises).then(lessons => {
+        const { sections } = course
+        const newSections = sections.map(section => {
+          const promises = section.lessonsIds.map(id =>
+            firebase.database().ref('lessons/' + id)
+            .once('value')
+            .then(snapshot2 => ({ ...snapshot2.val(), id }))
+          )
+          return Promise.all(promises).then(lessons => {
+            section = { ...section, lessons }
+            return (section)
+          })
+        })
+        Promise.all(newSections).then(result => {
           this.setState({
-            lessons,
+            sections: result,
             course,
             comments: course.comments,
             courseLoaded: true,
@@ -57,8 +66,22 @@ class MainView extends Component {
     })
   }
 
-  renderLessonsList () {
-    const { lessons } = this.state
+  renderLessonsList (lessons = []) {
+    return lessons.map((item, i) =>
+      <tr key={i}>
+        <td>
+          {item.isFree &&
+          <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
+          {!item.isFree &&
+          <div>{item.name}</div> }
+        </td>
+        <td> {item.length} </td>
+      </tr>
+    )
+  }
+
+  renderSectionsList () {
+    const { sections = [] } = this.state
     return (
       <div className='col-xs-12 col-md-12'>
         <div className='col-xs-12 col-md-8'>
@@ -69,19 +92,17 @@ class MainView extends Component {
                 <th>Length</th>
               </tr>
             </thead>
-            <tbody>
-              {lessons.map((item, i) =>
-                <tr key={i}>
+            {sections.map((item, i) =>
+              <tbody key={i}>
+                <tr>
                   <td>
-                    {item.isFree &&
-                      <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
-                    {!item.isFree &&
-                      <div>{item.name}</div> }
+                    <div className='col-xs-12 col-md-4'>{item.name}</div>
                   </td>
-                  <td> {item.length} </td>
+                  <td />
                 </tr>
-              )}
-            </tbody>
+                {this.renderLessonsList(item.lessons)}
+              </tbody>
+            )}
           </table>
         </div>
       </div>
@@ -154,7 +175,7 @@ class MainView extends Component {
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
-            {this.renderLessonsList()}
+            {this.renderSectionsList()}
           </ul>
         </div>
       </div>
