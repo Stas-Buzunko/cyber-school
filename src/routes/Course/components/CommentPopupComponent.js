@@ -17,7 +17,6 @@ class CommentPopupComponent extends Component {
 
   saveCommentPopup = () => {
     const { comment } = this.state
-    console.log(comment)
     const { isRespond, item } = this.props
     this.setState({ error: '' })
     if (!comment) {
