@@ -9,6 +9,9 @@
     },
     "lessons": {
       ".read": true
+    },
+    "tests": {
+      ".read": true
     }
   }
 }
