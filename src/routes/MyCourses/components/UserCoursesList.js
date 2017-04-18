@@ -48,16 +48,31 @@ class UserCoursesList extends Component {
     })
   }
 
+  renderProgressBar () {
+    const { userCourses } = this.props.auth.user
+    return (
+      <div className='progress'>
+        <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
+          aria-valuemin='0' aria-valuemax='100' style={{ width: '40%' }}>
+          40% Complete (success)
+        </div>
+      </div>
+    )
+  }
+
   renderCourses () {
     const { courses } = this.state
     return courses.map((course, i) => (
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
-          <div className='thumbnail' style={{ height: '300px' }}>
+          <div className='thumbnail' style={{ height: '360px' }}>
             <img src={course.mainPhoto} width='300px' height='250px' />
             <div className='caption'>
               <h5>{course.name} </h5>
               <h5>{course.description}</h5>
+              <div style={{ padding: '15px' }} >
+                {this.renderProgressBar()}
+              </div>
               <button
                 type='button'
                 className='btn btn-primary'

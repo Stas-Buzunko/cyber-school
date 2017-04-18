@@ -135,6 +135,28 @@ class MainView extends Component {
     )
   }
 
+  renderProgressBar () {
+    // const { userCourses } = this.props.auth.user
+    const { sections = [] } = this.state
+    const numPassedSections = 2
+    const percent = numPassedSections / sections.length
+    return (
+      <div>
+        <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
+          <label className='control-label col-xs-8'>Your progress: 2 sections from {sections.length} </label>
+        </div>
+        <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
+          <div className='progress'>
+            <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
+              aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent * 100}%` }}>
+              {Math.round(percent * 100)}% Complete (success)
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   render () {
     const { course, comments } = this.state
     const { params } = this.props
@@ -174,8 +196,9 @@ class MainView extends Component {
             />
           </ul>
         </div>
+        {this.renderProgressBar()}
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
+          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Sections: </label>
           <ul className='list-unstyled'>
             {this.renderSectionsList()}
           </ul>

@@ -56,7 +56,7 @@ class MainView extends Component {
           </div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>ImageUrl:</label>
-            <div> {lesson.imageUrl}</div>
+              <img src={lesson.imageUrl} width='150px' height='100px' />
           </div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>VideoUrl:</label>

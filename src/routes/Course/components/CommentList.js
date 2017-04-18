@@ -48,7 +48,6 @@ class CommentList extends Component {
   }
 
   saveComment = (comment, isRespond, item) => {
-    console.log(comment)
     const { user } = this.props.auth
     this.setState({
       comments: []
@@ -124,8 +123,6 @@ class CommentList extends Component {
 
   renderCommentList () {
     const { comments = [] } = this.state
-    console.log(comments)
-
     const isRespond = true
     return comments.map((item, i) =>
       <li key={i}>

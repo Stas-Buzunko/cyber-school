@@ -36,8 +36,21 @@ class MainView extends Component {
     })
   }
 
+  renderVideo () {
+    const { lesson = {} } = this.state
+    const urlFromLesson = lesson.videoUrl
+    console.log(urlFromLesson)
+    if (urlFromLesson) {
+      const videoId = urlFromLesson.replace('https://youtu.be/', '')
+      return (
+        <iframe className='embed-responsive-item' src={`https://www.youtube.com/embed/${videoId}`}>
+        </iframe>
+      )
+    }
+  }
+
   renderLesson () {
-    const { lesson } = this.state
+    const { lesson = {} } = this.state
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-8'>
@@ -45,6 +58,10 @@ class MainView extends Component {
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Name:</label>
             <div> {lesson.name}</div>
+          </div>
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Video:</label>
+            {this.renderVideo()}
           </div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Description:</label>
@@ -56,7 +73,7 @@ class MainView extends Component {
           </div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>ImageUrl:</label>
-            <div> {lesson.imageUrl}</div>
+            <img src={lesson.imageUrl} width='150px' height='100px' />
           </div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>VideoUrl:</label>
@@ -70,7 +87,6 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>TestId:</label>
             <div> {lesson.testId}</div>
           </div>
-
         </div>
       </div>
     )
