@@ -209,7 +209,8 @@ class MainView extends Component {
 }
 
 MainView.propTypes = {
-  params: PropTypes.object
+  params: PropTypes.object,
+  location: PropTypes.object
 }
 
 const mapStateToProps = state => ({

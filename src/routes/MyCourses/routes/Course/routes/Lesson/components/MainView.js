@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 import CommentList from './CommentList'
+import VideoPlayer from './VideoPlayer'
 
 class MainView extends Component {
   constructor (props) {
@@ -8,8 +9,10 @@ class MainView extends Component {
     this.state = {
       lesson: [],
       lessonLoaded: false,
-      comments: []
+      comments: [],
+      userCourses: {}
     }
+    this.videoEnded = this.videoEnded.bind(this)
   }
 
   componentWillMount () {
@@ -36,15 +39,41 @@ class MainView extends Component {
     })
   }
 
+  videoEnded () {
+    const { lessonId = '', courseId = '' } = this.props.params
+    const { uid } = this.props.auth.user
+    console.log(lessonId, uid, courseId)
+    firebase.database().ref('users/' + uid)
+    .once('value', snapshot => {
+      const object = snapshot.val()
+      const { userCourses } = object
+      console.log(userCourses)
+      this.setState({ userCourses })
+    })
+    .then(() => {
+      toastr.success('Your course saved!')
+      browserHistory.push(`/admin/courses`)
+    })
+    // firebase.database().ref('users/' + uid).push({
+    //   name, description, mainPhoto, duration, dateUploaded, price, discipline, author, sections, comments
+    // })
+    // .then(() => {
+    //   toastr.success('Your course saved!')
+    //   browserHistory.push(`/admin/courses`)
+    // })
+
+  }
+
   renderVideo () {
     const { lesson = {} } = this.state
-    const urlFromLesson = lesson.videoUrl
-    console.log(urlFromLesson)
-    if (urlFromLesson) {
-      const videoId = urlFromLesson.replace('https://youtu.be/', '')
+    if (lesson.videoUrl) {
       return (
-        <iframe className='embed-responsive-item' src={`https://www.youtube.com/embed/${videoId}`}>
-        </iframe>
+        <div>
+          <VideoPlayer
+            url={lesson.videoUrl}
+            videoEnded={this.videoEnded}
+          />
+        </div>
       )
     }
   }
@@ -54,7 +83,7 @@ class MainView extends Component {
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-8'>
-
+  {this.videoEnded()}
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Name:</label>
             <div> {lesson.name}</div>
@@ -117,7 +146,9 @@ class MainView extends Component {
   }
 }
 MainView.propTypes = {
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  auth: React.PropTypes.object,
+  user: React.PropTypes.object
 }
 
 export default MainView
