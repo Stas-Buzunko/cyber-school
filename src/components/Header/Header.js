@@ -36,6 +36,10 @@ export const Header = ({ user }) =>
           MyCourses
         </Link>
         {' · '}
+        <Link to='/statistics' activeClassName='route--active'>
+          My statistics
+        </Link>
+        {' · '}
         <p>{user.displayName}</p>
         <img src={user.avatar} alt='' />
         <a onClick={() => firebase.auth().signOut()}>Log out</a>

@@ -96,10 +96,10 @@ app.post('/charge', (req, res) => {
       // read course length in the future
       admin.database().ref('users/' + userId).once('value')
       .then(snapshot => {
-
         const user = snapshot.val()
         if (user !== null) {
           const { userCourses = [] } = user
+          const { estimate } = user.statistics.mmr_estimate
 
           admin.database().ref('users/' + userId).update({
             userCourses: [
@@ -107,7 +107,8 @@ app.post('/charge', (req, res) => {
               {
                 courseId,
                 validFrom: Math.floor(Date.now() / 1000),
-                validUntil: Math.floor(Date.now() / 1000) + 2 * 30 * 24 * 60 * 60
+                validUntil: Math.floor(Date.now() / 1000) + 2 * 30 * 24 * 60 * 60,
+                startMMR: estimate
               }
             ]
           })
@@ -120,6 +121,20 @@ app.post('/charge', (req, res) => {
       console.log('charge failed')
       res.sendStatus(400)
     }
+  })
+})
+
+app.post('/update', (req, res) => {
+  const { uid, email } = req.body
+
+  console.log('start update', uid, email)
+
+  admin.auth().updateUser(uid, {
+    email
+  })
+ .then(() => {
+    console.log('update successful')
+    res.sendStatus(200)
   })
 })
 
