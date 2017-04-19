@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { Provider } from 'react-redux'
 import firebase from 'firebase'
-import { steamLogin, onLogoutSuccess } from '../actions/auth-actions'
-import AppLayer from './AppLayer'
+import { steamLogin, onLogoutSuccess, onLoginSuccess } from '../actions/auth-actions'
+import { Router, browserHistory } from 'react-router'
 
 class AppContainer extends Component {
   static propTypes = {
-    routes : PropTypes.object.isRequired,
+    routes : PropTypes.array.isRequired,
     store  : PropTypes.object.isRequired
   }
 
@@ -15,10 +15,7 @@ class AppContainer extends Component {
       if (user) {
         console.log('logged in')
 
-        // fetch only users logged in via steam
-        if (!user.email) {
-          this.fetchUser(user.uid)
-        }
+        this.fetchUser(user.uid)
       } else {
         console.log('not logged in')
         this.clearUser()
@@ -32,7 +29,6 @@ class AppContainer extends Component {
 
   fetchUser (uid) {
     const { store } = this.props
-
     firebase.database().ref('users/' + uid)
     .on('value', snapshot => {
       let user = snapshot.val()
@@ -41,6 +37,9 @@ class AppContainer extends Component {
         user = { ...snapshot.val(), uid }
         localStorage.setItem('cyber-academy-user', JSON.stringify(user))
         store.dispatch(steamLogin(user))
+      } else {
+        // admin
+        store.dispatch(onLoginSuccess())
       }
     })
   }
@@ -49,6 +48,7 @@ class AppContainer extends Component {
     const { store } = this.props
 
     store.dispatch(onLogoutSuccess())
+    localStorage.removeItem('authenticated')
     localStorage.removeItem('cyber-academy-user')
   }
 
@@ -57,7 +57,9 @@ class AppContainer extends Component {
 
     return (
       <Provider store={store}>
-        <AppLayer routes={routes} />
+        <div style={{ height: '100%' }}>
+          <Router history={browserHistory} children={routes} />
+        </div>
       </Provider>
     )
   }

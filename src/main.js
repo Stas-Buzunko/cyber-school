@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import createStore from './store/createStore'
 import AppContainer from './containers/AppContainer'
 import * as firebase from 'firebase'
-import { onLoginSuccess, onLogoutSuccess } from './actions/auth-actions'
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -21,17 +20,6 @@ firebase.initializeApp(firebaseConfig)
 // ========================================================
 const initialState = window.___INITIAL_STATE__
 const store = createStore(initialState)
-
-// move to admin route? as it's used only for admins?
-// will not work for users now
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    store.dispatch(onLoginSuccess())
-  } else {
-    store.dispatch(onLogoutSuccess())
-    localStorage.removeItem('authenticated')
-  }
-})
 
 // ========================================================
 // Render Setup

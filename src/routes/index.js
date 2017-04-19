@@ -1,5 +1,6 @@
 // We only need to import the modules necessary for initial render
 import CoreLayout from '../layouts/CoreLayout'
+import AuthLayout from '../layouts/AuthLayout'
 import Home from './Home'
 import Admin from './Admin'
 import Courses from './Courses'
@@ -8,10 +9,38 @@ import Login from './Login'
 import Course from './Course'
 import Lesson from './Lesson'
 import MyCourses from './MyCourses'
+import VerifyEmail from './VerifyEmail'
+import EmailSetup from './EmailSetup'
+import Statistics from './Statistics'
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
-export const createRoutes = (store) => ({
+const redirectToEmail = (nextState, replace, store) => {
+  const state = store.getState()
+  const { user } = state.auth
+
+  if (Object.keys(user).length && (!user.email || !user.emailVerified)) {
+    replace({
+      pathname: '/email_setup',
+      state: { nextPathname: nextState.location.pathname }
+    })
+  }
+}
+
+const redirectToLanding = (nextState, replace, store) => {
+  const state = store.getState()
+  const { user } = state.auth
+
+  if (user.emailVerified) {
+    replace({
+      pathname: '/',
+      state: { nextPathname: nextState.location.pathname }
+    })
+  }
+}
+
+export const createRoutes = (store) => ([{
+  onEnter: (nextState, replace) => redirectToEmail(nextState, replace, store),
   path        : '/',
   component   : CoreLayout,
   indexRoute  : Home,
@@ -22,9 +51,20 @@ export const createRoutes = (store) => ({
     Login(),
     Course(store),
     Lesson(store),
-    MyCourses(store)
+    MyCourses(store),
+    Statistics(store),
   ]
-})
+}, {
+  onEnter: (nextState, replace) => redirectToLanding(nextState, replace, store),
+  path: '/email_setup',
+  component: AuthLayout,
+  indexRoute: EmailSetup(store)
+}, {
+  path: '/verify',
+  component: AuthLayout,
+  indexRoute: VerifyEmail(store)
+},
+])
 
 /*  Note: childRoutes can be chunked or otherwise loaded programmatically
     using getChildRoutes with the following signature:
