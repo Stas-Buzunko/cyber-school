@@ -9,7 +9,8 @@ class VideoPlayer extends Component {
     this.state = {
 
       playing: true,
-      volume: 0.1,
+      volume: 0,
+      // 111111111111111111111111111
       played: 0,
       loaded: 0,
       duration: 0,
@@ -17,9 +18,13 @@ class VideoPlayer extends Component {
     }
   }
   renderVideoEnded () {
-    this.props.videoEnded()
+    let isEnded
+    this.props.addVideoId(isEnded = true)
   }
-
+  renderVideoStarted () {
+    let isEnded
+    this.props.addVideoId(isEnded = false)
+  }
   playPause = () => {
     this.setState({ playing: !this.state.playing })
   }
@@ -78,6 +83,7 @@ class VideoPlayer extends Component {
           playbackRate={playbackRate}
           volume={volume}
           soundcloudConfig={soundcloudConfig}
+          onStart={() => this.renderVideoStarted()}
           onPlay={() => this.setState({ playing: true })}
           onPause={() => this.setState({ playing: false })}
           onEnded={() => {
@@ -138,7 +144,7 @@ class VideoPlayer extends Component {
 }
 VideoPlayer.propTypes = {
   url: React.PropTypes.string,
-  videoEnded: React.PropTypes.func
+  addVideoId: React.PropTypes.func
 }
 
 export default VideoPlayer

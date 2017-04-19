@@ -8,12 +8,14 @@ class UserCoursesList extends Component {
 
     this.state = {
       courses: [],
-      coursesLoaded: false
+      coursesLoaded: false,
+      userCourses: []
     }
   }
 
   componentWillMount () {
     const { userCourses } = this.props.auth.user
+    this.fetchUserCourses()
     if (userCourses) {
       this.fetchCourses(userCourses)
     } else {
@@ -48,13 +50,34 @@ class UserCoursesList extends Component {
     })
   }
 
-  renderProgressBar () {
-    const { userCourses } = this.props.auth.user
+  fetchUserCourses () {
+    const { uid } = this.props.auth.user
+    firebase.database().ref('users/' + uid)
+    .once('value', snapshot => {
+      const object = snapshot.val()
+      const { userCourses } = object
+      this.setState({ userCourses })
+    })
+  }
+
+  renderProgressBar (course) {
+    const { userCourses } = this.state
+    const courseFromUser = userCourses.find((item, i) => item.courseId === course.id)
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
+
+    const lessonsNumbersArray = course.sections.map(section => {
+      return section.lessonsIds.length
+    })
+    var numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
+      return a + b
+    })
+
+    const percent = numberWatchedlessons / numberLessonsInCourse
     return (
       <div className='progress'>
         <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
-          aria-valuemin='0' aria-valuemax='100' style={{ width: '40%' }}>
-          40% Complete (success)
+          aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent * 100}%` }}>
+          {Math.round(percent * 100)}% Complete (success)
         </div>
       </div>
     )
@@ -71,7 +94,7 @@ class UserCoursesList extends Component {
               <h5>{course.name} </h5>
               <h5>{course.description}</h5>
               <div style={{ padding: '15px' }} >
-                {this.renderProgressBar()}
+                {this.renderProgressBar(course)}
               </div>
               <button
                 type='button'

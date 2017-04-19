@@ -12,7 +12,7 @@ class MainView extends Component {
       comments: [],
       userCourses: {}
     }
-    this.videoEnded = this.videoEnded.bind(this)
+    this.addVideoId = this.addVideoId.bind(this)
   }
 
   componentWillMount () {
@@ -39,29 +39,71 @@ class MainView extends Component {
     })
   }
 
-  videoEnded () {
+  addLessonIdIfUnique (uniqueWatchedLessonsIds = [], lessonId) {
+    console.log(uniqueWatchedLessonsIds)
+    const isLessonInWatchedLessonsIds = uniqueWatchedLessonsIds.findIndex(id => id === lessonId)
+    if (isLessonInWatchedLessonsIds === -1) {
+      const newArray = [
+        ...uniqueWatchedLessonsIds,
+        lessonId
+      ]
+      return newArray
+    } else {
+      return uniqueWatchedLessonsIds
+    }
+  }
+
+  addVideoId (isEnded) {
+    console.log(isEnded)
     const { lessonId = '', courseId = '' } = this.props.params
     const { uid } = this.props.auth.user
-    console.log(lessonId, uid, courseId)
     firebase.database().ref('users/' + uid)
     .once('value', snapshot => {
       const object = snapshot.val()
       const { userCourses } = object
-      console.log(userCourses)
       this.setState({ userCourses })
     })
-    .then(() => {
-      toastr.success('Your course saved!')
-      browserHistory.push(`/admin/courses`)
-    })
-    // firebase.database().ref('users/' + uid).push({
-    //   name, description, mainPhoto, duration, dateUploaded, price, discipline, author, sections, comments
-    // })
-    // .then(() => {
-    //   toastr.success('Your course saved!')
-    //   browserHistory.push(`/admin/courses`)
-    // })
 
+    .then(() => {
+      const { userCourses } = this.state
+      const courseFromUser = userCourses.find((item, i) => item.courseId === courseId)
+      if (isEnded) {
+
+        const { watchedLessonsIds = [], uniqueWatchedLessonsIds = [] } = courseFromUser
+        const newUniqueWatchedLessonsIds = this.addLessonIdIfUnique(uniqueWatchedLessonsIds, lessonId)
+        const newWatchedLessonsIds = [
+          ...watchedLessonsIds,
+          lessonId
+        ]
+        const newCourseFromUser = {
+          ...courseFromUser,
+          watchedLessonsIds : newWatchedLessonsIds,
+          uniqueWatchedLessonsIds : newUniqueWatchedLessonsIds
+        }
+        this.setState({ newCourseFromUser })
+
+      } else {
+        const { startedLessonsIds = [] } = courseFromUser
+        const newStartedLessonsIds = [
+          ...startedLessonsIds,
+          lessonId
+        ]
+        const newCourseFromUser = {
+          ...courseFromUser,
+          startedLessonsIds : newStartedLessonsIds
+        }
+        this.setState({ newCourseFromUser })
+      }
+
+      const { newCourseFromUser } = this.state
+      const indexItemToRemove = userCourses.findIndex(course => course.courseId === courseId)
+      const newUserCourses = [
+        ...userCourses.slice(0, indexItemToRemove),
+        newCourseFromUser,
+        ...userCourses.slice(indexItemToRemove + 1)
+      ]
+      firebase.database().ref('users/' + uid).update({ userCourses: newUserCourses })
+    })
   }
 
   renderVideo () {
@@ -71,7 +113,8 @@ class MainView extends Component {
         <div>
           <VideoPlayer
             url={lesson.videoUrl}
-            videoEnded={this.videoEnded}
+            addVideoId={this.addVideoId}
+
           />
         </div>
       )
@@ -83,7 +126,6 @@ class MainView extends Component {
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-8'>
-  {this.videoEnded()}
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Name:</label>
             <div> {lesson.name}</div>

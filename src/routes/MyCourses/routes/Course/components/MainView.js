@@ -3,6 +3,7 @@ import firebase from 'firebase'
 import CommentList from './CommentList'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 
 class MainView extends Component {
   constructor (props) {
@@ -11,14 +12,15 @@ class MainView extends Component {
       course: {},
       courseLoaded: false,
       lessons: [],
-      lessonsLoaded: false
-
+      lessonsLoaded: false,
+      userCourses: []
     }
   }
 
   componentWillMount () {
     const { params } = this.props
     this.fetchItem(params.courseId)
+    this.fetchUserCourses()
   }
 
   fetchItem (id) {
@@ -48,12 +50,14 @@ class MainView extends Component {
           })
         })
         Promise.all(newSectionsLessons).then(result => {
+          const numberLessonsInCourse = this.countNumberLessonsInCourse(course)
           this.setState({
             sections: result,
             course,
             comments: course.comments,
             courseLoaded: true,
-            lessonsLoaded: true
+            lessonsLoaded: true,
+            numberLessonsInCourse
           })
           const { sections } = this.state
           const newSectionsTests = sections.map(section => {
@@ -135,15 +139,46 @@ class MainView extends Component {
     )
   }
 
+  fetchUserCourses () {
+    const { uid } = this.props.auth.user
+    firebase.database().ref('users/' + uid)
+    .once('value', snapshot => {
+      const object = snapshot.val()
+      const { userCourses } = object
+      this.setState({ userCourses })
+    })
+    .then(() => {
+      const { userCourses } = this.state
+      const { params } = this.props
+      const courseFromUser = userCourses.find((item, i) => item.courseId === params.courseId)
+      const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
+      const isLessonEnded = courseFromUser.watchedLessonsIds[length] === courseFromUser.startedLessonsIds[length]
+      const newtWatchLessonId = isLessonEnded ? 2 : courseFromUser.startedLessonsIds[length]
+      this.setState({ numberWatchedlessons, newtWatchLessonId })
+      console.log(userCourses)
+    })
+  }
+
+  countNumberLessonsInCourse (course = {}) {
+    const lessonsNumbersArray = course.sections.map(section => {
+      return section.lessonsIds.length
+    })
+    var numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
+      return a + b
+    })
+    console.log(numberLessonsInCourse)
+    return numberLessonsInCourse
+  }
+
   renderProgressBar () {
-    // const { userCourses } = this.props.auth.user
-    const { sections = [] } = this.state
-    const numPassedSections = 2
-    const percent = numPassedSections / sections.length
+    const { location } = this.props
+    const { numberWatchedlessons, numberLessonsInCourse, newtWatchLessonId } = this.state
+    const percent = numberWatchedlessons / numberLessonsInCourse
     return (
       <div>
         <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
-          <label className='control-label col-xs-8'>Your progress: 2 sections from {sections.length} </label>
+          <label className='control-label col-xs-8 col-md-6'>
+            Your progress: {numberWatchedlessons} sections from {numberLessonsInCourse} </label>
         </div>
         <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
           <div className='progress'>
@@ -152,6 +187,15 @@ class MainView extends Component {
               {Math.round(percent * 100)}% Complete (success)
             </div>
           </div>
+        </div>
+        <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
+          <button
+            type='button'
+            style={{ width:'30%', margin: '15px' }}
+            className='btn btn-success lg'
+            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${newtWatchLessonId}` }) }}
+            >Continue lesson
+          </button>
         </div>
       </div>
     )
@@ -210,7 +254,9 @@ class MainView extends Component {
 
 MainView.propTypes = {
   params: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
+  auth: React.PropTypes.object,
+  user: React.PropTypes.object
 }
 
 const mapStateToProps = state => ({
