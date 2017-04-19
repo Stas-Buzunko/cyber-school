@@ -19,7 +19,7 @@ class Statistics extends Component {
   }
 
   changeTab = newTab => {
-    this.setState({ currentTab: newTab })
+    this.setState({ currentTab: newTab, data: [] })
     this.fetchData(newTab)
   }
 
