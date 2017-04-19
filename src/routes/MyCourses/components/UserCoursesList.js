@@ -68,16 +68,16 @@ class UserCoursesList extends Component {
     const lessonsNumbersArray = course.sections.map(section => {
       return section.lessonsIds.length
     })
-    var numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
+    const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
       return a + b
     })
 
-    const percent = numberWatchedlessons / numberLessonsInCourse
+    const percent = Math.round(numberWatchedlessons / numberLessonsInCourse * 100)
     return (
       <div className='progress'>
         <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
-          aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent * 100}%` }}>
-          {Math.round(percent * 100)}% Complete (success)
+          aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent}%` }}>
+          {percent}% Complete (success)
         </div>
       </div>
     )

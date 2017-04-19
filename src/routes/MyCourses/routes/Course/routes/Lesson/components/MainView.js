@@ -40,21 +40,18 @@ class MainView extends Component {
   }
 
   addLessonIdIfUnique (uniqueWatchedLessonsIds = [], lessonId) {
-    console.log(uniqueWatchedLessonsIds)
     const isLessonInWatchedLessonsIds = uniqueWatchedLessonsIds.findIndex(id => id === lessonId)
     if (isLessonInWatchedLessonsIds === -1) {
-      const newArray = [
+      return  ([
         ...uniqueWatchedLessonsIds,
         lessonId
-      ]
-      return newArray
+      ])
     } else {
       return uniqueWatchedLessonsIds
     }
   }
 
   addVideoId (isEnded) {
-    console.log(isEnded)
     const { lessonId = '', courseId = '' } = this.props.params
     const { uid } = this.props.auth.user
     firebase.database().ref('users/' + uid)
@@ -67,8 +64,8 @@ class MainView extends Component {
     .then(() => {
       const { userCourses } = this.state
       const courseFromUser = userCourses.find((item, i) => item.courseId === courseId)
-      if (isEnded) {
 
+      if (isEnded) {
         const { watchedLessonsIds = [], uniqueWatchedLessonsIds = [] } = courseFromUser
         const newUniqueWatchedLessonsIds = this.addLessonIdIfUnique(uniqueWatchedLessonsIds, lessonId)
         const newWatchedLessonsIds = [

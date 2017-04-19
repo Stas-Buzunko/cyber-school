@@ -162,7 +162,7 @@ class MainView extends Component {
     const lessonsNumbersArray = course.sections.map(section => {
       return section.lessonsIds.length
     })
-    var numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
+    const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
       return a + b
     })
     console.log(numberLessonsInCourse)
