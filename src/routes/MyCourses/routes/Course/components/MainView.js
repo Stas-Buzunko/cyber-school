@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
 import CommentList from './CommentList'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
 
 class MainView extends Component {
   constructor (props) {
@@ -178,7 +177,7 @@ class MainView extends Component {
       <div>
         <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8 col-md-6'>
-            Your progress: {numberWatchedlessons} sections from {numberLessonsInCourse} </label>
+            Your progress: {numberWatchedlessons} lessons from {numberLessonsInCourse} </label>
         </div>
         <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
           <div className='progress'>
