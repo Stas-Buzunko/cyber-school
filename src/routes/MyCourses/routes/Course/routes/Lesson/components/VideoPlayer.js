@@ -18,12 +18,12 @@ class VideoPlayer extends Component {
     }
   }
   renderVideoEnded () {
-    let isEnded
-    this.props.addVideoId(isEnded = true)
+    const isEnded = true
+    this.props.addVideoId(isEnded)
   }
   renderVideoStarted () {
-    let isEnded
-    this.props.addVideoId(isEnded = false)
+    const isEnded = false
+    this.props.addVideoId(isEnded)
   }
   playPause = () => {
     this.setState({ playing: !this.state.playing })

@@ -121,7 +121,7 @@ class MainView extends Component {
       </tr>
     )
   }
-  
+
   renderTestsList (tests = []) {
     const { location } = this.props
 
