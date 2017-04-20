@@ -52,7 +52,6 @@ class MainView extends Component {
         Promise.all(newSectionsLessons).then(result => {
           const numberLessonsInCourse = this.countNumberLessonsInCourse(course)
           const nextLessonId = this.countNextLessonId(course)
-          console.log(nextLessonId)
           this.setState({
             sections: result,
             course,
@@ -87,18 +86,42 @@ class MainView extends Component {
     })
   }
 
+  isPassed (id, type) {
+    const { params } = this.props
+    const { userCourses } = this.props.auth.user
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+    const { uniqueWatchedLessonsIds } = courseFromUser
+    const array = (type === 'lesson') ? uniqueWatchedLessonsIds : 'insert test massive here later'
+    const passed = array.find(item => item === id)
+    if (passed === -1) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   renderLessonsList (lessons = []) {
     const { location } = this.props
-
     return lessons.map((item, i) =>
       <tr key={i}>
         <td>
           <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link>
         </td>
         <td> {item.length} </td>
+        <td>
+          <div className='col-xs-10 col-md-2'>
+            <label className='checkbox checkbox-info checkbox-circle' style={{ paddingBottom: '20px' }}>
+              <input
+                type='checkbox'
+                checked={this.isPassed(item.id, 'lesson')}
+                 />
+            </label>
+          </div>
+        </td>
       </tr>
     )
   }
+  
   renderTestsList (tests = []) {
     const { location } = this.props
 
@@ -122,6 +145,7 @@ class MainView extends Component {
               <tr>
                 <th>Name</th>
                 <th>Length</th>
+                <th> </th>
               </tr>
             </thead>
             {sections.map((item, i) =>
