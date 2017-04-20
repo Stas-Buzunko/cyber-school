@@ -42,7 +42,7 @@ class MainView extends Component {
   addLessonIdIfUnique (uniqueWatchedLessonsIds = [], lessonId) {
     const isLessonInWatchedLessonsIds = uniqueWatchedLessonsIds.findIndex(id => id === lessonId)
     if (isLessonInWatchedLessonsIds === -1) {
-      return  ([
+      return ([
         ...uniqueWatchedLessonsIds,
         lessonId
       ])
@@ -53,54 +53,42 @@ class MainView extends Component {
 
   addVideoId (isEnded) {
     const { lessonId = '', courseId = '' } = this.props.params
-    const { uid } = this.props.auth.user
-    firebase.database().ref('users/' + uid)
-    .once('value', snapshot => {
-      const object = snapshot.val()
-      const { userCourses } = object
-      this.setState({ userCourses })
-    })
-
-    .then(() => {
-      const { userCourses } = this.state
-      const courseFromUser = userCourses.find((item, i) => item.courseId === courseId)
-
-      if (isEnded) {
-        const { watchedLessonsIds = [], uniqueWatchedLessonsIds = [] } = courseFromUser
-        const newUniqueWatchedLessonsIds = this.addLessonIdIfUnique(uniqueWatchedLessonsIds, lessonId)
-        const newWatchedLessonsIds = [
-          ...watchedLessonsIds,
-          lessonId
-        ]
-        const newCourseFromUser = {
-          ...courseFromUser,
-          watchedLessonsIds : newWatchedLessonsIds,
-          uniqueWatchedLessonsIds : newUniqueWatchedLessonsIds
-        }
-        this.setState({ newCourseFromUser })
-
-      } else {
-        const { startedLessonsIds = [] } = courseFromUser
-        const newStartedLessonsIds = [
-          ...startedLessonsIds,
-          lessonId
-        ]
-        const newCourseFromUser = {
-          ...courseFromUser,
-          startedLessonsIds : newStartedLessonsIds
-        }
-        this.setState({ newCourseFromUser })
-      }
-
-      const { newCourseFromUser } = this.state
-      const indexItemToRemove = userCourses.findIndex(course => course.courseId === courseId)
-      const newUserCourses = [
-        ...userCourses.slice(0, indexItemToRemove),
-        newCourseFromUser,
-        ...userCourses.slice(indexItemToRemove + 1)
+    const { userCourses, uid } = this.props.auth.user
+    const courseFromUser = userCourses.find((item, i) => item.courseId === courseId)
+    if (isEnded) {
+      const { watchedLessonsIds = [], uniqueWatchedLessonsIds = [] } = courseFromUser
+      const newUniqueWatchedLessonsIds = this.addLessonIdIfUnique(uniqueWatchedLessonsIds, lessonId)
+      const newWatchedLessonsIds = [
+        ...watchedLessonsIds,
+        lessonId
       ]
-      firebase.database().ref('users/' + uid).update({ userCourses: newUserCourses })
-    })
+      const newCourseFromUser = {
+        ...courseFromUser,
+        watchedLessonsIds : newWatchedLessonsIds,
+        uniqueWatchedLessonsIds : newUniqueWatchedLessonsIds
+      }
+      this.setState({ newCourseFromUser })
+    } else {
+      const { startedLessonsIds = [] } = courseFromUser
+      const newStartedLessonsIds = [
+        ...startedLessonsIds,
+        lessonId
+      ]
+      const newCourseFromUser = {
+        ...courseFromUser,
+        startedLessonsIds : newStartedLessonsIds
+      }
+      this.setState({ newCourseFromUser })
+    }
+
+    const { newCourseFromUser } = this.state
+    const indexItemToRemove = userCourses.findIndex(course => course.courseId === courseId)
+    const newUserCourses = [
+      ...userCourses.slice(0, indexItemToRemove),
+      newCourseFromUser,
+      ...userCourses.slice(indexItemToRemove + 1)
+    ]
+    firebase.database().ref('users/' + uid).update({ userCourses: newUserCourses })
   }
 
   renderVideo () {

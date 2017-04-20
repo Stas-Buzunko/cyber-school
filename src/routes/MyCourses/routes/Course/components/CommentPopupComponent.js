@@ -68,7 +68,9 @@ class CommentPopupComponent extends Component {
 CommentPopupComponent.propTypes = {
   show: React.PropTypes.bool,
   handleHide: React.PropTypes.func,
-  saveComment: React.PropTypes.func
+  saveComment: React.PropTypes.func,
+  isRespond: React.PropTypes.bool,
+  item: React.PropTypes.object
 
 }
 

@@ -12,14 +12,15 @@ class MainView extends Component {
       courseLoaded: false,
       lessons: [],
       lessonsLoaded: false,
-      userCourses: []
+      userCourses: [],
+      newWatchLessonId: [],
+      nextLessonId: ''
     }
   }
 
   componentWillMount () {
     const { params } = this.props
     this.fetchItem(params.courseId)
-    this.fetchUserCourses()
   }
 
   fetchItem (id) {
@@ -50,13 +51,16 @@ class MainView extends Component {
         })
         Promise.all(newSectionsLessons).then(result => {
           const numberLessonsInCourse = this.countNumberLessonsInCourse(course)
+          const nextLessonId = this.countNextLessonId(course)
+          console.log(nextLessonId)
           this.setState({
             sections: result,
             course,
             comments: course.comments,
             courseLoaded: true,
             lessonsLoaded: true,
-            numberLessonsInCourse
+            numberLessonsInCourse,
+            nextLessonId
           })
           const { sections } = this.state
           const newSectionsTests = sections.map(section => {
@@ -138,26 +142,6 @@ class MainView extends Component {
     )
   }
 
-  fetchUserCourses () {
-    const { uid } = this.props.auth.user
-    firebase.database().ref('users/' + uid)
-    .once('value', snapshot => {
-      const object = snapshot.val()
-      const { userCourses } = object
-      this.setState({ userCourses })
-    })
-    .then(() => {
-      const { userCourses } = this.state
-      const { params } = this.props
-      const courseFromUser = userCourses.find((item, i) => item.courseId === params.courseId)
-      const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
-      const isLessonEnded = courseFromUser.watchedLessonsIds[length] === courseFromUser.startedLessonsIds[length]
-      const newtWatchLessonId = isLessonEnded ? 2 : courseFromUser.startedLessonsIds[length]
-      this.setState({ numberWatchedlessons, newtWatchLessonId })
-      console.log(userCourses)
-    })
-  }
-
   countNumberLessonsInCourse (course = {}) {
     const lessonsNumbersArray = course.sections.map(section => {
       return section.lessonsIds.length
@@ -165,13 +149,42 @@ class MainView extends Component {
     const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
       return a + b
     })
-    console.log(numberLessonsInCourse)
     return numberLessonsInCourse
   }
 
+  countNextLessonId (course) {
+    const { params } = this.props
+    const { userCourses } = this.props.auth.user
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+    const lastLessonId = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)]
+
+    const findNextLessonIdArray = course.sections.map((section) => {
+      const index = section.lessonsIds.findIndex(item => item === lastLessonId)
+      const nextLessonId = (index === -1) ? false :
+      section.lessonsIds[index + 1] ? section.lessonsIds[(index + 1)] : section.sectionNumber
+      return nextLessonId
+    })
+
+    const nextId = findNextLessonIdArray.find(item => item !== false)
+    const NextSectionId = course.sections[(nextId + 1)] ? course.sections[(nextId + 1)].lessonsIds[0] : false
+    const nextLessonId = (typeof nextId === 'number') ? NextSectionId : nextId
+    return nextLessonId
+  }
+
   renderProgressBar () {
-    const { location } = this.props
-    const { numberWatchedlessons, numberLessonsInCourse, newtWatchLessonId } = this.state
+    const { location, params } = this.props
+    const { userCourses } = this.props.auth.user
+    const { numberLessonsInCourse, nextLessonId } = this.state
+
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
+
+    const isLessonEnded = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)] ===
+    courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+
+    const newWatchLessonId = isLessonEnded ?
+    nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+
     const percent = numberWatchedlessons / numberLessonsInCourse
     return (
       <div>
@@ -188,13 +201,14 @@ class MainView extends Component {
           </div>
         </div>
         <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
-          <button
+          {nextLessonId && <button
             type='button'
             style={{ width:'30%', margin: '15px' }}
             className='btn btn-success lg'
-            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${newtWatchLessonId}` }) }}
+            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}lesson/${newWatchLessonId}` }) }}
             >Continue lesson
           </button>
+        }
         </div>
       </div>
     )

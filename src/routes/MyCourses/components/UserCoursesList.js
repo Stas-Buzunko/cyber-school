@@ -15,7 +15,6 @@ class UserCoursesList extends Component {
 
   componentWillMount () {
     const { userCourses } = this.props.auth.user
-    this.fetchUserCourses()
     if (userCourses) {
       this.fetchCourses(userCourses)
     } else {
@@ -50,18 +49,8 @@ class UserCoursesList extends Component {
     })
   }
 
-  fetchUserCourses () {
-    const { uid } = this.props.auth.user
-    firebase.database().ref('users/' + uid)
-    .once('value', snapshot => {
-      const object = snapshot.val()
-      const { userCourses } = object
-      this.setState({ userCourses })
-    })
-  }
-
   renderProgressBar (course) {
-    const { userCourses } = this.state
+    const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find((item, i) => item.courseId === course.id)
     const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
 
