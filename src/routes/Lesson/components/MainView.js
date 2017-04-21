@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 import CommentList from './CommentList'
+import VideoPlayer from '../../Utils/VideoPlayer'
 
 class MainView extends Component {
   constructor (props) {
@@ -10,6 +11,8 @@ class MainView extends Component {
       lessonLoaded: false,
       comments: []
     }
+    this.addVideoId = this.addVideoId.bind(this)
+
   }
 
   componentWillMount () {
@@ -35,6 +38,20 @@ class MainView extends Component {
       }
     })
   }
+  addVideoId (isEnded) {}
+  renderVideo () {
+    const { lesson = {} } = this.state
+    if (lesson.videoUrl) {
+      return (
+        <div>
+          <VideoPlayer
+            url={lesson.videoUrl}
+            addVideoId={this.addVideoId}
+          />
+        </div>
+      )
+    }
+  }
 
   renderLesson () {
     const { lesson } = this.state
@@ -59,8 +76,8 @@ class MainView extends Component {
               <img src={lesson.imageUrl} width='150px' height='100px' />
           </div>
           <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>VideoUrl:</label>
-            <div> {lesson.videoUrl}</div>
+            <label className='control-label col-xs-2'>Video:</label>
+            {this.renderVideo()}
           </div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>IsFree:</label>

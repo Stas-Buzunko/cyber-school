@@ -9,8 +9,7 @@ class VideoPlayer extends Component {
     this.state = {
 
       playing: true,
-      volume: 0,
-      // 111111111111111111111111111
+      volume: 0.6,
       played: 0,
       loaded: 0,
       duration: 0,
@@ -68,16 +67,14 @@ class VideoPlayer extends Component {
       soundcloudConfig
     } = this.state
 
-    const videoId = url.replace('https://youtu.be/', '')
+    // const videoId = url.replace('https://youtu.be/', '')
     return (
       <div>
         <ReactPlayer
-          url={`https://www.youtube.com/embed/${videoId}`}
-
+          // url={`https://www.youtube.com/embed/${videoId}`}
+          url={url}
           ref={player => { this.player = player }}
           className='react-player'
-          width='100%'
-          height='100%'
 
           playing={playing}
           playbackRate={playbackRate}

@@ -52,7 +52,7 @@ class UserCoursesList extends Component {
   renderProgressBar (course) {
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find((item, i) => item.courseId === course.id)
-    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length : 0
 
     const lessonsNumbersArray = course.sections.map(section => {
       return section.lessonsIds.length

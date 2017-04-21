@@ -6,7 +6,7 @@ import firebase from 'firebase'
 
 export const Header = ({ user }) =>
   <div>
-    <h1>React Redux Starter Kit</h1>
+    <h1>Cyber academy</h1>
     <IndexLink to='/' activeClassName='route--active'>
       Home
     </IndexLink>

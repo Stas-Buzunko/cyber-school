@@ -14,7 +14,8 @@ class MainView extends Component {
       lessonsLoaded: false,
       userCourses: [],
       newWatchLessonId: [],
-      nextLessonId: ''
+      nextLessonId: '',
+      firstLessonId: ''
     }
   }
 
@@ -59,7 +60,8 @@ class MainView extends Component {
             courseLoaded: true,
             lessonsLoaded: true,
             numberLessonsInCourse,
-            nextLessonId
+            nextLessonId,
+            firstLessonId: course.sections[0].lessonsIds[0]
           })
           const { sections } = this.state
           const newSectionsTests = sections.map(section => {
@@ -90,9 +92,9 @@ class MainView extends Component {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const { uniqueWatchedLessonsIds } = courseFromUser
+    const { uniqueWatchedLessonsIds = [] } = courseFromUser
     const array = (type === 'lesson') ? uniqueWatchedLessonsIds : 'insert test massive here later'
-    const passed = array.find(item => item === id)
+    const passed = array.findIndex(item => item === id)
     if (passed === -1) {
       return false
     } else {
@@ -180,8 +182,9 @@ class MainView extends Component {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const lastLessonId = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)]
-
+    const lastLessonId = courseFromUser.watchedLessonsIds ?
+    courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)]
+    : 0
     const findNextLessonIdArray = course.sections.map((section) => {
       const index = section.lessonsIds.findIndex(item => item === lastLessonId)
       const nextLessonId = (index === -1) ? false :
@@ -194,21 +197,24 @@ class MainView extends Component {
     const nextLessonId = (typeof nextId === 'number') ? NextSectionId : nextId
     return nextLessonId
   }
-
+  countNewWatchLessonId (courseFromUser) {
+    const { nextLessonId } = this.state
+    const isLessonEnded = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)] ===
+    courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+    const newWatchLessonId = isLessonEnded ?
+    nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+    return newWatchLessonId
+  }
   renderProgressBar () {
     const { location, params } = this.props
     const { userCourses } = this.props.auth.user
-    const { numberLessonsInCourse, nextLessonId } = this.state
-
+    const { numberLessonsInCourse, course, firstLessonId } = this.state
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length
-
-    const isLessonEnded = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)] ===
-    courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
-
-    const newWatchLessonId = isLessonEnded ?
-    nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
-
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length
+    : 0
+    console.log(course)
+    const watchLessonId = courseFromUser.watchedLessonsIds ? this.countNewWatchLessonId(courseFromUser)
+    : firstLessonId
     const percent = numberWatchedlessons / numberLessonsInCourse
     return (
       <div>
@@ -225,11 +231,11 @@ class MainView extends Component {
           </div>
         </div>
         <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
-          {nextLessonId && <button
+          {watchLessonId && <button
             type='button'
             style={{ width:'30%', margin: '15px' }}
             className='btn btn-success lg'
-            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}lesson/${newWatchLessonId}` }) }}
+            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${watchLessonId}` }) }}
             >Continue lesson
           </button>
         }

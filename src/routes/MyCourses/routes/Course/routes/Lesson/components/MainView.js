@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 import CommentList from './CommentList'
-import VideoPlayer from './VideoPlayer'
+import VideoPlayer from '../../../../../../Utils/VideoPlayer'
 
 class MainView extends Component {
   constructor (props) {
