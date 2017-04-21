@@ -208,14 +208,16 @@ class MainView extends Component {
   renderProgressBar () {
     const { location, params } = this.props
     const { userCourses } = this.props.auth.user
-    const { numberLessonsInCourse, course, firstLessonId } = this.state
+    const { numberLessonsInCourse, firstLessonId } = this.state
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length
-    : 0
-    console.log(course)
+
     const watchLessonId = courseFromUser.watchedLessonsIds ? this.countNewWatchLessonId(courseFromUser)
     : firstLessonId
+
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length
+    : 0
     const percent = numberWatchedlessons / numberLessonsInCourse
+     const buttonName = courseFromUser.uniqueWatchedLessonsIds ? 'Start first lesson' : 'Continue lesson'
     return (
       <div>
         <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
@@ -236,7 +238,7 @@ class MainView extends Component {
             style={{ width:'30%', margin: '15px' }}
             className='btn btn-success lg'
             onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${watchLessonId}` }) }}
-            >Continue lesson
+            >{buttonName}
           </button>
         }
         </div>
