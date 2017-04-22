@@ -73,7 +73,7 @@ class EditCourse extends Component {
 
   render () {
     const { name, discipline, author, description, mainPhoto, duration,
-    price, sections, isAddNewSectionOpen } = this.state
+    price, sections = [], isAddNewSectionOpen } = this.state
     return (
       <div className='container'>
         <div className='row'>

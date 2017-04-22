@@ -120,6 +120,29 @@ class MainView extends Component {
     })
     return newRightUserAnswers
   }
+
+  addTestId () {
+    const { courseId = '', testId = '' } = this.props.params
+    const { userCourses, uid } = this.props.auth.user
+    const courseFromUser = userCourses.find((item, i) => item.courseId === courseId)
+    const { passedTestIds = [] } = courseFromUser
+    const newPassedTestIds = [
+      ...passedTestIds,
+      testId
+    ]
+    const newCourseFromUser = {
+      ...courseFromUser,
+      passedTestIds : newPassedTestIds
+    }
+    const indexItemToRemove = userCourses.findIndex(course => course.courseId === courseId)
+    const newUserCourses = [
+      ...userCourses.slice(0, indexItemToRemove),
+      newCourseFromUser,
+      ...userCourses.slice(indexItemToRemove + 1)
+    ]
+    firebase.database().ref('users/' + uid).update({ userCourses: newUserCourses })
+  }
+
   closeAnswer () {
     const { userQuestions = [] } = this.state
     const { params } = this.props
@@ -127,6 +150,7 @@ class MainView extends Component {
     const isAllTestPassed = rightUserAnswers === userQuestions.length
     if (isAllTestPassed) {
       browserHistory.push({ pathname : `/myCourses/course/${params.courseId}` })
+      this.addTestId()
     } else {
       toastr.success('Would you like to try one more time?')
     }
@@ -208,7 +232,9 @@ const mapDispatchToProps = {
 MainView.propTypes = {
   openModal: React.PropTypes.func,
   hideModal: React.PropTypes.func,
-  params: React.PropTypes.object
+  params: React.PropTypes.object,
+  auth: React.PropTypes.object,
+  user: React.PropTypes.object
 }
 
 export default connect(

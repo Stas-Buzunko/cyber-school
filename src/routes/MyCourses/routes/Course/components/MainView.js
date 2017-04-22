@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
-import CommentList from './CommentList'
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
@@ -92,8 +91,8 @@ class MainView extends Component {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const { uniqueWatchedLessonsIds = [] } = courseFromUser
-    const array = (type === 'lesson') ? uniqueWatchedLessonsIds : 'insert test massive here later'
+    const { uniqueWatchedLessonsIds = [], passedTestIds = [] } = courseFromUser
+    const array = (type === 'lesson') ? uniqueWatchedLessonsIds : passedTestIds
     const passed = array.findIndex(item => item === id)
     if (passed === -1) {
       return false
@@ -133,6 +132,16 @@ class MainView extends Component {
           <Link to={{ pathname: `${location.pathname}/test/${item.id}` }}>{item.name}</Link>
         </td>
         <td> </td>
+        <td>
+          <div className='col-xs-10 col-md-2'>
+            <label className='checkbox checkbox-info checkbox-circle' style={{ paddingBottom: '20px' }}>
+              <input
+                type='checkbox'
+                checked={this.isPassed(item.id, 'test')}
+                 />
+            </label>
+          </div>
+        </td>
       </tr>
     )
   }
@@ -217,7 +226,7 @@ class MainView extends Component {
     const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length
     : 0
     const percent = numberWatchedlessons / numberLessonsInCourse
-     const buttonName = courseFromUser.uniqueWatchedLessonsIds ? 'Start first lesson' : 'Continue lesson'
+    const buttonName = courseFromUser.uniqueWatchedLessonsIds ? 'Continue lesson' : 'Start first lesson'
     return (
       <div>
         <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
@@ -276,14 +285,6 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>Discipline:</label>
             <div> {course.discipline}</div>
           </div>
-        </div>
-        <div className='col-xs-12 col-md-10'>
-          <ul className='list-unstyled'>
-            <CommentList
-              comments={comments}
-              courseId={params.id}
-            />
-          </ul>
         </div>
         {this.renderProgressBar()}
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>

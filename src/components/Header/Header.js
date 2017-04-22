@@ -11,16 +11,16 @@ export const Header = ({ user }) =>
       Home
     </IndexLink>
     {' · '}
-    <Link to='/disciplines/dota2' activeClassName='route--active'>
-       Dota 2
+    <Link to='/disciplines/Dota2' activeClassName='route--active'>
+       Dota2
     </Link>
     {' · '}
-    <Link to='/disciplines/cs_go' activeClassName='route--active'>
+    <Link to='/disciplines/CS:GO' activeClassName='route--active'>
       CS:GO
     </Link>
     {' · '}
-    <Link to='/disciplines/lol' activeClassName='route--active'>
-      LOL
+    <Link to='/disciplines/LoL' activeClassName='route--active'>
+      LoL
     </Link>
     {' · '}
 
