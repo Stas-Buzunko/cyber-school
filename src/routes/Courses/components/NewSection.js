@@ -22,11 +22,14 @@ class NewSection extends Component {
     }
     this.saveNewSection = this.saveNewSection.bind(this)
     this.saveLesson = this.saveLesson.bind(this)
+    this.saveTest = this.saveTest.bind(this)
+
     this.renderLessonPopup = this.renderLessonPopup.bind(this)
     this.renderButtonAddNewTest = this.renderButtonAddNewTest.bind(this)
   }
 
   renderLessonPopup () {
+    const isNewLesson = { true }
     return (
       <div>
         <button
@@ -34,7 +37,7 @@ class NewSection extends Component {
           className='btn btn-success lg'
           onClick={(e) => {
             e.preventDefault()
-            this.props.openModal('lesson')
+            this.props.openModal('lesson', { isNewLesson })
           }}>Add Lesson
         </button>
       </div>
@@ -129,6 +132,7 @@ class NewSection extends Component {
               <LessonList
                 isNewLesson={true}
                 lessonsIds={this.state.lessonsIds}
+                isEditSection={false}
               />
             </ul>
           </div>
