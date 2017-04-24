@@ -192,7 +192,7 @@ class MainView extends Component {
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
     const lastLessonId = courseFromUser.watchedLessonsIds ?
-    courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)]
+    courseFromUser.watchedLessonsIds.splice(-1)
     : 0
     const findNextLessonIdArray = course.sections.map((section) => {
       const index = section.lessonsIds.findIndex(item => item === lastLessonId)
@@ -208,10 +208,10 @@ class MainView extends Component {
   }
   countNewWatchLessonId (courseFromUser) {
     const { nextLessonId } = this.state
-    const isLessonEnded = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)] ===
-    courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+    const isLessonEnded = courseFromUser.watchedLessonsIds.splice(-1) ===
+    courseFromUser.startedLessonsIds.splice(-1)
     const newWatchLessonId = isLessonEnded ?
-    nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+    nextLessonId : courseFromUser.startedLessonsIds.splice(-1)
     return newWatchLessonId
   }
   renderProgressBar () {
