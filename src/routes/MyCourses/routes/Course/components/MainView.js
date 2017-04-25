@@ -191,20 +191,61 @@ class MainView extends Component {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const lastLessonId = courseFromUser.watchedLessonsIds ?
-    courseFromUser.watchedLessonsIds.splice(-1)
-    : 0
-    const findNextLessonIdArray = course.sections.map((section) => {
-      const index = section.lessonsIds.findIndex(item => item === lastLessonId)
-      const nextLessonId = (index === -1) ? false :
-      section.lessonsIds[index + 1] ? section.lessonsIds[(index + 1)] : section.sectionNumber
-      return nextLessonId
-    })
+    const watchedLessonsLength = courseFromUser.watchedLessonsIds.length
 
-    const nextId = findNextLessonIdArray.find(item => item !== false)
-    const NextSectionId = course.sections[(nextId + 1)] ? course.sections[(nextId + 1)].lessonsIds[0] : false
-    const nextLessonId = (typeof nextId === 'number') ? NextSectionId : nextId
-    return nextLessonId
+    let nextId = false
+
+    // if 0 watched
+    if (!watchedLessonsLength) {
+      // return first section, first lesson
+      nextId = course.sections[0].lessonsIds[0]
+    } else {
+      // take last watched lesson
+      const lastLessonId = courseFromUser.watchedLessonsIds[watchedLessonsLength - 1]
+
+      // find last watched section and index
+      const currentSectionIndex = course.sections.findIndex(section =>
+        section.lessonsIds.includes(lastLessonId))
+      const currentSection = course.sections[currentSectionIndex]
+
+      // find lessons in section that haven't been watched yet
+      const lessonLeftInSection = currentSection.lessonsIds.find(lesson =>
+        !courseFromUser.watchedLessonsIds.includes(lesson))
+
+      // if there is such a lesson in current section, then use it
+      if (lessonLeftInSection) {
+        nextId = lessonLeftInSection
+
+        // otherwise chech if there is 1 more section
+        // if there is then use next section, first lesson
+      } else if (course.sections[currentSectionIndex + 1]) {
+        nextId = course.sections[currentSectionIndex + 1].lessonsIds[0]
+      }
+    }
+
+    // const findNextLessonIdArray = course.sections.map((section) => {
+    //   const index = section.lessonsIds.findIndex(item => item === lastLessonId)
+    //   const nextLessonId = (index === -1)
+    //   ? false
+    //   : section.lessonsIds[index + 1] ? section.lessonsIds[(index + 1)] : section.sectionNumber
+    //   return nextLessonId
+    // })
+
+    // const nextId = findNextLessonIdArray.find(item => item !== false)
+
+    // const nextId = course.sections.find(section => {
+    //   const index = section.lessonsIds.findIndex(item => item === lastLessonId)
+    //   const nextLessonId = (index !== -1) && section.lessonsIds[index + 1]
+    //   ? section.lessonsIds[(index + 1)]
+    //   : section.sectionNumber
+    //   return nextLessonId
+    // })
+
+    // const NextSectionId = course.sections[(nextId + 1)] ? course.sections[(nextId + 1)].lessonsIds[0] : false
+    // const nextLessonId = (typeof nextId === 'number') ? NextSectionId : nextId
+    // return nextLessonId
+
+    return nextId
   }
   countNewWatchLessonId (courseFromUser) {
     const { nextLessonId } = this.state
@@ -220,9 +261,9 @@ class MainView extends Component {
     const { numberLessonsInCourse, firstLessonId } = this.state
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
 
+    // here is a bug
     const watchLessonId = courseFromUser.watchedLessonsIds ? this.countNewWatchLessonId(courseFromUser)
     : firstLessonId
-
     const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length
     : 0
     const percent = numberWatchedlessons / numberLessonsInCourse
