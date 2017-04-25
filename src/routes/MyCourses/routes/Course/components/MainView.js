@@ -190,8 +190,9 @@ class MainView extends Component {
   countNextLessonId (course) {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
+    const {watchedLessonsIds = {} } = userCourses
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const watchedLessonsLength = courseFromUser.watchedLessonsIds.length
+    const watchedLessonsLength = watchedLessonsIds.length || 0
 
     let nextId = false
 
@@ -249,18 +250,19 @@ class MainView extends Component {
   }
   countNewWatchLessonId (courseFromUser) {
     const { nextLessonId } = this.state
-    const isLessonEnded = courseFromUser.watchedLessonsIds.splice(-1) ===
-    courseFromUser.startedLessonsIds.splice(-1)
+    const isLessonEnded = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)] ===
+    courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
     const newWatchLessonId = isLessonEnded ?
-    nextLessonId : courseFromUser.startedLessonsIds.splice(-1)
+    nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
     return newWatchLessonId
   }
   renderProgressBar () {
     const { location, params } = this.props
     const { userCourses } = this.props.auth.user
     const { numberLessonsInCourse, firstLessonId } = this.state
-    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
 
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+console.log(firstLessonId)
     // here is a bug
     const watchLessonId = courseFromUser.watchedLessonsIds ? this.countNewWatchLessonId(courseFromUser)
     : firstLessonId
