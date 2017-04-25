@@ -3,7 +3,6 @@ import LessonsList from './LessonList'
 import TestList from './TestList'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
-import LessonPopupComponent from './LessonPopupComponent'
 import toastr from 'toastr'
 import firebase from 'firebase'
 import NewTest from './NewTest'
@@ -26,6 +25,7 @@ class SectionsListEdit extends Component {
       lessonsIds: []
     }
     this.saveLesson = this.saveLesson.bind(this)
+    this.deleteItemId = this.deleteItemId.bind(this)
     this.saveTest = this.saveTest.bind(this)
     this.renderEditSection = this.renderEditSection.bind(this)
   }
@@ -122,18 +122,36 @@ class SectionsListEdit extends Component {
 
   saveTest = (test) => {
     const testKey = firebase.database().ref('tests/').push().key
-    const { testsIds = [] } = this.state
-    const newTests = [...testsIds, testKey]
-    this.setState({ testsIds: newTests })
+    if (testKey) {
+      const { name, questions } = test
+      firebase.database().ref('tests/' + testKey).update({
+        name, questions
+      })
+      .then(() => {
+        toastr.success('Your test saved!')
+        const { testsIds = [] } = this.state
+        const newTests = [...testsIds, testKey]
+        this.setState({ isNewTest: false, isAddNewTest: false, testsIds: newTests })
+      })
+    }
+  }
 
-    const { name, questions } = test
-    firebase.database().ref('tests/' + testKey).update({
-      name, questions
-    })
-    .then(() => {
-      toastr.success('Your test saved!')
-      this.setState({ isNewTest: false, isAddNewTest: false })
-    })
+  deleteItemId (id, type) {
+    const { testsIds = [], lessonsIds = [] } = this.state
+    const arrayId = type === 'lesson' ? lessonsIds : testsIds
+    const indexItemToRemove = arrayId.findIndex(item => item === id)
+    const newArray = [
+      ...arrayId.slice(0, indexItemToRemove),
+      ...arrayId.slice(indexItemToRemove + 1)
+    ]
+    if (type === 'lesson') {
+      this.setState({ lessonsIds: newArray })
+    }
+    if (type === 'test') {
+      this.setState({ testsIds: newArray })
+    }
+    this.props.hideModal('delete')
+    toastr.success(`Your ${type} deleted!`)
   }
 
   renderButtonAddNewTest () {
@@ -170,6 +188,7 @@ class SectionsListEdit extends Component {
               lessonsIds={lessonsIds}
               isEditSection={true}
               saveLesson={this.saveLesson}
+              deleteItemId={this.deleteItemId}
             />
           </div>
         </div>
@@ -178,6 +197,7 @@ class SectionsListEdit extends Component {
             isNewTest={false}
             testsIds={testsIds}
             isShowEditButton={isShowEditButton}
+            deleteItemId={this.deleteItemId}
           />
         </div>
         {this.renderButtonAddNewTest()}

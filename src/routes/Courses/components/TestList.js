@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import QuestionsList from './QuestionsList'
 import firebase from 'firebase'
 import toastr from 'toastr'
+import { show, hide } from 'redux-modal'
+import { connect } from 'react-redux'
+import DeletePopupComponent from './DeletePopupComponent'
 
 class TestList extends Component {
   constructor (props) {
@@ -49,6 +52,16 @@ class TestList extends Component {
         testsLoaded: true
       })
     })
+  }
+
+  renderDelete (e, id) {
+    e.preventDefault()
+    const type = 'test'
+    this.props.openModal('delete', { id , type })
+  }
+
+  deleteItem = (id, type) => {
+    this.props.deleteItemId(id, type)
   }
 
   editTest = (test) => {
@@ -147,14 +160,20 @@ class TestList extends Component {
           <div className='col-xs-12 col-md-4' style={{ padding: '15px' }} >
             <label>Test: {item.name}</label>
           </div>
-        { !!isShowEditButton && <div className='col-xs-10 col-md-4'>
-            <button
-              type='button'
-              className='btn btn-primary lg'
-              onClick={() => { this.editTestButton(item) }}
-              >Edit Test
-            </button>
-          </div>}
+         {!!isShowEditButton && <div className='col-xs-10 col-md-4'>
+           <button
+             type='button'
+             className='btn btn-primary lg'
+             onClick={() => { this.editTestButton(item) }}
+             >Edit Test
+           </button>
+           <button
+             type='button'
+             className='btn btn-primary lg'
+             onClick={(e) => { this.renderDelete(e, item.id) }}
+             >Delete Test
+           </button>
+         </div>}
         </div>
         <label className='col-xs-2 col-md-6'>Questions: </label>
         <div className='col-xs-2 col-md-12'>
@@ -167,11 +186,14 @@ class TestList extends Component {
             />
           </ul>
         </div>
+        <DeletePopupComponent
+          deleteItem={this.deleteItem}
+        />
       </li>
     )
   }
   render () {
-     const { isTestEdit } = this.state
+  const { isTestEdit } = this.state
     return (
       <div className='container'>
         <div className='row'>
@@ -188,8 +210,18 @@ class TestList extends Component {
 }
 
 TestList.propTypes = {
+  openModal: React.PropTypes.func,
   testsIds: React.PropTypes.array,
-  isShowEditButton: React.PropTypes.bool
+  isShowEditButton: React.PropTypes.bool,
+  deleteItemId: React.PropTypes.func
 }
 
-export default TestList
+const mapDispatchToProps = {
+  openModal: show,
+  hideModal: hide
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(TestList)

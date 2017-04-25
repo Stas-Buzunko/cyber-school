@@ -4,6 +4,7 @@ import firebase from 'firebase'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
+import DeletePopupComponent from './DeletePopupComponent'
 
 class LessonsList extends Component {
   constructor (props) {
@@ -54,6 +55,16 @@ class LessonsList extends Component {
     this.props.openModal('lesson', { item, isEditSection, isNewLesson })
   }
 
+  renderDelete (e, id) {
+    e.preventDefault()
+    const type = 'lesson'
+    this.props.openModal('delete', { id, type })
+  }
+
+  deleteItem = (id, type) => {
+    this.props.deleteItemId(id, type)
+  }
+
   editLesson = (lesson, isEditSection) => {
     if (isEditSection) {
       this.props.saveLesson(lesson)
@@ -71,7 +82,6 @@ class LessonsList extends Component {
           ...lessons.slice(0, indexItemToRemove),
           lesson,
           ...lessons.slice(indexItemToRemove + 1)
-
         ]
         this.setState({ lessons: newArray })
       })
@@ -96,29 +106,31 @@ class LessonsList extends Component {
                   <label className='control-label col-xs-2'>Name:</label>
                   <div> {item.name}</div>
                 </div>
-                { !!isNewLesson && <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>Description:</label>
-                  <div> {item.description}</div>
-                </div>}
-                { !!isNewLesson && <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>Length:</label>
-                  <div> {item.length}</div>
-                </div>}
-                { !!isNewLesson && <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>ImageUrl:</label>
-                  <div> {item.imageUrl}</div>
-                </div>}
-                { !!isNewLesson && <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>VideoUrl:</label>
-                  <div> {item.videoUrl}</div>
-                </div>}
-                { !!isNewLesson && <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>IsFree:</label>
-                  <div> {item.isFree}</div>
-                </div>}
-                { !!isNewLesson && <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>TestId:</label>
-                  <div> {item.testId}</div>
+                { !!isNewLesson && <div>
+                  <div className='col-xs-10'>
+                    <label className='control-label col-xs-2'>Description:</label>
+                    <div> {item.description}</div>
+                  </div>
+                  <div className='col-xs-10'>
+                    <label className='control-label col-xs-2'>Length:</label>
+                    <div> {item.length}</div>
+                  </div>
+                  <div className='col-xs-10'>
+                    <label className='control-label col-xs-2'>ImageUrl:</label>
+                    <div> {item.imageUrl}</div>
+                  </div>
+                  <div className='col-xs-10'>
+                    <label className='control-label col-xs-2'>VideoUrl:</label>
+                    <div> {item.videoUrl}</div>
+                  </div>
+                  <div className='col-xs-10'>
+                    <label className='control-label col-xs-2'>IsFree:</label>
+                    <div> {item.isFree}</div>
+                  </div>
+                  <div className='col-xs-10'>
+                    <label className='control-label col-xs-2'>TestId:</label>
+                    <div> {item.testId}</div>
+                  </div>
                 </div>}
               </div>
               { !isNewLesson && <div className='col-xs-12 col-md-4'>
@@ -130,7 +142,16 @@ class LessonsList extends Component {
                   }}
                   >Edit lesson
                 </button>
-              </div> }
+                <button
+                  type='button'
+                  className='btn btn-primary lg'
+                  onClick={(e) => {
+                    this.renderDelete(e, item.id)
+                  }}
+                  >Delete lesson
+                </button>
+              </div>
+             }
             </div>
           </li>
         )}
@@ -146,6 +167,9 @@ class LessonsList extends Component {
         </div> }
         <LessonPopupComponent
           saveLesson={this.editLesson}
+        />
+        <DeletePopupComponent
+            deleteItem={this.deleteItem}
         />
       </div>
     )
@@ -171,7 +195,8 @@ LessonsList.propTypes = {
   isNewLesson: React.PropTypes.bool,
   isEditSection: React.PropTypes.bool,
   hideModal: React.PropTypes.func,
-  saveLesson: React.PropTypes.func
+  saveLesson: React.PropTypes.func,
+  deleteItemId: React.PropTypes.func
 }
 
 const mapDispatchToProps = {

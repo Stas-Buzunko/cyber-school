@@ -31,9 +31,9 @@ class QuestionPopupComponent extends Component {
   }
 
   componentWillMount () {
-    const isNewQuestion = this.props.isNewQuestion
+    const { isNewQuestion } = this.props
     if (!isNewQuestion) {
-      const { text, questionNumber = 0, answers, rightAnswers } = this.props.question
+      const { text, questionNumber, answers, rightAnswers } = this.props.question
       this.setState({
         questionNumber,
         text,
@@ -44,7 +44,7 @@ class QuestionPopupComponent extends Component {
   }
 
   saveQuestionPopup = () => {
-    const { questionNumber = 0 } = this.props
+    const { questionNumber, isNewQuestion } = this.props
     const { text, answers, rightAnswers } = this.state
     this.setState({ error: '' })
     const isOneAnswer = answers.length
@@ -67,7 +67,7 @@ class QuestionPopupComponent extends Component {
       answers,
       rightAnswers
     }
-    this.props.saveQuestion(question)
+    this.props.saveQuestion(question, isNewQuestion)
     this.setState({
       text: '',
       answers: ['', '', '', ''],

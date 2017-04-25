@@ -3,6 +3,7 @@ import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import QuestionPopupComponent from './QuestionPopupComponent'
 import toastr from 'toastr'
+import DeletePopupComponent from './DeletePopupComponent'
 
 class QuestionsList extends Component {
   constructor (props) {
@@ -13,22 +14,55 @@ class QuestionsList extends Component {
       question: []
     }
     this.renderAnswers = this.renderAnswers.bind(this)
+    this.deleteQuestion = this.deleteQuestion.bind(this)
   }
-  editQuestion = (question) => {
+
+  editQuestion = (question, isNewQuestion) => {
+
     const { questions = [], test } = this.props
-    const indexItemToRemove = questions.findIndex(item => question.questionNumber === item.questionNumber)
+
+    if (isNewQuestion) {
+      const newArray = [
+        ...questions, question
+      ]
+        this.setState({ questions: newArray })
+        this.props.editQuestionsInTest(newArray, test)
+    } else {
+      const indexItemToRemove = questions.findIndex(item => question.questionNumber === item.questionNumber)
+      const newArray = [
+        ...questions.slice(0, indexItemToRemove),
+        question,
+        ...questions.slice(indexItemToRemove + 1)
+      ]
+        this.setState({ questions: newArray })
+        this.props.editQuestionsInTest(newArray, test)
+    }
+    this.props.hideModal('question')
+
+    toastr.success('Your question saved!')
+  }
+
+  renderQuestionPopup (question, isNewQuestion, questionNumber) {
+    this.props.openModal('question', { question, isNewQuestion, questionNumber })
+  }
+
+  renderDelete (question) {
+    const questionNumber = question.questionNumber
+    const type = 'question'
+    this.props.openModal('delete', { questionNumber, type })
+  }
+
+  deleteQuestion = (questionNumber) => {
+    const { questions = [], test } = this.props
+    const indexItemToRemove = questions.findIndex(item => questionNumber === item.questionNumber)
     const newArray = [
       ...questions.slice(0, indexItemToRemove),
-      question,
       ...questions.slice(indexItemToRemove + 1)
     ]
     this.setState({ questions: newArray })
     this.props.hideModal('question')
     this.props.editQuestionsInTest(newArray, test)
-    toastr.success('Your question saved!')
-  }
-  renderQuestionPopup (question) {
-    this.props.openModal('question', { question })
+    toastr.success('Your question deleted!')
   }
 
   isRightAnswer (i, rightAnswers) {
@@ -61,6 +95,7 @@ class QuestionsList extends Component {
   }
   renderQuestionsList () {
     const { isTestEdit, questions = [] } = this.props
+    let isNewQuestion
     return questions.map((item, i) =>
       <li key={i}>
 
@@ -86,12 +121,22 @@ class QuestionsList extends Component {
                 <button
                   type='button'
                   className='btn btn-primary lg'
-                  onClick={(e) => { this.renderQuestionPopup(item) }}
+                  onClick={(e) => { this.renderQuestionPopup(item, isNewQuestion = false) }}
                   >Edit Question
                 </button>
+                <button
+                  type='button'
+                  className='btn btn-primary lg'
+                  onClick={(e) => { this.renderDelete(item) }}
+                  >Delete Question
+                </button>
+
                 <QuestionPopupComponent
                   saveQuestion={this.editQuestion}
                   isNewQuestion={false}
+                />
+                <DeletePopupComponent
+                  deleteQuestion={this.deleteQuestion}
                 />
               </div>
             }
@@ -101,15 +146,32 @@ class QuestionsList extends Component {
     )
   }
   render () {
+    const { isTestEdit, questions = [] } = this.props
+    const questionNumber = questions.length
+    let isNewQuestion
+    let question = []
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
             <ul className='list-unstyled'>
               {this.renderQuestionsList()}
+              {!!isTestEdit && <div>
+                <button
+                type='button'
+                className='btn btn-primary lg'
+                onClick={(e) => { this.renderQuestionPopup(question, isNewQuestion = true, questionNumber) }}
+                >New Question
+              </button>
+              <QuestionPopupComponent
+                saveQuestion={this.editQuestion}
+                isNewQuestion={false}
+              />
+            </div> }
             </ul>
           </div>
         </div>
+
       </div>
     )
   }
