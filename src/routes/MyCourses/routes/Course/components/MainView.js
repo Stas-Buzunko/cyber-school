@@ -190,7 +190,7 @@ class MainView extends Component {
   countNextLessonId (course) {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
-    const {watchedLessonsIds = {} } = userCourses
+    const { watchedLessonsIds = {} } = userCourses
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
     const watchedLessonsLength = watchedLessonsIds.length || 0
 
@@ -262,7 +262,6 @@ class MainView extends Component {
     const { numberLessonsInCourse, firstLessonId } = this.state
 
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-console.log(firstLessonId)
     // here is a bug
     const watchLessonId = courseFromUser.watchedLessonsIds ? this.countNewWatchLessonId(courseFromUser)
     : firstLessonId
