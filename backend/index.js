@@ -99,7 +99,7 @@ app.post('/charge', (req, res) => {
         const user = snapshot.val()
         if (user !== null) {
           const { userCourses = [] } = user
-          const { estimate } = user.statistics.mmr_estimate
+          const { estimate = 0 } = user.statistics.mmr_estimate
 
           admin.database().ref('users/' + userId).update({
             userCourses: [
