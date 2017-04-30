@@ -45,7 +45,6 @@ class SectionsListEdit extends Component {
 
   renderSectionsList () {
     const { sections = [], isNewSection } = this.props
-    console.log(sections)
     const { isShowEditButton } = this.state
     return sections.map((item, i) =>
       <li key={i}>

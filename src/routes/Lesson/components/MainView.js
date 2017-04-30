@@ -14,7 +14,7 @@ class MainView extends Component {
 
   componentWillMount () {
     const { params } = this.props
-    this.fetchItem(params.id)
+    this.fetchItem(params.lessonId)
   }
 
   fetchItem (id) {
@@ -91,8 +91,8 @@ class MainView extends Component {
         <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
             <CommentList
-              comments={lesson.comments}
-              lessonId={params.id}
+              lessonId={params.lessonId}
+              courseId={params.courseId}
             />
           </ul>
         </div>

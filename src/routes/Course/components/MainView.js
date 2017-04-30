@@ -15,14 +15,16 @@ class MainView extends Component {
       lessons: [],
       lessonsLoaded: false,
       sections: [],
-      courseLessons: []
+      courseLessons: [],
+      showComments: false,
+      buttonName: 'Show Comments'
     }
     this.renderSectionsList = this.renderSectionsList.bind(this)
   }
 
   componentWillMount () {
     const { params } = this.props
-    this.fetchItem(params.id)
+    this.fetchItem(params.courseId)
   }
 
   fetchItem (id) {
@@ -67,11 +69,12 @@ class MainView extends Component {
   }
 
   renderLessonsList (lessons = []) {
+    const { location } = this.props
     return lessons.map((item, i) =>
       <tr key={i}>
         <td>
           {item.isFree &&
-          <Link to={{ pathname: `/lesson/${item.id}` }}>{item.name}</Link> }
+          <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link> }
           {!item.isFree &&
           <div>{item.name}</div> }
         </td>
@@ -109,6 +112,28 @@ class MainView extends Component {
     )
   }
 
+  buttonClick () {
+    const { showComments, buttonName } = this.state
+    const newButtonName = (buttonName === 'Show Comments') ? 'Hide Comments' : 'Show Comments'
+    this.setState({ showComments: !showComments, buttonName: newButtonName })
+    console.log('buttonName', buttonName)
+  }
+
+  renderShowCommentsButton () {
+    const { buttonName } = this.state
+    return (
+      <div className='col-xs-12 col-md-10'>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          style={{ width:'30%', margin: '15px' }}
+          onClick={() => this.buttonClick()}
+          >{buttonName}
+        </button>
+      </div>
+    )
+  }
+
   renderBuyButton () {
     const { course, courseLoaded } = this.state
     const { user } = this.props
@@ -132,7 +157,7 @@ class MainView extends Component {
   }
 
   render () {
-    const { course, comments } = this.state
+    const { course, showComments } = this.state
     const { params } = this.props
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
@@ -164,14 +189,15 @@ class MainView extends Component {
             <div> {course.discipline}</div>
           </div>
         </div>
-        <div className='col-xs-12 col-md-10'>
+        {this.renderShowCommentsButton()}
+        {showComments && <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
             <CommentList
-              comments={comments}
-              courseId={params.id}
+              courseId={params.courseId}
             />
           </ul>
         </div>
+      }
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
@@ -185,7 +211,8 @@ class MainView extends Component {
 
 MainView.propTypes = {
   params: PropTypes.object,
-  user: PropTypes.object
+  user: PropTypes.object,
+  location: PropTypes.object
 }
 
 const mapStateToProps = state => ({

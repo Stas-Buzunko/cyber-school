@@ -27,7 +27,6 @@ class NewCourse extends Component {
 
   saveCourse () {
     const { name, description, mainPhoto, duration, price, discipline, author, sections } = this.state
-
     const dateUploaded = Date.now()
     if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
       if (!name) {
@@ -58,13 +57,24 @@ class NewCourse extends Component {
     }
     this.setState({ error: '' })
     const comments = []
-    firebase.database().ref('courses/').push({
-      name, description, mainPhoto, duration, dateUploaded, price, discipline, author, sections, comments
+    const courseId = firebase.database().ref('courses/').push().key
+    firebase.database().ref('forumSections/' + courseId).update({ courseId })
+    firebase.database().ref('courses/' + courseId).update({
+      name,
+      description,
+      mainPhoto,
+      duration,
+      dateUploaded,
+      price,
+      discipline,
+      author,
+      sections,
+      comments
     })
-      .then(() => {
-        toastr.success('Your course saved!')
-        browserHistory.push(`/admin/courses`)
-      })
+    .then(() => {
+      toastr.success('Your course saved!')
+      browserHistory.push(`/admin/courses`)
+    })
   }
 
   saveSection = (section) => {

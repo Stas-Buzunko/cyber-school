@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
-import CommentList from './CommentList'
+import CommentList from '../containers/CommentListContainer'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 
@@ -11,7 +11,9 @@ class MainView extends Component {
       course: {},
       courseLoaded: false,
       lessons: [],
-      lessonsLoaded: false
+      lessonsLoaded: false,
+      showComments: false,
+      buttonName: 'Show Comments'
 
     }
   }
@@ -51,7 +53,6 @@ class MainView extends Component {
           this.setState({
             sections: result,
             course,
-            comments: course.comments,
             courseLoaded: true,
             lessonsLoaded: true
           })
@@ -135,8 +136,30 @@ class MainView extends Component {
     )
   }
 
+  buttonClick () {
+    const { showComments, buttonName } = this.state
+    const newButtonName = (buttonName === 'Show Comments') ? 'Hide Comments' : 'Show Comments'
+    this.setState({ showComments: !showComments, buttonName: newButtonName })
+    console.log('buttonName', buttonName)
+  }
+
+  renderShowCommentsButton () {
+    const { buttonName } = this.state
+    return (
+      <div className='col-xs-12 col-md-10'>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          style={{ width:'30%', margin: '15px' }}
+          onClick={() => this.buttonClick()}
+          >{buttonName}
+        </button>
+      </div>
+    )
+  }
+
   render () {
-    const { course, comments } = this.state
+    const { course, showComments } = this.state
     const { params } = this.props
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
@@ -166,14 +189,15 @@ class MainView extends Component {
             <div> {course.discipline}</div>
           </div>
         </div>
-        <div className='col-xs-12 col-md-10'>
+        {this.renderShowCommentsButton()}
+        {showComments && <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
             <CommentList
-              comments={comments}
-              courseId={params.id}
+              courseId={params.courseId}
             />
           </ul>
         </div>
+      }
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
           <ul className='list-unstyled'>
@@ -186,7 +210,8 @@ class MainView extends Component {
 }
 
 MainView.propTypes = {
-  params: PropTypes.object
+  params: PropTypes.object,
+  location: PropTypes.object
 }
 
 const mapStateToProps = state => ({
