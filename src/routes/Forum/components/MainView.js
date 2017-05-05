@@ -43,11 +43,16 @@ class MainView extends Component {
       .then(snapshot => {
         const object = snapshot.val()
         const courseFromId = object
-        item.discipline = courseFromId.discipline
-        item.name = courseFromId.name
-        return (item)
-      })
+        if (object !== null) {
+          console.log(courseFromId)
+          item.discipline = courseFromId.discipline
+          item.name = courseFromId.name
+          return (item)
+        } else {
+          this.setState({ sectionsLoaded: true })
+      }
     })
+      })
     Promise.all(promises).then(result => {
       this.setState({
         forumSections: result,

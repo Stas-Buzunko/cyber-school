@@ -22,6 +22,7 @@ class CommentList extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log(nextProps, 1234)
     this.props.subSections !== nextProps.subSections && this.fetchLessons(nextProps.subSections)
   }
 
@@ -123,6 +124,7 @@ class CommentList extends Component {
 
   render () {
     const { generalQuestions = [], subSections = {} } = this.props
+    console.log(subSections,123)
     const isRespond = false
     let lessonId, array, item, type
     return (
@@ -132,8 +134,8 @@ class CommentList extends Component {
             <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
               <label className='control-label col-xs-2 col-md-2'>General comments:</label>
               <ul className='list-unstyled'>
-                {this.renderCommentPopup(isRespond, item = {}, type = 'course', lessonId = '') }
-                {this.renderCommentList(generalQuestions, type, lessonId = '')}
+                {this.renderCommentPopup(isRespond, {}, type = 'course', lessonId = '') }
+                {this.renderCommentList(generalQuestions, type, '')}
               </ul>
             </div>
           }
