@@ -10,38 +10,67 @@ class CommentList extends Component {
     super(props)
 
     this.state = {
-      generalQuestions: [],
-      generalQuestionsLoaded: false
+      subSections: {},
+      subSectionsLoaded: false,
+      lesson: {},
+      lessonLoaded: false,
+      comments: [],
+      hasLessonComments: false
     }
+    this.saveComment = this.saveComment.bind(this)
     this.renderCommentList = this.renderCommentList.bind(this)
-    this.renderChildrenList = this.renderChildrenList.bind(this)
   }
 
-  componentWillMount () {
-    const { courseId } = this.props
-    this.fetchItems(courseId)
+  componentDidMount () {
+    this.fetchItem()
   }
-
-  fetchItems (courseId) {
+  fetchItem () {
+    const { lessonId, courseId } = this.props
     this.setState({
-      generalQuestions: [],
-      generalQuestionsLoaded: false
+      forumSections: [],
+      sectionsLoaded: false
     })
     firebase.database().ref('forumSections/' + courseId)
     .once('value')
     .then(snapshot => {
       const object = snapshot.val()
       if (object !== null) {
-        const generalQuestions = object.generalQuestions
-        this.setState({ generalQuestions, generalQuestionsLoaded: true })
+        const forumSection = object
+        const keys = Object.keys(forumSection.subSections)
+        const hasLessonComments = keys.includes(lessonId)
+        this.setState({
+          hasLessonComments,
+          subSection: forumSection.subSections[`${lessonId}`],
+          sectionLoaded: true })
+        this.fetchLesson()
       } else {
-        this.setState({ generalQuestionsLoaded: true })
+        this.setState({ sectionLoaded: true })
       }
+    })
+  }
+  fetchLesson () {
+    const { lessonId } = this.props
+    const { hasLessonComments } = this.state
+
+    this.setState({
+      lesson: [],
+      lessonLoaded: false
+    })
+    if (hasLessonComments) {
+      firebase.database().ref('lessons/' + lessonId)
+      .once('value')
+      .then(snapshot => {
+        const object = snapshot.val()
+        const lesson = { name: object.name, lessonId: lessonId }
+        this.setState({
+          lesson,
+          lessonLoaded: true
+        })
+      })
     }
-  )
   }
 
-  renderCommentPopup (isRespond, item) {
+  renderCommentPopup (isRespond, item, lessonId) {
     const buttonName = isRespond ? 'Reply' : 'Add Comment'
     return (
       <div>
@@ -50,7 +79,7 @@ class CommentList extends Component {
           className='btn btn-success lg'
           onClick={(e) => {
             e.preventDefault()
-            this.props.openModal('comment', { isRespond, item })
+            this.props.openModal('comment', { isRespond, item, lessonId })
           }}>{buttonName}
         </button>
         <CommentPopupComponent
@@ -59,25 +88,26 @@ class CommentList extends Component {
     )
   }
 
-  saveComment = (comment, isRespond, item) => {
+  saveComment = (comment, isRespond, item, lessonId) => {
     const { user } = this.props.auth
     const { courseId } = this.props
-
     this.setState({
-      generalQuestions: []
+      comments: []
     })
-
     firebase.database().ref('forumSections/' + courseId)
     .once('value')
     .then(snapshot => {
       const object = snapshot.val()
       if (object !== null) {
-        const generalQuestions = object.generalQuestions
-        this.setState({ generalQuestions })
+        const subSections = object.subSections
+        if (subSections) {
+          const comments = object.subSections[`${lessonId}`] || []
+          this.setState({ comments, subSections })
+        }
       }
     })
     .then(() => {
-      const { generalQuestions = [] } = this.state
+      const { comments = [] } = this.state
       if (!isRespond) {
         const commentStructure = {
           text: comment,
@@ -86,8 +116,8 @@ class CommentList extends Component {
           displayName: user.displayName,
           avatar: user.avatar
         }
-        const newGeneralQuestions = [ ...generalQuestions, commentStructure ]
-        this.setState({ generalQuestions: newGeneralQuestions })
+        const newComments = [ ...comments, commentStructure ]
+        this.setState({ comments: newComments })
       } else {
         const respond = comment
         if (!item.children) {
@@ -97,34 +127,37 @@ class CommentList extends Component {
           ...item.children,
           respond
         ]
-        const indexItemToRemove = generalQuestions.findIndex(comment => item.text === comment.text)
+        const indexItemToRemove = comments.findIndex(comment => item.text === comment.text)
         const newComment = {
-          text : generalQuestions[indexItemToRemove].text,
+          text : comments[indexItemToRemove].text,
           children: newCommentChildrenArray,
           uid: user.uid,
           displayName: user.displayName,
           avatar: user.avatar
         }
         const newArray = [
-          ...generalQuestions.slice(0, indexItemToRemove),
+          ...comments.slice(0, indexItemToRemove),
           newComment,
-          ...generalQuestions.slice(indexItemToRemove + 1)
+          ...comments.slice(indexItemToRemove + 1)
         ]
-        this.setState({ generalQuestions: newArray })
+        this.setState({ comments: newArray })
       }
     })
-      .then(() => {
-        const { generalQuestions } = this.state
-        firebase.database().ref('forumSections/' + courseId).update({ generalQuestions })
-      })
-      .then(() => {
-        this.props.hideModal('comment')
-        if (!isRespond) {
-          toastr.success('Your comment saved!')
-        } else {
-          toastr.success('Your respond saved!')
-        }
-      })
+    .then(() => {
+      const { comments, subSections } = this.state
+      const newSubSections = !!subSections ? subSections : {}
+      newSubSections[`${lessonId}`] = comments
+      this.setState({ subSection: comments })
+      firebase.database().ref('forumSections/' + courseId).update({ subSections: newSubSections })
+    })
+    .then(() => {
+      this.props.hideModal('comment')
+      if (!isRespond) {
+        toastr.success('Your comment saved!')
+      } else {
+        toastr.success('Your respond saved!')
+      }
+    })
   }
 
   renderChildrenList (item) {
@@ -139,9 +172,9 @@ class CommentList extends Component {
   }
 
   renderCommentList () {
-    const { generalQuestions = [] } = this.state
     const isRespond = true
-    return generalQuestions.map((item, i) =>
+    const { subSection, lesson } = this.state
+    return subSection.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-10 col-md-3'>
@@ -150,10 +183,10 @@ class CommentList extends Component {
           </div>
           <div className='col-xs-10 col-md-3' style={{ borderRadius:'50%' }}>{item.text} </div>
           <div className='col-xs-6 col-md-4'>
-            {this.renderCommentPopup(isRespond, item) }
+            {this.renderCommentPopup(isRespond, item, lesson.lessonId) }
           </div>
         </div>
-        { item.children && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
+        {!!item.children && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-12 col-md-2'>
           </div>
           <div className='col-xs-10 col-md-8'>
@@ -161,18 +194,23 @@ class CommentList extends Component {
           </div>
         </div>}
       </li>
-  )
+    )
   }
+
   render () {
+    const { hasLessonComments, lesson } = this.state
     const isRespond = false
     return (
       <div className='container'>
         <div className='row'>
           <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-2 col-md-2'>Comments:</label>
+            <label className='control-label col-xs-2 col-md-2'>{lesson.name}</label>
+            <label className='control-label col-xs-2 col-md-12'>Lesson comments: </label>
             <ul className='list-unstyled'>
-              {this.renderCommentPopup(isRespond, {}) }
-              {this.renderCommentList()}
+              {this.renderCommentPopup(isRespond, {}, lesson.lessonId) }
+              {!!hasLessonComments && <div>
+                {this.renderCommentList()}
+              </div>}
             </ul>
           </div>
         </div>
@@ -183,10 +221,11 @@ class CommentList extends Component {
 
 CommentList.propTypes = {
   openModal: React.PropTypes.func,
+  lessonId:  React.PropTypes.string,
   hideModal: React.PropTypes.func,
-  courseId: React.PropTypes.string,
   user: React.PropTypes.object,
-  auth: React.PropTypes.object
+  auth: React.PropTypes.object,
+  courseId: React.PropTypes.string
 }
 
 const mapDispatchToProps = {

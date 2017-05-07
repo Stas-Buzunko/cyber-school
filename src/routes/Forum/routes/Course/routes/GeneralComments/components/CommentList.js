@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
-import firebase from 'firebase'
 import CommentPopupComponent from './CommentPopupComponent'
 
 class CommentList extends Component {
@@ -21,37 +20,7 @@ class CommentList extends Component {
     this.renderCommentList = this.renderCommentList.bind(this)
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(nextProps, 1234)
-    this.props.subSections !== nextProps.subSections && this.fetchLessons(nextProps.subSections)
-  }
-
-  fetchLessons (subSections) {
-    this.setState({
-      lessons: [],
-      lessonsLoaded: false
-    })
-
-    const keys = Object.keys(subSections)
-
-    const promises = keys.map(key => {
-      return firebase.database().ref('lessons/' + key)
-      .once('value')
-      .then(snapshot => {
-        const object = snapshot.val()
-        const lesson = { name: object.name, lessonId: key }
-        return (lesson)
-      })
-    })
-    Promise.all(promises).then(result => {
-      this.setState({
-        lessons: result,
-        lessonsLoaded: true
-      })
-    })
-  }
-
-  renderCommentPopup (isRespond, item, type, lessonId) {
+  renderCommentPopup (isRespond, item, lessonId) {
     const buttonName = isRespond ? 'Reply' : 'Add Comment'
     return (
       <div>
@@ -60,7 +29,7 @@ class CommentList extends Component {
           className='btn btn-success lg'
           onClick={(e) => {
             e.preventDefault()
-            this.props.openModal('comment', { isRespond, item, type, lessonId })
+            this.props.openModal('comment', { isRespond, item, lessonId })
           }}>{buttonName}
         </button>
         <CommentPopupComponent
@@ -69,8 +38,8 @@ class CommentList extends Component {
     )
   }
 
-  saveComment = (comment, isRespond, item, type, lessonId) => {
-    this.props.saveComment(comment, isRespond, item, type, lessonId)
+  saveComment = (comment, isRespond, item, lessonId) => {
+    this.props.saveComment(comment, isRespond, item, lessonId)
   }
 
   renderChildrenList (item) {
@@ -84,7 +53,7 @@ class CommentList extends Component {
       </div>)
   }
 
-  renderCommentList (array, type, lessonId) {
+  renderCommentList (array, lessonId) {
     const isRespond = true
     return array.map((item, i) =>
       <li key={i}>
@@ -95,7 +64,7 @@ class CommentList extends Component {
           </div>
           <div className='col-xs-10 col-md-3' style={{ borderRadius:'50%' }}>{item.text} </div>
           <div className='col-xs-6 col-md-4'>
-            {this.renderCommentPopup(isRespond, item, type, lessonId) }
+            {this.renderCommentPopup(isRespond, item, lessonId) }
           </div>
         </div>
         {!!item.children && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
@@ -109,24 +78,9 @@ class CommentList extends Component {
     )
   }
 
-  renderLessonCommentList (subSections, isRespond, type) {
-    const { lessons = [] } = this.state
-    console.log(subSections)
-    let lessonId, array, item
-    return lessons.map((lesson, i) =>
-      <div key={i}>
-        <label className='control-label col-xs-2 col-md-12 text-left'>{lesson.name}</label>
-        {this.renderCommentPopup(isRespond, item = {}, type, lessonId = lesson.lessonId) }
-        {this.renderCommentList(subSections[`${lesson.lessonId}`], type, lessonId = lesson.lessonId)}
-      </div>
-    )
-  }
-
   render () {
-    const { generalQuestions = [], subSections = {} } = this.props
-    console.log(subSections,123)
+    const { generalQuestions = [] } = this.props
     const isRespond = false
-    let lessonId, array, item, type
     return (
       <div className='container'>
         <div className='row'>
@@ -134,28 +88,19 @@ class CommentList extends Component {
             <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
               <label className='control-label col-xs-2 col-md-2'>General comments:</label>
               <ul className='list-unstyled'>
-                {this.renderCommentPopup(isRespond, {}, type = 'course', lessonId = '') }
-                {this.renderCommentList(generalQuestions, type, '')}
+                {this.renderCommentPopup(isRespond, {}, '')}
+                {this.renderCommentList(generalQuestions, '')}
               </ul>
             </div>
           }
-          {!!subSections && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-2 col-md-2'>Lesson comments:</label>
-            <ul className='list-unstyled'>
-              {this.renderLessonCommentList(subSections, isRespond, type = 'lesson')}
-            </ul>
-          </div>
-        }
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 }
 
 CommentList.propTypes = {
   openModal: React.PropTypes.func,
-  type: React.PropTypes.string,
-  subSections: React.PropTypes.object,
   generalQuestions: React.PropTypes.array,
   saveComment: React.PropTypes.func
 }

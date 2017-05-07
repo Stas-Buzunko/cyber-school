@@ -39,7 +39,6 @@ class SectionsListEdit extends Component {
     const editSectionNumber = item.sectionNumber
 
     const section = sections.find(itemSection => editSectionNumber === itemSection.sectionNumber)
-    console.log(editSectionNumber, section)
     this.setState({ isEditSection: true, isShowEditButton: true, section, name: section.name })
   }
 

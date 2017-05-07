@@ -17,13 +17,13 @@ class CommentPopupComponent extends Component {
 
   saveCommentPopup = () => {
     const { comment } = this.state
-    const { isRespond, item, type, lessonId } = this.props
+    const { isRespond, item, lessonId } = this.props
     this.setState({ error: '' })
     if (!comment) {
       toastr.error('Please, fill your comment')
       return false
     }
-    this.props.saveComment(comment, isRespond, item, type, lessonId)
+    this.props.saveComment(comment, isRespond, item, lessonId)
   }
 
   render () {
@@ -71,7 +71,6 @@ CommentPopupComponent.propTypes = {
   saveComment: React.PropTypes.func,
   isRespond: React.PropTypes.bool,
   item: React.PropTypes.object,
-  type: React.PropTypes.string,
   lessonId: React.PropTypes.string
 }
 

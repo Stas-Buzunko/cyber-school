@@ -57,7 +57,6 @@ class LessonPopupComponent extends Component {
     }
 
     const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, id }
-    console.log(id)
     this.props.saveLesson(lesson)
   }
 

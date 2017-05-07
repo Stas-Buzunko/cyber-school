@@ -26,7 +26,6 @@ class MainView extends Component {
       const object = snapshot.val()
       if (object !== null) {
         const forumSections = Object.keys(object).map(id => ({ ...object[id], id }))
-        console.log(forumSections)
         this.setState({ forumSections, sectionsLoaded: true })
         this.fetchInfo()
       } else {
@@ -44,22 +43,20 @@ class MainView extends Component {
         const object = snapshot.val()
         const courseFromId = object
         if (object !== null) {
-          console.log(courseFromId)
           item.discipline = courseFromId.discipline
           item.name = courseFromId.name
           return (item)
         } else {
           this.setState({ sectionsLoaded: true })
-      }
-    })
+        }
       })
+    })
     Promise.all(promises).then(result => {
       this.setState({
         forumSections: result,
         forumSectionsLoaded: true
       })
     })
-    console.log(forumSections)
   }
 
   renderSectionsList (filteredForumSections) {
@@ -76,7 +73,7 @@ class MainView extends Component {
   renderTable (discipline) {
     const { forumSections = [] } = this.state
     const filteredForumSections = forumSections.filter((item, i) =>
-    item.discipline === discipline)
+      item.discipline === discipline)
     return <div>
       {!!filteredForumSections.length &&
         <table className='table'>

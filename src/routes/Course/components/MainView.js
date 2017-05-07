@@ -116,7 +116,6 @@ class MainView extends Component {
     const { showComments, buttonName } = this.state
     const newButtonName = (buttonName === 'Show Comments') ? 'Hide Comments' : 'Show Comments'
     this.setState({ showComments: !showComments, buttonName: newButtonName })
-    console.log('buttonName', buttonName)
   }
 
   renderShowCommentsButton () {
