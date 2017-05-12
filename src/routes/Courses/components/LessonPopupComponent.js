@@ -32,6 +32,7 @@ class LessonPopupComponent extends Component {
     }
   }
   saveLessonPopup = () => {
+    const { isEditSection } = this.props
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = this.state
     this.setState({ error: '' })
     if (!name || !description || !length || !imageUrl || !videoUrl || !testId) {
@@ -57,7 +58,7 @@ class LessonPopupComponent extends Component {
     }
 
     const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, id }
-    this.props.saveLesson(lesson, this.props.isEditSection)
+    this.props.saveLesson(lesson, isEditSection)
   }
 
   render () {

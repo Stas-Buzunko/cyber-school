@@ -29,7 +29,7 @@ class NewSection extends Component {
   }
 
   renderLessonPopup () {
-    const isNewLesson = { true }
+    const isNewLesson = true
     return (
       <div>
         <button
@@ -72,12 +72,9 @@ class NewSection extends Component {
     const lessonKey = firebase.database().ref('lessons/').push().key
     const { lessonsIds = [] } = this.state
     const newLessons = [...lessonsIds, lessonKey]
-    this.setState({ lessonsIds: newLessons })
-
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
-    const comments = []
     firebase.database().ref('lessons/' + lessonKey).update({
-      name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
+      name, description, length, imageUrl, videoUrl, isFree, testId, id
     })
     .then(() => {
       this.props.hideModal('lesson')
@@ -129,6 +126,9 @@ class NewSection extends Component {
           <div className='col-xs-2 col-md-10'>
             <ul className='list-unstyled'>
               {this.renderLessonPopup()}
+              <LessonPopupComponent
+                saveLesson={this.saveLesson}
+               />
               <LessonList
                 isNewLesson={true}
                 lessonsIds={this.state.lessonsIds}
@@ -159,10 +159,7 @@ class NewSection extends Component {
             </ul>
           </div>
         </div>
-        <LessonPopupComponent
-          saveLesson={this.saveLesson}
-          isNewLesson={true}
-         />
+
       </div>
     )
   }

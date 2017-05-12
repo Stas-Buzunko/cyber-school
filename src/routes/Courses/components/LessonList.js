@@ -150,6 +150,9 @@ class LessonsList extends Component {
                   }}
                   >Delete lesson
                 </button>
+                <LessonPopupComponent
+                  saveLesson={this.editLesson}
+                />
               </div>
              }
             </div>
@@ -165,9 +168,7 @@ class LessonsList extends Component {
             >Add new lesson
           </button>
         </div> }
-        <LessonPopupComponent
-          saveLesson={this.editLesson}
-        />
+
         <DeletePopupComponent
             deleteItem={this.deleteItem}
         />
