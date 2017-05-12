@@ -141,10 +141,13 @@ class NewCourse extends Component {
               <div className='form-group'>
                 <label className='control-label col-xs-2'>Discipline</label>
                 <div className='col-xs-10 col-md-6'>
-                  <input
-                    type='text'
-                    className='form-control'
-                    onChange={(e) => this.setState({ discipline: e.target.value })} />
+                <select className='form-control'
+                  onChange={(e) => this.setState({ discipline: e.target.value })}>
+                  <option>Dota2</option>
+                  <option>CS:GO</option>
+                  <option>LoL</option>
+                    
+                </select>
                 </div>
               </div>
 

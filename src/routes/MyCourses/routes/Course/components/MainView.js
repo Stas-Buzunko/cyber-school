@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
 import CommentList from '../containers/CommentListContainer'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
 class MainView extends Component {
@@ -13,8 +13,11 @@ class MainView extends Component {
       lessons: [],
       lessonsLoaded: false,
       showComments: false,
-      buttonName: 'Show Comments'
-
+      buttonName: 'Show Comments',
+      userCourses: [],
+      newWatchLessonId: [],
+      nextLessonId: '',
+      firstLessonId: ''
     }
   }
 
@@ -50,11 +53,16 @@ class MainView extends Component {
           })
         })
         Promise.all(newSectionsLessons).then(result => {
+          const numberLessonsInCourse = this.countNumberLessonsInCourse(course)
+          const nextLessonId = this.countNextLessonId(course)
           this.setState({
             sections: result,
             course,
             courseLoaded: true,
-            lessonsLoaded: true
+            lessonsLoaded: true,
+            numberLessonsInCourse,
+            nextLessonId,
+            firstLessonId: course.sections[0].lessonsIds[0]
           })
           const { sections } = this.state
           const newSectionsTests = sections.map(section => {
@@ -81,29 +89,62 @@ class MainView extends Component {
     })
   }
 
+  isPassed (id, type) {
+    const { params } = this.props
+    const { userCourses } = this.props.auth.user
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+    const { uniqueWatchedLessonsIds = [], passedTestIds = [] } = courseFromUser
+    const array = (type === 'lesson') ? uniqueWatchedLessonsIds : passedTestIds
+    const passed = array.findIndex(item => item === id)
+    if (passed === -1) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   renderLessonsList (lessons = []) {
     const { location } = this.props
-
     return lessons.map((item, i) =>
-      <tr key={i}>
-        <td>
-          <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link>
-        </td>
-        <td> {item.length} </td>
-      </tr>
-    )
+    <tr key={i}>
+      <td>
+        <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link>
+      </td>
+      <td> {item.length} </td>
+      <td>
+        <div className='col-xs-10 col-md-2'>
+          <label className='checkbox checkbox-info checkbox-circle' style={{ paddingBottom: '20px' }}>
+            <input
+              type='checkbox'
+              checked={this.isPassed(item.id, 'lesson')}
+            />
+          </label>
+        </div>
+      </td>
+    </tr>
+  )
   }
+
   renderTestsList (tests = []) {
     const { location } = this.props
-
     return tests.map((item, i) =>
-      <tr key={i}>
-        <td>
-          <Link to={{ pathname: `${location.pathname}/test/${item.id}` }}>{item.name}</Link>
-        </td>
-        <td> </td>
-      </tr>
-    )
+    <tr key={i}>
+      <td>
+        <Link to={{ pathname: `${location.pathname}/test/${item.id}` }}>{item.name}</Link>
+      </td>
+      <td> </td>
+      <td>
+        <div className='col-xs-10 col-md-2'>
+          <label className='checkbox checkbox-info checkbox-circle' style={{ paddingBottom: '20px' }}>
+            <input
+              type='checkbox'
+              checked={this.isPassed(item.id, 'test')}
+            />
+          </label>
+        </div>
+      </td>
+    </tr>
+  )
   }
 
   renderSectionsList () {
@@ -116,6 +157,7 @@ class MainView extends Component {
               <tr>
                 <th>Name</th>
                 <th>Length</th>
+                <th> </th>
               </tr>
             </thead>
             {sections.map((item, i) =>
@@ -153,6 +195,95 @@ class MainView extends Component {
           onClick={() => this.buttonClick()}
           >{buttonName}
         </button>
+      </div>
+    )
+  }
+  countNumberLessonsInCourse (course = {}) {
+    const lessonsNumbersArray = course.sections.map(section => {
+      return section.lessonsIds.length
+    })
+    const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
+      return a + b
+    })
+    return numberLessonsInCourse
+  }
+
+  countNextLessonId (course) {
+    const { params } = this.props
+    const { userCourses } = this.props.auth.user
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+    const { watchedLessonsIds = {} } = courseFromUser
+    const watchedLessonsLength = watchedLessonsIds.length || 0
+    let nextId = false
+    // count nextLessonId if lesson is ended
+    // take last watched lesson
+    const lastLessonId = courseFromUser.watchedLessonsIds[watchedLessonsLength - 1]
+    // find last watched section and index
+    const currentSectionIndex = course.sections.findIndex(section =>
+      section.lessonsIds.includes(lastLessonId))
+    const currentSection = course.sections[currentSectionIndex]
+    // find index of last watched lesson in currentSection
+    const lastLessonIdIndex = currentSection.lessonsIds.findIndex(lessonId =>
+        lessonId === lastLessonId)
+    const nextLessonIdInCurrentSection = currentSection.lessonsIds[lastLessonIdIndex + 1]
+    // if there is such a lesson in current section, then use it
+    if (nextLessonIdInCurrentSection) {
+      nextId = nextLessonIdInCurrentSection
+    // otherwise chech if there is 1 more section
+    // if there is then use next section, first lesson
+    } else if (course.sections[currentSectionIndex + 1]) {
+      nextId = course.sections[currentSectionIndex + 1].lessonsIds[0]
+    }
+    return nextId
+  }
+
+  countNewWatchLessonId (courseFromUser) {
+    const { nextLessonId } = this.state
+    const isLessonEnded = courseFromUser.watchedLessonsIds[(courseFromUser.watchedLessonsIds.length - 1)] ===
+    courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+    // if lesson is not ended use last watched lesson else count nextLessonId
+    const newWatchLessonId = isLessonEnded ?
+    nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
+    return newWatchLessonId
+  }
+  renderProgressBar () {
+    const { location, params } = this.props
+    const { userCourses } = this.props.auth.user
+    const { numberLessonsInCourse, firstLessonId } = this.state
+    const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
+
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length || 0
+    const buttonName = courseFromUser.uniqueWatchedLessonsIds ? 'Continue lesson' : 'Start first lesson'
+    // if 0 watched take 1st lesson of first section else count watchLessonId``
+    const watchLessonId = courseFromUser.uniqueWatchedLessonsIds ? this.countNewWatchLessonId(courseFromUser) :
+    firstLessonId
+    const isCorseWatched = courseFromUser.uniqueWatchedLessonsIds.length === numberLessonsInCourse
+    const percent = numberWatchedlessons / numberLessonsInCourse
+
+    return (
+      <div>
+        <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
+          <label className='control-label col-xs-8 col-md-6'>
+            Your progress: {numberWatchedlessons} lessons from {numberLessonsInCourse} </label>
+        </div>
+        <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
+          <div className='progress'>
+            <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
+              aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent * 100}%` }}>
+              {Math.round(percent * 100)}% Complete (success)
+            </div>
+          </div>
+        </div>
+        <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
+          {!!watchLessonId && !isCorseWatched && <button
+            type='button'
+            style={{ width:'30%', margin: '15px' }}
+            className='btn btn-success lg'
+            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${watchLessonId}` }) }}
+            >{buttonName}
+          </button>
+        }
+        </div>
       </div>
     )
   }
@@ -197,8 +328,9 @@ class MainView extends Component {
           </ul>
         </div>
       }
+        {this.renderProgressBar()}
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
+          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Sections: </label>
           <ul className='list-unstyled'>
             {this.renderSectionsList()}
           </ul>
@@ -210,7 +342,9 @@ class MainView extends Component {
 
 MainView.propTypes = {
   params: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
+  auth: React.PropTypes.object,
+  user: React.PropTypes.object
 }
 
 const mapStateToProps = state => ({

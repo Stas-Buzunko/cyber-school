@@ -17,7 +17,6 @@ class CommentList extends Component {
     const { courseId } = this.props
     this.fetchItems(courseId)
   }
-
   fetchItems (courseId) {
     this.setState({
       generalQuestions: [],

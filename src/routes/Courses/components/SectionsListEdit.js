@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import LessonsList from './LessonList'
 import TestList from './TestList'
+import { show, hide } from 'redux-modal'
+import { connect } from 'react-redux'
+import toastr from 'toastr'
+import firebase from 'firebase'
+import NewTest from './NewTest'
 
 class SectionsListEdit extends Component {
   constructor (props) {
@@ -13,13 +18,23 @@ class SectionsListEdit extends Component {
       sections: [],
       error: '',
       isAddNewSectionOpen: false,
-      isShowEditButton: false
+      isShowEditButton: false,
+      isAddNewTest: false,
+      isNewTest: false,
+      testsIds: [],
+      lessonsIds: []
     }
+    this.saveLesson = this.saveLesson.bind(this)
+    this.deleteItemId = this.deleteItemId.bind(this)
+    this.saveTest = this.saveTest.bind(this)
     this.renderEditSection = this.renderEditSection.bind(this)
   }
+
   saveSection = (section) => {
-    const { name } = this.state
+    const { name, lessonsIds, testsIds } = this.state
     section.name = name
+    section.lessonsIds = lessonsIds
+    section.testsIds = testsIds
     const { sections = [] } = this.props
     const indexItemToRemove = sections.findIndex(item => section.sectionNumber === item.sectionNumber)
     const newArray = [
@@ -37,9 +52,15 @@ class SectionsListEdit extends Component {
   editSectionButton = (item) => {
     const { sections = [] } = this.props
     const editSectionNumber = item.sectionNumber
-
     const section = sections.find(itemSection => editSectionNumber === itemSection.sectionNumber)
-    this.setState({ isEditSection: true, isShowEditButton: true, section, name: section.name })
+    this.setState({
+      isEditSection: true,
+      isShowEditButton: true,
+      section,
+      name: section.name,
+      lessonsIds: section.lessonsIds,
+      testsIds: section.testsIds
+    })
   }
 
   renderSectionsList () {
@@ -85,8 +106,69 @@ class SectionsListEdit extends Component {
     )
   }
 
+  saveLesson (lesson) {
+    const lessonKey = firebase.database().ref('lessons/').push().key
+    const { lessonsIds = [] } = this.state
+    const newLessons = [...lessonsIds, lessonKey]
+    this.setState({ lessonsIds: newLessons })
+    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+    const comments = []
+    firebase.database().ref('lessons/' + lessonKey).update({
+      name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
+    })
+    this.props.hideModal('lesson')
+    toastr.success('Your lesson saved!')
+  }
+
+  saveTest = (test) => {
+    const testKey = firebase.database().ref('tests/').push().key
+    if (testKey) {
+      const { name, questions } = test
+      firebase.database().ref('tests/' + testKey).update({
+        name, questions
+      })
+      .then(() => {
+        toastr.success('Your test saved!')
+        const { testsIds = [] } = this.state
+        const newTests = [...testsIds, testKey]
+        this.setState({ isNewTest: false, isAddNewTest: false, testsIds: newTests })
+      })
+    }
+  }
+
+  deleteItemId (id, type) {
+    const { testsIds = [], lessonsIds = [] } = this.state
+    const arrayId = type === 'lesson' ? lessonsIds : testsIds
+    const indexItemToRemove = arrayId.findIndex(item => item === id)
+    const newArray = [
+      ...arrayId.slice(0, indexItemToRemove),
+      ...arrayId.slice(indexItemToRemove + 1)
+    ]
+    if (type === 'lesson') {
+      this.setState({ lessonsIds: newArray })
+    }
+    if (type === 'test') {
+      this.setState({ testsIds: newArray })
+    }
+    this.props.hideModal('delete')
+    toastr.success(`Your ${type} deleted!`)
+  }
+
+  renderButtonAddNewTest () {
+    return (
+      <div className='col-xs-12 col-md-12'>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          onClick={() => {
+            this.setState({ isAddNewTest: true, isNewTest: true })
+          }}>Add New Test
+        </button>
+      </div>
+    )
+  }
   renderEditSection () {
-    const { name, section, isShowEditButton } = this.state
+    const { name, section, isShowEditButton, isAddNewTest, lessonsIds, testsIds } = this.state
     return (
       <div className='col-xs-12 col-md-12'>
         <div className='form-group' style={{ padding: '15px' }}>
@@ -103,17 +185,29 @@ class SectionsListEdit extends Component {
           <div >
             <LessonsList
               isNewLesson={false}
-              lessonsIds={section.lessonsIds}
+              lessonsIds={lessonsIds}
+              isEditSection={true}
+              saveLesson={this.saveLesson}
+              deleteItemId={this.deleteItemId}
             />
           </div>
         </div>
         <div className='col-xs-2 col-md-8'>
           <TestList
             isNewTest={false}
-            testsIds={section.testsIds}
+            testsIds={testsIds}
             isShowEditButton={isShowEditButton}
+            deleteItemId={this.deleteItemId}
           />
         </div>
+        {this.renderButtonAddNewTest()}
+        {!!isAddNewTest &&
+          <div>
+            <NewTest
+              saveTest={this.saveTest}
+            />
+          </div>
+        }
         <div className='col-xs-2 col-md-9'>
           <button
             type='button'
@@ -144,11 +238,20 @@ class SectionsListEdit extends Component {
     )
   }
   }
+const mapDispatchToProps = {
+  openModal: show,
+  hideModal: hide
+}
 
 SectionsListEdit.propTypes = {
+  openModal: React.PropTypes.func,
+  hideModal: React.PropTypes.func,
   sections: React.PropTypes.array,
   isNewSection: React.PropTypes.bool,
   saveSections: React.PropTypes.func
 }
 
-export default SectionsListEdit
+export default connect(
+  null,
+  mapDispatchToProps
+)(SectionsListEdit)
