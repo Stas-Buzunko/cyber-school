@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
+import CommentList from '../containers/CommentListContainer'
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
@@ -11,6 +12,8 @@ class MainView extends Component {
       courseLoaded: false,
       lessons: [],
       lessonsLoaded: false,
+      showComments: false,
+      buttonName: 'Show Comments',
       userCourses: [],
       newWatchLessonId: [],
       nextLessonId: '',
@@ -55,7 +58,6 @@ class MainView extends Component {
           this.setState({
             sections: result,
             course,
-            comments: course.comments,
             courseLoaded: true,
             lessonsLoaded: true,
             numberLessonsInCourse,
@@ -176,6 +178,26 @@ class MainView extends Component {
     )
   }
 
+  buttonClick () {
+    const { showComments, buttonName } = this.state
+    const newButtonName = (buttonName === 'Show Comments') ? 'Hide Comments' : 'Show Comments'
+    this.setState({ showComments: !showComments, buttonName: newButtonName })
+  }
+
+  renderShowCommentsButton () {
+    const { buttonName } = this.state
+    return (
+      <div className='col-xs-12 col-md-10'>
+        <button
+          type='button'
+          className='btn btn-success lg'
+          style={{ width:'30%', margin: '15px' }}
+          onClick={() => this.buttonClick()}
+          >{buttonName}
+        </button>
+      </div>
+    )
+  }
   countNumberLessonsInCourse (course = {}) {
     const lessonsNumbersArray = course.sections.map(section => {
       return section.lessonsIds.length
@@ -261,13 +283,13 @@ class MainView extends Component {
             >{buttonName}
           </button>
         }
-      </div>
+        </div>
       </div>
     )
   }
 
   render () {
-    const { course, comments } = this.state
+    const { course, showComments } = this.state
     const { params } = this.props
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
@@ -297,6 +319,15 @@ class MainView extends Component {
             <div> {course.discipline}</div>
           </div>
         </div>
+        {this.renderShowCommentsButton()}
+        {showComments && <div className='col-xs-12 col-md-10'>
+          <ul className='list-unstyled'>
+            <CommentList
+              courseId={params.courseId}
+            />
+          </ul>
+        </div>
+      }
         {this.renderProgressBar()}
         <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
           <label className='control-label col-xs-8' style={{ padding: '15px' }}>Sections: </label>

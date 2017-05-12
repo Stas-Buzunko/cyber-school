@@ -12,7 +12,7 @@ export const Header = ({ user }) =>
     </IndexLink>
     {' · '}
     <Link to='/disciplines/Dota2' activeClassName='route--active'>
-       Dota2
+      Dota2
     </Link>
     {' · '}
     <Link to='/disciplines/CS:GO' activeClassName='route--active'>
@@ -34,6 +34,10 @@ export const Header = ({ user }) =>
       <div>
         <Link to='/MyCourses' activeClassName='route--active'>
           MyCourses
+        </Link>
+        {' · '}
+        <Link to='/forum' activeClassName='route--active'>
+          Forum
         </Link>
         {' · '}
         <Link to='/statistics' activeClassName='route--active'>

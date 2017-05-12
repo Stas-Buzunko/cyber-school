@@ -1,7 +1,7 @@
 // import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path : 'discipline/(:discipline)(/:id)',
+  path : 'discipline/(:discipline)(/course/:courseId)',
   /*  Async getComponent is only invoked when route matches   */
   getComponent (nextState, cb) {
     /*  Webpack - use 'require.ensure' to create a split point
@@ -20,6 +20,6 @@ export default (store) => ({
       cb(null, MainView)
 
     /* Webpack named bundle   */
-    }, 'discipline/(:discipline)(/:id)')
+    }, 'discipline/(:discipline)(/course/:courseId)')
   }
 })

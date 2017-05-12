@@ -7,7 +7,6 @@ class VideoPlayer extends Component {
   constructor (props) {
     super(props)
     this.state = {
-
       playing: true,
       volume: 0.6,
       played: 0,

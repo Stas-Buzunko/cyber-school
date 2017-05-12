@@ -8,36 +8,37 @@ import toastr from 'toastr'
 class CommentList extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
-      comments: [],
-      subSections: []
+      generalQuestions: [],
+      generalQuestionsLoaded: false
     }
     this.renderCommentList = this.renderCommentList.bind(this)
     this.renderChildrenList = this.renderChildrenList.bind(this)
   }
 
   componentWillMount () {
-    const { lessonId, courseId } = this.props
-    this.fetchItems(courseId, lessonId)
+    const { courseId } = this.props
+    this.fetchItems(courseId)
   }
 
-  fetchItems (courseId, lessonId) {
+  fetchItems (courseId) {
     this.setState({
-      comments: []
+      generalQuestions: [],
+      generalQuestionsLoaded: false
     })
     firebase.database().ref('forumSections/' + courseId)
     .once('value')
     .then(snapshot => {
       const object = snapshot.val()
       if (object !== null) {
-        if (object.subSections) {
-          const comments = object.subSections[`${lessonId}`] || []
-          this.setState({ comments, object })
-        } else {
-          this.setState({ object })
-        }
+        const generalQuestions = object.generalQuestions
+        this.setState({ generalQuestions, generalQuestionsLoaded: true })
+      } else {
+        this.setState({ generalQuestionsLoaded: true })
       }
-    })
+    }
+  )
   }
 
   renderCommentPopup (isRespond, item) {
@@ -60,24 +61,23 @@ class CommentList extends Component {
 
   saveComment = (comment, isRespond, item) => {
     const { user } = this.props.auth
-    const { courseId, lessonId } = this.props
+    const { courseId } = this.props
+
     this.setState({
-      comments: []
+      generalQuestions: []
     })
+
     firebase.database().ref('forumSections/' + courseId)
     .once('value')
     .then(snapshot => {
       const object = snapshot.val()
       if (object !== null) {
-        const subSections = object.subSections
-        if (subSections) {
-          const comments = object.subSections[`${lessonId}`] || []
-          this.setState({ comments })
-        }
+        const generalQuestions = object.generalQuestions
+        this.setState({ generalQuestions })
       }
     })
     .then(() => {
-      const { comments = [] } = this.state
+      const { generalQuestions = [] } = this.state
       if (!isRespond) {
         const commentStructure = {
           text: comment,
@@ -86,8 +86,8 @@ class CommentList extends Component {
           displayName: user.displayName,
           avatar: user.avatar
         }
-        const newComments = [ ...comments, commentStructure ]
-        this.setState({ comments: newComments })
+        const newGeneralQuestions = [ ...generalQuestions, commentStructure ]
+        this.setState({ generalQuestions: newGeneralQuestions })
       } else {
         const respond = comment
         if (!item.children) {
@@ -97,56 +97,51 @@ class CommentList extends Component {
           ...item.children,
           respond
         ]
-        const indexItemToRemove = comments.findIndex(comment => item.text === comment.text)
+        const indexItemToRemove = generalQuestions.findIndex(comment => item.text === comment.text)
         const newComment = {
-          text : comments[indexItemToRemove].text,
+          text : generalQuestions[indexItemToRemove].text,
           children: newCommentChildrenArray,
           uid: user.uid,
           displayName: user.displayName,
           avatar: user.avatar
         }
         const newArray = [
-          ...comments.slice(0, indexItemToRemove),
+          ...generalQuestions.slice(0, indexItemToRemove),
           newComment,
-          ...comments.slice(indexItemToRemove + 1)
+          ...generalQuestions.slice(indexItemToRemove + 1)
         ]
-        this.setState({ comments: newArray })
+        this.setState({ generalQuestions: newArray })
       }
     })
-    .then(() => {
-      const { comments, object } = this.state
-      const { lessonId, courseId } = this.props
-      const newSubSections = (object.subSections) ? object.subSections : {}
-      newSubSections[`${lessonId}`] = comments
-      firebase.database().ref('forumSections/' + courseId).update({ subSections: newSubSections })
-    })
-    .then(() => {
-      this.props.hideModal('comment')
-      if (!isRespond) {
-        toastr.success('Your comment saved!')
-      } else {
-        toastr.success('Your respond saved!')
-      }
-    })
+      .then(() => {
+        const { generalQuestions } = this.state
+        firebase.database().ref('forumSections/' + courseId).update({ generalQuestions })
+      })
+      .then(() => {
+        this.props.hideModal('comment')
+        if (!isRespond) {
+          toastr.success('Your comment saved!')
+        } else {
+          toastr.success('Your respond saved!')
+        }
+      })
   }
 
   renderChildrenList (item) {
-    return (
-      item.children.map((child, i) =>
-        <div key={i} className='col-xs-12 col-md-12'>
-          <div className='col-xs-12 col-md-4'>
-            <div className='col-xs-12 col-md-4'>{item.displayName}</div>
-            <div className='col-xs-12 col-md-4'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
-          </div>
-          <div className='col-xs-12 col-md-3'>{child} </div>
+    return item.children.map((child, i) =>
+      <div key={i} className='col-xs-12 col-md-12'>
+        <div className='col-xs-12 col-md-4'>
+          <div className='col-xs-12 col-md-4'>{item.displayName}</div>
+          <div className='col-xs-12 col-md-4'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
         </div>
-     ))
+        <div className='col-xs-12 col-md-3'>{child} </div>
+      </div>)
   }
 
   renderCommentList () {
-    const { comments = [] } = this.state
+    const { generalQuestions = [] } = this.state
     const isRespond = true
-    return comments.map((item, i) =>
+    return generalQuestions.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
           <div className='col-xs-10 col-md-3'>
@@ -166,7 +161,7 @@ class CommentList extends Component {
           </div>
         </div>}
       </li>
-    )
+  )
   }
   render () {
     const isRespond = false
@@ -189,7 +184,6 @@ class CommentList extends Component {
 CommentList.propTypes = {
   openModal: React.PropTypes.func,
   hideModal: React.PropTypes.func,
-  lessonId: React.PropTypes.string,
   courseId: React.PropTypes.string,
   user: React.PropTypes.object,
   auth: React.PropTypes.object
