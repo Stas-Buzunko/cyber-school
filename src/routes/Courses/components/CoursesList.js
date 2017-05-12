@@ -52,7 +52,7 @@ class CoursesList extends Component {
             </div>
             <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Main photo:</label>
-              <div> {item.mainPhoto}</div>
+                <img src={item.mainPhoto} width='150px' height='100px' />
             </div>
             <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Duration:</label>
