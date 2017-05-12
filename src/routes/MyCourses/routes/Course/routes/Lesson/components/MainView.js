@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
-import CommentList from './CommentList'
+import CommentList from '../containers/CommentListContainer'
 import VideoPlayer from '../../../../../../Utils/VideoPlayer'
 
 class MainView extends Component {
@@ -8,19 +8,17 @@ class MainView extends Component {
     super(props)
     this.state = {
       lesson: [],
-      lessonLoaded: false,
-      comments: [],
-      userCourses: {}
+      lessonLoaded: false
     }
     this.addVideoId = this.addVideoId.bind(this)
   }
 
   componentWillMount () {
-    const { params } = this.props
-    this.fetchItem(params.lessonId)
+    const { lessonId } = this.props.params
+    this.fetchItems(lessonId)
   }
 
-  fetchItem (id) {
+  fetchItems (id) {
     this.setState({
       lesson: [],
       lessonLoaded: false
@@ -149,7 +147,6 @@ class MainView extends Component {
   }
 
   render () {
-    const { lesson } = this.state
     const { params } = this.props
     return (
       <div className='container'>
@@ -163,8 +160,8 @@ class MainView extends Component {
         <div className='col-xs-12 col-md-10'>
           <ul className='list-unstyled'>
             <CommentList
-              comments={lesson.comments}
-              lessonId={params.id}
+              lessonId={params.lessonId}
+              courseId={params.courseId}
             />
           </ul>
         </div>

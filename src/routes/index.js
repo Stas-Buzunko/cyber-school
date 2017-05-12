@@ -12,6 +12,7 @@ import MyCourses from './MyCourses'
 import VerifyEmail from './VerifyEmail'
 import EmailSetup from './EmailSetup'
 import Statistics from './Statistics'
+import Forum from './Forum'
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
@@ -53,6 +54,7 @@ export const createRoutes = (store) => ([{
     Lesson(store),
     MyCourses(store),
     Statistics(store),
+    Forum(store)
   ]
 }, {
   onEnter: (nextState, replace) => redirectToLanding(nextState, replace, store),
