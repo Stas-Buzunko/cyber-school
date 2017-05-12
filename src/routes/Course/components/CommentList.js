@@ -123,7 +123,6 @@ class CommentList extends Component {
 
   renderCommentList () {
     const { comments = [] } = this.state
-
     const isRespond = true
     return comments.map((item, i) =>
       <li key={i}>

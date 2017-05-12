@@ -10,7 +10,7 @@ export const TestRoute = (store) => ({
       /*  Webpack - use require callback to define
           dependencies for bundling   */
 
-      const MainView = require('./components/MainView').default
+      const MainView = require('./containers/MainViewContainer').default
 
       /*  Add the reducer to the store on key 'counter'  */
 

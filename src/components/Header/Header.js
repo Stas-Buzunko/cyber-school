@@ -6,21 +6,21 @@ import firebase from 'firebase'
 
 export const Header = ({ user }) =>
   <div>
-    <h1>React Redux Starter Kit</h1>
+    <h1>Cyber academy</h1>
     <IndexLink to='/' activeClassName='route--active'>
       Home
     </IndexLink>
     {' · '}
-    <Link to='/disciplines/dota2' activeClassName='route--active'>
-       Dota 2
+    <Link to='/disciplines/Dota2' activeClassName='route--active'>
+       Dota2
     </Link>
     {' · '}
-    <Link to='/disciplines/cs_go' activeClassName='route--active'>
+    <Link to='/disciplines/CS:GO' activeClassName='route--active'>
       CS:GO
     </Link>
     {' · '}
-    <Link to='/disciplines/lol' activeClassName='route--active'>
-      LOL
+    <Link to='/disciplines/LoL' activeClassName='route--active'>
+      LoL
     </Link>
     {' · '}
 
