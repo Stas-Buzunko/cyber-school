@@ -57,7 +57,7 @@ class LessonPopupComponent extends Component {
     }
 
     const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, id }
-    this.props.saveLesson(lesson)
+    this.props.saveLesson(lesson, this.props.isEditSection)
   }
 
   render () {
@@ -174,7 +174,8 @@ LessonPopupComponent.propTypes = {
   handleHide: React.PropTypes.func,
   saveLesson: React.PropTypes.func,
   isNewLesson: React.PropTypes.bool,
-  item: React.PropTypes.object
+  item: React.PropTypes.object,
+  isEditSection: React.PropTypes.bool
 }
 
 export default connectModal({

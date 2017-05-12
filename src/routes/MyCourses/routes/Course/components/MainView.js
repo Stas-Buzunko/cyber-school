@@ -224,7 +224,6 @@ class MainView extends Component {
     nextLessonId : courseFromUser.startedLessonsIds[(courseFromUser.startedLessonsIds.length - 1)]
     return newWatchLessonId
   }
-
   renderProgressBar () {
     const { location, params } = this.props
     const { userCourses } = this.props.auth.user
@@ -238,6 +237,7 @@ class MainView extends Component {
     firstLessonId
     const isCorseWatched = courseFromUser.uniqueWatchedLessonsIds.length === numberLessonsInCourse
     const percent = numberWatchedlessons / numberLessonsInCourse
+
     return (
       <div>
         <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
