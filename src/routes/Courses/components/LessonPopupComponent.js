@@ -63,6 +63,7 @@ class LessonPopupComponent extends Component {
 
   render () {
     const { handleHide, show } = this.props
+    console.log(this.props)
     const { name, description, length, imageUrl, videoUrl, isFree, testId } = this.state
     return (
       <Modal

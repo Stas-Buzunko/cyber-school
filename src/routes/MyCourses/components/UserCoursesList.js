@@ -79,7 +79,7 @@ class UserCoursesList extends Component {
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
           <div className='thumbnail' style={{ height: '360px' }}>
-            <img src={course.mainPhoto} width='300px' height='250px' />
+            <img src={course.mainPhoto} width='300px' height='250px' alt='loading' />
             <div className='caption'>
               <h5>{course.name} </h5>
               <h5>{course.description}</h5>

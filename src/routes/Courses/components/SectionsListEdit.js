@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import LessonsList from './LessonList'
+import LessonsList from './LessonsList'
 import TestList from './TestList'
 import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
@@ -77,6 +77,8 @@ class SectionsListEdit extends Component {
             <label className='col-xs-2 col-md-2'>Lessons: </label>
             <div className='col-xs-2 col-md-4'>
               <LessonsList
+                SectionsListEdit={'SectionsListEdit renderSectionsList'}
+                isEditSection={false}
                 isNewLesson={true}
                 lessonsIds={item.lessonsIds}
                 editLesson={this.editLesson}
@@ -184,6 +186,7 @@ class SectionsListEdit extends Component {
           <label>Lessons: </label>
           <div >
             <LessonsList
+              SectionsListEdit={'SectionsListEdit renderEditSection'}
               isNewLesson={false}
               lessonsIds={lessonsIds}
               isEditSection={true}

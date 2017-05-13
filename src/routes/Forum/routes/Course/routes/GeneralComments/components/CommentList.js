@@ -93,6 +93,14 @@ class CommentList extends Component {
               </ul>
             </div>
           }
+          {!generalQuestions.length &&
+            <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
+              <label className='control-label col-xs-2 col-md-2'>General comments:</label>
+              <ul className='list-unstyled'>
+                {this.renderCommentPopup(isRespond, {}, '')}
+              </ul>
+            </div>
+          }
         </div>
       </div>
     )

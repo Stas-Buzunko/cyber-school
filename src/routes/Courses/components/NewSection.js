@@ -5,7 +5,7 @@ import { show, hide } from 'redux-modal'
 import { connect } from 'react-redux'
 import LessonPopupComponent from './LessonPopupComponent'
 import TestList from './TestList'
-import LessonList from './LessonList'
+import LessonsList from './LessonsList'
 import NewTest from './NewTest'
 
 class NewSection extends Component {
@@ -69,9 +69,11 @@ class NewSection extends Component {
   }
 
   saveLesson = (lesson) => {
+    console.log('NewSection')
     const lessonKey = firebase.database().ref('lessons/').push().key
     const { lessonsIds = [] } = this.state
     const newLessons = [...lessonsIds, lessonKey]
+    this.setState({ lessonsIds: newLessons })
     const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
     firebase.database().ref('lessons/' + lessonKey).update({
       name, description, length, imageUrl, videoUrl, isFree, testId, id
@@ -129,7 +131,8 @@ class NewSection extends Component {
               <LessonPopupComponent
                 saveLesson={this.saveLesson}
                />
-              <LessonList
+              <LessonsList
+                newSection={'newSection'}
                 isNewLesson={true}
                 lessonsIds={this.state.lessonsIds}
                 isEditSection={false}

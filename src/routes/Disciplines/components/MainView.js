@@ -46,8 +46,8 @@ class MainView extends Component {
     return courses.map((course, i) => (
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
-          <div className='thumbnail' style={{ height: '300px' }}>
-            <img src={course.mainPhoto} width='300px' height='250px' />
+          <div className='thumbnail' style={{ height: '350px' }}>
+            <img src={course.mainPhoto} width='400px' height='300px' />
             <div className='caption'>
               <h5>{course.name} </h5>
               <h5>{course.description}</h5>

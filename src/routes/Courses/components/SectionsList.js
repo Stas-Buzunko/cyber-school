@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import LessonsList from './LessonList'
+import LessonsList from './LessonsList'
 import TestList from './TestList'
 
 class SectionsList extends Component {
@@ -17,6 +17,7 @@ class SectionsList extends Component {
         <div className='col-xs-2 col-md-10'>
           <ul className='list-unstyled'>
             <LessonsList
+              sectionsList={'SectionsList'}
               isNewLesson={isNewSection}
               lessonsIds={item.lessonsIds}
               sections={sections}
