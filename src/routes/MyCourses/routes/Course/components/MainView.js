@@ -42,6 +42,7 @@ class MainView extends Component {
         const course = { ...snapshot.val(), id }
         const { sections } = course
         const newSectionsLessons = sections.map(section => {
+          if (section.lessonsIds) {
           const promisesLessons = section.lessonsIds.map(id =>
             firebase.database().ref('lessons/' + id)
             .once('value')
@@ -51,6 +52,7 @@ class MainView extends Component {
             section = { ...section, lessons }
             return (section)
           })
+        }
         })
         Promise.all(newSectionsLessons).then(result => {
           const numberLessonsInCourse = this.countNumberLessonsInCourse(course)
@@ -200,7 +202,9 @@ class MainView extends Component {
   }
   countNumberLessonsInCourse (course = {}) {
     const lessonsNumbersArray = course.sections.map(section => {
-      return section.lessonsIds.length
+      if (section.lessonsIds) {
+        return section.lessonsIds.length
+      }
     })
     const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
       return a + b
@@ -212,27 +216,34 @@ class MainView extends Component {
     const { params } = this.props
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
-    const { watchedLessonsIds = {} } = courseFromUser
-    const watchedLessonsLength = watchedLessonsIds.length || 0
+    const { watchedLessonsIds } = courseFromUser
+
     let nextId = false
-    // count nextLessonId if lesson is ended
-    // take last watched lesson
-    const lastLessonId = courseFromUser.watchedLessonsIds[watchedLessonsLength - 1]
-    // find last watched section and index
-    const currentSectionIndex = course.sections.findIndex(section =>
-      section.lessonsIds.includes(lastLessonId))
-    const currentSection = course.sections[currentSectionIndex]
-    // find index of last watched lesson in currentSection
-    const lastLessonIdIndex = currentSection.lessonsIds.findIndex(lessonId =>
-        lessonId === lastLessonId)
-    const nextLessonIdInCurrentSection = currentSection.lessonsIds[lastLessonIdIndex + 1]
-    // if there is such a lesson in current section, then use it
-    if (nextLessonIdInCurrentSection) {
-      nextId = nextLessonIdInCurrentSection
-    // otherwise chech if there is 1 more section
-    // if there is then use next section, first lesson
-    } else if (course.sections[currentSectionIndex + 1]) {
-      nextId = course.sections[currentSectionIndex + 1].lessonsIds[0]
+    if (!!watchedLessonsIds) {
+      const watchedLessonsLength = watchedLessonsIds.length
+      // count nextLessonId if lesson is ended
+      // take last watched lesson
+      const lastLessonId = courseFromUser.watchedLessonsIds[watchedLessonsLength - 1]
+      // find last watched section and index
+      const filteredSection = course.sections.filter(section =>
+       section.lessonsIds)
+      const currentSectionIndex = filteredSection.findIndex(section =>
+       section.lessonsIds.includes(lastLessonId))
+       // if lastWathedLesson was deleted, take 2 section lesson
+      const trueCurrentSectionIndex = currentSectionIndex === -1 ? 1 : currentSectionIndex
+      const currentSection = course.sections[trueCurrentSectionIndex]
+        // find index of last watched lesson in currentSection
+      const lastLessonIdIndex = currentSection.lessonsIds.findIndex(lessonId =>
+          lessonId === lastLessonId)
+      const nextLessonIdInCurrentSection = currentSection.lessonsIds[lastLessonIdIndex + 1]
+          // if there is such a lesson in current section, then use it
+      if (nextLessonIdInCurrentSection) {
+        nextId = nextLessonIdInCurrentSection
+            // otherwise chech if there is 1 more section
+            // if there is then use next section, first lesson
+      } else if (course.sections[currentSectionIndex + 1]) {
+        nextId = course.sections[currentSectionIndex + 1].lessonsIds[0]
+      }
     }
     return nextId
   }
@@ -252,12 +263,15 @@ class MainView extends Component {
     const { numberLessonsInCourse, firstLessonId } = this.state
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
 
-    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds.length || 0
+    const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length : 0
     const buttonName = courseFromUser.uniqueWatchedLessonsIds ? 'Continue lesson' : 'Start first lesson'
     // if 0 watched take 1st lesson of first section else count watchLessonId``
     const watchLessonId = courseFromUser.uniqueWatchedLessonsIds ? this.countNewWatchLessonId(courseFromUser) :
     firstLessonId
-    const isCorseWatched = courseFromUser.uniqueWatchedLessonsIds.length === numberLessonsInCourse
+    const isCorseWatched = false
+    if (courseFromUser.uniqueWatchedLessonsIds) {
+      const isCorseWatched = courseFromUser.uniqueWatchedLessonsIds.length === numberLessonsInCourse
+    }
     const percent = numberWatchedlessons / numberLessonsInCourse
 
     return (

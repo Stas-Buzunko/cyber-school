@@ -55,7 +55,8 @@ class UserCoursesList extends Component {
     const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length : 0
 
     const lessonsNumbersArray = course.sections.map(section => {
-      return section.lessonsIds.length
+      const lengthLessonsId = section.lessonsIds ? section.lessonsIds.length : 0
+      return lengthLessonsId
     })
     const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
       return a + b
@@ -73,12 +74,12 @@ class UserCoursesList extends Component {
   }
 
   renderCourses () {
-    const { courses } = this.state
+    const { courses = [] } = this.state
     return courses.map((course, i) => (
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
           <div className='thumbnail' style={{ height: '360px' }}>
-            <img src={course.mainPhoto} width='300px' height='250px' />
+            <img src={course.mainPhoto} width='300px' height='250px' alt='loading' />
             <div className='caption'>
               <h5>{course.name} </h5>
               <h5>{course.description}</h5>

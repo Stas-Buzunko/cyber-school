@@ -43,6 +43,7 @@ class QuestionsList extends Component {
   }
 
   renderQuestionPopup (question, isNewQuestion, questionNumber) {
+    console.log(question)
     this.props.openModal('question', { question, isNewQuestion, questionNumber })
   }
 
@@ -121,7 +122,7 @@ class QuestionsList extends Component {
                 <button
                   type='button'
                   className='btn btn-primary lg'
-                  onClick={(e) => { this.renderQuestionPopup(item, isNewQuestion = false) }}
+                  onClick={(e) => { this.renderQuestionPopup(item, isNewQuestion = false, item.questionNumber) }}
                   >Edit Question
                 </button>
                 <button
@@ -149,7 +150,7 @@ class QuestionsList extends Component {
     const { isTestEdit, questions = [] } = this.props
     const questionNumber = questions.length
     let isNewQuestion
-    let question = []
+    let question = {}
     return (
       <div className='container'>
         <div className='row'>

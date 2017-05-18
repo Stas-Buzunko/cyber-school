@@ -56,7 +56,6 @@ class NewCourse extends Component {
       return false
     }
     this.setState({ error: '' })
-    const comments = []
     const courseId = firebase.database().ref('courses/').push().key
     firebase.database().ref('forumSections/' + courseId).update({ courseId })
     firebase.database().ref('courses/' + courseId).update({
@@ -68,8 +67,7 @@ class NewCourse extends Component {
       price,
       discipline,
       author,
-      sections,
-      comments
+      sections
     })
     .then(() => {
       toastr.success('Your course saved!')
@@ -146,7 +144,6 @@ class NewCourse extends Component {
                   <option>Dota2</option>
                   <option>CS:GO</option>
                   <option>LoL</option>
-                    
                 </select>
                 </div>
               </div>

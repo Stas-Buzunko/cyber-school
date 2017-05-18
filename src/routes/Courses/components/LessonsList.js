@@ -94,13 +94,14 @@ class LessonsList extends Component {
 
   renderLessonsList () {
     const { lessons = [] } = this.state
+    console.log(this.props)
     const { isNewLesson, isEditSection } = this.props
     return (
       <div>
         {lessons.map((item, i) =>
           <li key={i}>
             <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-              <div className='col-xs-12 col-md-8'>
+              <div className='col-xs-12 col-md-6'>
 
                 <div className='col-xs-10'>
                   <label className='control-label col-xs-2'>Name:</label>
@@ -116,10 +117,6 @@ class LessonsList extends Component {
                     <div> {item.length}</div>
                   </div>
                   <div className='col-xs-10'>
-                    <label className='control-label col-xs-2'>ImageUrl:</label>
-                    <div> {item.imageUrl}</div>
-                  </div>
-                  <div className='col-xs-10'>
                     <label className='control-label col-xs-2'>VideoUrl:</label>
                     <div> {item.videoUrl}</div>
                   </div>
@@ -132,6 +129,12 @@ class LessonsList extends Component {
                     <div> {item.testId}</div>
                   </div>
                 </div>}
+              </div>
+              <div className='col-xs-12 col-md-6'>
+                <div className='col-md-12'>
+                  <label className='control-label col-xs-2'>ImageUrl:</label>
+                  <img src={item.imageUrl} width='300px' height='200px' alt='Loading' />
+                </div>
               </div>
               { !isNewLesson && <div className='col-xs-12 col-md-4'>
                 <button
@@ -150,6 +153,9 @@ class LessonsList extends Component {
                   }}
                   >Delete lesson
                 </button>
+                <LessonPopupComponent
+                  saveLesson={this.editLesson}
+                />
               </div>
              }
             </div>
@@ -164,10 +170,11 @@ class LessonsList extends Component {
             }}
             >Add new lesson
           </button>
+          <LessonPopupComponent
+            saveLesson={this.editLesson}
+          />
         </div> }
-        <LessonPopupComponent
-          saveLesson={this.editLesson}
-        />
+
         <DeletePopupComponent
             deleteItem={this.deleteItem}
         />
@@ -196,7 +203,9 @@ LessonsList.propTypes = {
   isEditSection: React.PropTypes.bool,
   hideModal: React.PropTypes.func,
   saveLesson: React.PropTypes.func,
-  deleteItemId: React.PropTypes.func
+  deleteItemId: React.PropTypes.func,
+
+
 }
 
 const mapDispatchToProps = {
