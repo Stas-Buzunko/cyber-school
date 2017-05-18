@@ -88,9 +88,9 @@ class CommentList extends Component {
     )
   }
 
-  saveComment = (comment, isRespond, item, lessonId) => {
+  saveComment = (comment, isRespond, item) => {
     const { user } = this.props.auth
-    const { courseId } = this.props
+    const { lessonId, courseId } = this.props
     this.setState({
       comments: []
     })
@@ -145,9 +145,10 @@ class CommentList extends Component {
     })
     .then(() => {
       const { comments, subSections } = this.state
+      const { lessonId } = this.props
       const newSubSections = !!subSections ? subSections : {}
       newSubSections[`${lessonId}`] = comments
-      this.setState({ subSection: comments })
+      this.setState({ subSection: comments, hasLessonComments: true })
       firebase.database().ref('forumSections/' + courseId).update({ subSections: newSubSections })
     })
     .then(() => {

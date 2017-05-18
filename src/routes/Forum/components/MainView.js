@@ -87,7 +87,7 @@ class MainView extends Component {
           </tbody>
         </table>
       }
-      {!filteredForumSections.length && <div className='text-left'> No sections </div>}
+      {/* {!filteredForumSections.length && <div className='text-left'> No sections </div>} */}
     </div>
   }
 
