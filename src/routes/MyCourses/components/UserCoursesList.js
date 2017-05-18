@@ -42,8 +42,9 @@ class UserCoursesList extends Component {
       })
     })
     Promise.all(promises).then(result => {
+      const newResult = result.filter(item => item)
       this.setState({
-        courses: result,
+        courses: newResult,
         coursesLoaded: true
       })
     })

@@ -157,7 +157,9 @@ class MainView extends Component {
 
   render () {
     const { course, showComments } = this.state
-    const { params } = this.props
+    const { params, user } = this.props
+    const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
+    const isBuyButtonShow = (index === -1)
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-12'>
@@ -165,7 +167,7 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>Name:</label>
             <div> {course.name}</div>
           </div>
-          {this.renderBuyButton()}
+          {!!isBuyButtonShow && this.renderBuyButton()}
 
           <div className='col-xs-10' style={{ padding: '15px' }}>
             <label className='control-label col-xs-2'>Main photo:</label>
