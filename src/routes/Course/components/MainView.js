@@ -158,8 +158,11 @@ class MainView extends Component {
   render () {
     const { course, showComments } = this.state
     const { params, user } = this.props
-    const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
-    const isBuyButtonShow = (index === -1)
+    const isBuyButtonShow = false
+    if (user.userCourses) {
+      const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
+      const isBuyButtonShow = (index === -1)
+    }
     return (
       <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
         <div className='col-xs-12 col-md-12'>

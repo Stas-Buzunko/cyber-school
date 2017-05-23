@@ -13,6 +13,7 @@ class MainView extends Component {
 
   componentWillMount () {
     this.fetchItems()
+    firebase.database().ref('forumSections/courseId').remove()
   }
 
   fetchItems () {
@@ -45,6 +46,7 @@ class MainView extends Component {
         if (object !== null) {
           item.discipline = courseFromId.discipline
           item.name = courseFromId.name
+          console.log()
           return (item)
         } else {
           this.setState({ sectionsLoaded: true })
@@ -72,7 +74,8 @@ class MainView extends Component {
 
   renderTable (discipline) {
     const { forumSections = [] } = this.state
-    const filteredForumSections = forumSections.filter((item, i) =>
+    forumSections.forEach(item => console.log(item) )
+    const filteredForumSections = forumSections.filter((item) =>
       item.discipline === discipline)
     return <div>
       {!!filteredForumSections.length &&
