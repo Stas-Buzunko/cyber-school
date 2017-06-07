@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import firebase from 'firebase'
 import CommentList from '../containers/CommentListContainer'
 import VideoPlayer from '../../../../../../Utils/VideoPlayer'
+import './MainView.scss'
 
 class MainView extends Component {
   constructor (props) {
@@ -107,8 +108,8 @@ class MainView extends Component {
   renderLesson () {
     const { lesson = {} } = this.state
     return (
-      <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-        <div className='col-xs-12 col-md-8'>
+      <div className='container container-lesson text-center'>
+        <div className='row'>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Name:</label>
             <div> {lesson.name}</div>

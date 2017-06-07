@@ -188,7 +188,7 @@ class MainView extends Component {
       return false
     }
     return (
-      <div className=' container container-course text-center'>
+      <div className='container container-course text-center'>
         <div className='row'>
           <div className='col-xs-12 col-md-12 course-name'> {course.name}</div>
           <div className='col-xs-12 col-md-12'>
