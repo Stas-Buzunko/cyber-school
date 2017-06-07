@@ -1,0 +1,109 @@
+.content{
+  padding-top: 22px;
+  margin: auto;
+  width:1140px;
+}
+.description{
+  padding:0px;
+  margin-top:10px;
+  width:750px;
+  height:181px;
+  background-image: url(../../../images/description.jpg);
+}
+.text-description {
+  padding:20px;
+  color: #7bb4d7;
+  text-align: left;
+  font-size: 12px;
+}
+.logo-Dota2{
+  padding:0px;
+  margin-top:10px;
+  width:360px;
+  height:181px;
+  float:left;
+  background-image: url(../../../images/logoDota2.jpg);
+}
+.logo-CSGO{
+  padding:0px;
+  margin:0px;
+  width:360px;
+  height:181px;
+  background-image: url(../../../images/logoDota2.jpg);
+}
+.logo-LoL{
+  padding:0px;
+  margin:0px;
+  width:360px;
+  height:181px;
+  background-image: url(../../../images/logoDota2.jpg);
+}
+.course0{
+  padding:0px;
+  margin:20px 0px 10px 0px;
+  width:360px;
+  height:277px;
+  background-image: url(../../../images/course1.png);
+}
+.course1{
+  padding:0px;
+  margin:20px 0px 10px 0px;
+  width:360px;
+  height:277px;
+  background-image: url(../../../images/course2.png);
+}
+.course2{
+  padding:0px;
+  margin:20px 0px 10px 0px;
+  width:360px;
+  height:277px;
+  background-image: url(../../../images/course3.png);
+}
+.btn-start{
+  bottom: 50px;
+  padding:20px 5px 0px 45px;
+  position: relative;
+  left: calc((30%-120px)/2);
+  width:250px;
+  height:64px;
+  background-image: url(../../../images/btnStartEduc.png);
+}
+.text-course{
+  padding:10px 20px 5px 10px;
+  color: #7bb4d7;
+  text-align: right;
+  font-size: 12px;
+}
+.text-reviews{
+  padding:30px 10px 5px 10px;
+  color: #7bb4d7;
+  text-align: center;
+  font-size: 12px;
+}
+.text-name{
+  padding: 5px 20px 3px 0px;
+  margin: 0px;
+  color: white;
+  font-size: 14px;
+  text-align: right;
+}
+.text-time{
+  color: #e5d800;
+  padding: 95px 20px 5px 0px;
+  margin:0px;
+  font-size: 14px;
+  text-align: right;
+}
+.avatar{
+  padding:0px;
+  margin-top:5px;
+  width:359px;
+  height:120px;
+  background-image: url(../../../images/avatar.jpg);
+}
+.reviews{
+  margin-top:5px;
+  width:750px;
+  height:120px;
+  background-image: url(../../../images/reviews.jpg);
+}

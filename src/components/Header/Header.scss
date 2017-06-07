@@ -1,4 +1,152 @@
+
+@font-face {
+	font-family: 'Conv_MICRADI_';
+	src: url('../../fonts/MICRADI_.eot');
+	src: local('☺'),
+  url('../../fonts/MICRADI_.woff') format('woff'),
+  url('../../fonts/MICRADI_.ttf') format('truetype'),
+  url('../../fonts/MICRADI_.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
 .route--active {
   font-weight: bold;
   text-decoration: underline;
+}
+.container-header {
+font-family: 'Conv_MICRADI_';
+align-items:baseline;
+}
+.logo {
+   padding-top:30px;
+   margin-top:7px;
+	 margin-right: 20px;
+   width:267px;
+   height:53px;
+   background-image: url(../../images/logo.png);
+
+}
+.btn {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+}
+.navbtn1 {
+  padding-top:20px;
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  margin:0px;
+	padding-top:20px;
+  width:201px;
+  height:60px;
+  background-image: url(../../images/btn1.png);
+
+}
+.navbtn1:active {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  padding-top:20px;
+  margin:0px;
+  width:204px;
+	padding-top:20px;
+  height:63px;
+  background-image: url(../../images/btnAct1.png);
+	float: left;
+}
+.navbtn2 {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  padding-top:20px;
+  margin:0px;
+  width:187px;
+  height:60px;
+  background-image: url(../../images/btn2.png);
+	float: left;
+}
+.navbtn2:active {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  padding-top:20px;
+  margin:0px;
+  width:187px;
+  height:60px;
+  background-image: url(../../images/btnAct2.png);
+	float: left;
+}
+.navbtnLogin {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  padding-top:20px;
+	padding-left:3px;
+  margin:0px;
+  width:155px;
+  height:60px;
+  background-image: url(../../images/btnLogin.png);
+	float: left;
+}
+.navbtnLogin:active {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  padding-top:20px;
+  margin:0px;
+  width:155px;
+  height:60px;
+  background-image: url(../../images/btnActLogin.png);
+  float: left;
+}
+
+.navbtn4{
+	padding-top:20px;
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
+  margin:0px;
+	padding-top:20px;
+  width:203px;
+  height:63px;
+  background-image: url(../../images/btn4.png);
+}
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+		margin: 0px;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    width:181px;
+    height:69px;
+    position: absolute;
+    opacity: 0.9;
+    background-image: url(../../images/dropdownContent.png);
+    z-index: 1;
+
+}
+.firstButton{
+	margin-left:20px;
+}
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover { color: #e5d800}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+.userName {
+  font-family: 'Conv_MICRADI_';
+  color: #e5d800;
 }

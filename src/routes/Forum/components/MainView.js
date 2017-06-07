@@ -52,6 +52,7 @@ class MainView extends Component {
       })
     })
     Promise.all(promises).then(result => {
+      console.log(result)
       this.setState({
         forumSections: result,
         forumSectionsLoaded: true
