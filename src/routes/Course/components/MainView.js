@@ -5,6 +5,8 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import StripeComponent from '../../../components/StripeComponent'
 import backend from '../../../../config/apis'
+import './MainView.scss'
+import VideoPlayer from './VideoPlayer'
 
 class MainView extends Component {
   constructor (props) {
@@ -17,8 +19,9 @@ class MainView extends Component {
       sections: [],
       courseLessons: [],
       showComments: false,
-      buttonName: 'Show Comments'
-    }
+      buttonName: 'Show Comments',
+      lessonDescription: ''
+        }
     this.renderSectionsList = this.renderSectionsList.bind(this)
   }
 
@@ -54,10 +57,12 @@ class MainView extends Component {
           })
         })
         Promise.all(newSections).then(result => {
+          console.log(result)
           this.setState({
             sections: result,
             course,
             comments: course.comments,
+            lessonDescription: result[0].lessons[0].description,
             courseLoaded: true,
             lessonsLoaded: true
           })
@@ -73,10 +78,12 @@ class MainView extends Component {
     return lessons.map((item, i) =>
       <tr key={i}>
         <td>
-          {item.isFree &&
-          <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link> }
-          {!item.isFree &&
-          <div>{item.name}</div> }
+          {/* {item.isFree &&
+          <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link> } */}
+          {/* {!item.isFree && */}
+          <div
+            onClick={() => { this.setState({ lessonDescription: item.description }) }}
+            >{item.name}</div>
         </td>
         <td> {item.length} </td>
       </tr>
@@ -97,12 +104,6 @@ class MainView extends Component {
             </thead>
             {sections.map((item, i) =>
               <tbody key={i}>
-                <tr>
-                  <td>
-                    <div className='col-xs-12 col-md-4'>{item.name}</div>
-                  </td>
-                  <td />
-                </tr>
                 {this.renderLessonsList(item.lessons)}
               </tbody>
             )}
@@ -111,6 +112,27 @@ class MainView extends Component {
       </div>
     )
   }
+
+  renderDescripton () {
+      const { lessonDescription } = this.state
+      return (
+        <div className='col-xs-12 col-md-12'>
+          <div className='col-xs-12 col-md-8'>
+            <table className='table'>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                </tr>
+              </thead>
+                <tbody>
+                {lessonDescription}
+                </tbody>
+
+            </table>
+          </div>
+        </div>
+      )
+    }
 
   buttonClick () {
     const { showComments, buttonName } = this.state
@@ -156,62 +178,56 @@ class MainView extends Component {
   }
 
   render () {
-    const { course, showComments } = this.state
+    const { course, showComments, sections, courseLoaded } = this.state
     const { params, user } = this.props
-    const isBuyButtonShow = false
-    if (user.userCourses) {
-      const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
-      const isBuyButtonShow = (index === -1)
+    const isBuyButtonShow = () => {
+      if (user.userCourses) {
+        const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
+        return (index === -1)
+      }
+      return false
     }
     return (
-      <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-        <div className='col-xs-12 col-md-12'>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Name:</label>
-            <div> {course.name}</div>
+      <div className='container container-course text-center'>
+        <div className='row'>
+          <div className='col-xs-12 col-md-12 course-name'> {course.name}</div>
+          <div className='col-xs-12 col-md-12'>
+            {courseLoaded && <VideoPlayer
+              url={sections[0].lessons[0].videoUrl}
+            />}
           </div>
-          {!!isBuyButtonShow && this.renderBuyButton()}
+          <label className='control-label col-xs-3 col-md-3'>Duration:</label>
+          <div className='col-xs-3 col-md-3'> {course.duration} hours</div>
+          <label className='control-label col-xs-3 col-md-3'>Price:</label>
+          <div className='col-xs-3 col-md-3'> {course.price}</div>
+          <div className='col-xs-12 col-md-12'>{!!isBuyButtonShow() && this.renderBuyButton()}</div>
 
-          <div className='col-xs-10' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-2'>Main photo:</label>
-            <img src={course.mainPhoto} className='img-thumbnail' width='400px' height='250px' />
+          <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
+            <ul className='list-unstyled'>
+              {this.renderSectionsList()}
+            </ul>
           </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Description:</label>
-            <div> {course.description}</div>
+          <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
+            <ul className='list-unstyled'>
+              {this.renderDescripton()}
+            </ul>
           </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Duration:</label>
-            <div> {course.duration}</div>
-          </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Price:</label>
-            <div> {course.price}</div>
-          </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Discipline:</label>
-            <div> {course.discipline}</div>
-          </div>
-        </div>
-        {this.renderShowCommentsButton()}
-        {showComments && <div className='col-xs-12 col-md-10'>
-          <ul className='list-unstyled'>
-            <CommentList
-              courseId={params.courseId}
-            />
-          </ul>
-        </div>
-      }
-        <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Lessons: </label>
-          <ul className='list-unstyled'>
-            {this.renderSectionsList()}
-          </ul>
+          <div className='col-xs-12 col-md-12'>
+            {this.renderShowCommentsButton()}
+            {showComments && <div className='col-xs-12 col-md-10'>
+              <ul className='list-unstyled'>
+                <CommentList
+                  courseId={params.courseId}
+                />
+              </ul>
+            </div>
+          }
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
+  }
 
 MainView.propTypes = {
   params: PropTypes.object,

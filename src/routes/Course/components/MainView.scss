@@ -1,0 +1,127 @@
+@font-face {
+	font-family: 'Conv_MICRADI_';
+	src: url('../../../fonts/MICRADI_.eot');
+	src: local('☺'),
+  url('../../../fonts/MICRADI_.woff') format('woff'),
+  url('../../../fonts/MICRADI_.ttf') format('truetype'),
+  url('../../../fonts/MICRADI_.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.container-lesson {
+font-family: 'Conv_MICRADI_';
+color: yellow;
+align-items:baseline;
+
+}
+
+.content{
+  padding-top: 22px;
+  margin: auto;
+  width:1140px;
+}
+.course-name{
+  padding:0px;
+  margin:20px 0px 20px 0px;
+}
+.third2{
+  padding:0px;
+  margin:0px;
+  width:360px;
+  height:584px;
+  background-image: url(../../../images/bannerDota2blue.jpg);
+}
+.third3{
+  padding:0px;
+  margin:0px;
+  width:360px;
+  height:584px;
+  background-image: url(../../../images/bannerLoLblue.jpg);
+}
+.textFrame {
+  padding-top:10px;
+  color: #7bb4d7;
+  width:360px;
+  height:70px;
+  text-align: center;
+    background-image: url(../../../images/textFrame.jpg);
+}
+.btnEnterFacult {
+  font-size: 12px;
+  padding-top: 22px;
+  text-align: center;
+  margin: 0 auto;
+  width:250px;
+  height:64px;
+  background-image: url(../../../images/btnEnterFacult.png);
+}
+.сontrols{
+  margin:auto;
+  width:1125px;
+  height:30px;
+  background-color: #000;
+}
+.play{
+  margin:0;
+  width:23px;
+  height:23px;
+  padding:10px;
+  background-image: url(../../../images/play.png);
+  float: left;
+}
+.pause{
+  margin:0;
+  width:23px;
+  height:23px;
+  padding:10px;
+  background-image: url(../../../images/pause.png);
+  float: left;
+}
+.fullscreen{
+  margin:3px 0px 3px 10px;
+  width:21px;
+  height:21px;
+  padding:0px;
+  background-image: url(../../../images/fullscreen.png);
+  float: left;
+}
+.time{
+  float: left;
+  padding:3px 12px 3px 12px;
+  color: white;
+}
+input[type=range] {
+  float: left;
+  margin-top:10px;
+  width: 860px;
+  height: 3px;
+  -webkit-appearance: none;
+  border: 0 none;
+  background:blue;
+  color: #0069b4 ;
+  overflow: visible;
+}
+input[type=range].volume{
+  float: left;
+  margin-top:10px;
+  padding:0px 10px 0px 10px;
+  width: 60px;
+  height: 3px;
+  -webkit-appearance: none;
+  border: 0 none;
+  background: #0069b4;
+  color: #0069b4;
+  overflow: visible;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 20px;
+  width: 10px;
+  border-radius: 3px;
+  background: blue;
+  cursor: pointer;
+  // margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}

@@ -1,31 +1,102 @@
-import React from 'react'
-import { Link } from 'react-router'
+import React, { Component } from 'react'
+import { Link, browserHistory } from 'react-router'
+import './HomeView.scss'
+import Slider from 'react-slick'
+import VideoPlayer from './VideoPlayer'
 
-export const HomeView = () => (
-  <div>
-    <h4>Super landing will be here!</h4>
-    <h5>But for now we just show main disciplines</h5>
-    <div>
-      <Link to='/disciplines/Dota2'>
-        <img
-          src='http://static1.gamespot.com/uploads/original/43/434805/3026092-2827525372-dota-.jpg'
-          style={{ height: '200px' }} />
-        <h4>Dota2</h4>
-      </Link>
-      <Link to='/disciplines/CS:GO'>
-        <img
-          src='http://media.steampowered.com/apps/valvestore/images/slider/store_image_02.png'
-          style={{ height: '200px' }} />
-        <h4>CS:GO</h4>
-      </Link>
-      <Link to='/disciplines/LoL'>
-        <img
-          src='https://games.openmandriva.org/wp-content/uploads/2015/05/hc6k-Custom.png'
-          style={{ height: '200px' }} />
-        <h4>LoL</h4>
-      </Link>
-    </div>
-  </div>
-)
+class HomeView extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      showVideo: false,
+      transactionToChange: {}
+    }
+  }
+  render () {
+    const { showVideo } = this.state
+    const settings = {
+      accessibility: false,
+      autoplay: true,
+      autoplaySpeed: 3000,
+      centerMode: false,
+      useCSS: true,
+      fade:true,
+      arrows: false,
+      dots: false,
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    }
+    return (
+      <div className='container'>
+        <div className='row'>
+          <div className='col-xs-12 col-md-12'>
+            {!showVideo && <div className='content'>
+              {
+                <Slider {...settings}>
+                  <div className='sliderDota'></div>
+                  <div className='sliderCSGO'></div>
+                </Slider>
+              }
+              <div className='row fourQuaters'>
+                <div className='col-sm-3 col-md-3'>
+                  <div className='quater1'>
+                    <div className='text'>
+                      Изучи механизм игры и взаимодействие с командой
+                    </div>
+                  </div>
+                </div>
+                <div className='col-sm-3 col-md-3'>
+                  <div className='quater2'>
+                    <div className='text'>
+                      Улучши свои навыки и контроль за игрой
+                    </div>
+                  </div>
+                </div>
+                <div className='col-sm-3 col-md-3'>
+                  <div className='quater3'>
+                    <div className='text'>
+                      Изучи продвинутые техники профессиональных спортсменов и научись их применять
+                    </div>
+                  </div>
+                </div>
+                <div className='col-sm-3 col-md-3'>
+                  <div className='quater4'>
+                    <div className='text'>
+                      Каждый ученик получает право бесплатно попасть на турнир с 2000$ призовых
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-xs-12 col-md-12'>
+                  <div className='btnStart'
+                       onClick={() => {  browserHistory.push({ pathname: '/faculties'}) }}
+                    >
+                    Начать обучение
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+            {!!showVideo && <div>
+              <div>
+                <VideoPlayer
+                  url={`https://www.youtube.com/watch?v=fvySzEH85hk`}
+                />
+              </div>
+            </div>}
+          <button
+            type='button'
+            className='videoToParents '
+            onClick={() => { this.setState({ showVideo: !showVideo }) }}
+            >
+         </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
 
 export default HomeView

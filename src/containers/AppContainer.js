@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import firebase from 'firebase'
 import { steamLogin, onLogoutSuccess, onLoginSuccess } from '../actions/auth-actions'
 import { Router, browserHistory } from 'react-router'
+import './style.scss'
 
 class AppContainer extends Component {
   static propTypes = {
@@ -57,9 +58,9 @@ class AppContainer extends Component {
 
     return (
       <Provider store={store}>
-        <div style={{ height: '100%' }}>
-          <Router history={browserHistory} children={routes} />
-        </div>
+          <div style={{ height: '100%' }} className= 'appContainer'>
+            <Router history={browserHistory} children={routes} />
+          </div>
       </Provider>
     )
   }

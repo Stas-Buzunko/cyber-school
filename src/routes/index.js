@@ -13,6 +13,14 @@ import VerifyEmail from './VerifyEmail'
 import EmailSetup from './EmailSetup'
 import Statistics from './Statistics'
 import Forum from './Forum'
+import About from './About'
+import BecomeACoach from './BecomeACoach'
+import Faq from './FAQ'
+import Support from './Support'
+import Terms from './Terms'
+import Coaches from './Coaches'
+import Faculties from './Faculties'
+
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
@@ -54,7 +62,15 @@ export const createRoutes = (store) => ([{
     Lesson(store),
     MyCourses(store),
     Statistics(store),
-    Forum(store)
+    Forum(store),
+    About(store),
+    BecomeACoach(store),
+    Faq(store),
+    Support(store),
+    Terms(store),
+    Coaches(store),
+    Faculties(store)
+
   ]
 }, {
   onEnter: (nextState, replace) => redirectToLanding(nextState, replace, store),

@@ -13,6 +13,10 @@ export const Header = () =>
       Courses
     </Link>
     {' · '}
+    <Link to='/admin/faculties' activeClassName='route--active'>
+      Courses
+    </Link>
+    {' · '}
   </div>
 
 export default Header
