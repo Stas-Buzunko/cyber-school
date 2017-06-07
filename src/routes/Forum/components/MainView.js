@@ -72,7 +72,7 @@ class MainView extends Component {
 
   renderTable (discipline) {
     const { forumSections = [] } = this.state
-    const filteredForumSections = forumSections.filter((item, i) =>
+    const filteredForumSections = forumSections.filter((item) =>
       item.discipline === discipline)
     return <div>
       {!!filteredForumSections.length &&
