@@ -1,16 +1,13 @@
-@font-face {
-	font-family: 'Conv_MICRADI_';
-	src: url('../../../../../../../fonts/MICRADI_.eot');
-	src: local('☺'),
-  url('../../../../../../../fonts/MICRADI_.woff') format('woff'),
-  url('../../../../../../../fonts/MICRADI_.ttf') format('truetype'),
-  url('../../../../../../../fonts/MICRADI_.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-
+// @font-face {
+//     font-family: 'micradiregular';
+//     src: url('../../../../../../../fonts/micradi_regular-webfont.woff2') format('woff2'),
+//          url('../../../../../../../fonts/micradi_regular-webfont.woff') format('woff');
+//     font-weight: normal;
+//     font-style: normal;
+// }
 .container-course {
-font-family: 'Conv_MICRADI_';
+font-family: 'Orbitron', sans-serif;
+font-weight: medium;
 color: yellow;
 align-items:baseline;
 }

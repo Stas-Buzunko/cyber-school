@@ -1,22 +1,27 @@
-
-@font-face {
-	font-family: 'Conv_MICRADI_';
-	src: url('../../fonts/MICRADI_.eot');
-	src: local('☺'),
-  url('../../fonts/MICRADI_.woff') format('woff'),
-  url('../../fonts/MICRADI_.ttf') format('truetype'),
-  url('../../fonts/MICRADI_.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-
-
+// @font-face {
+//     font-family: 'micradiregular';
+//     src: url('../../fonts/micradi_regular-webfont.woff2') format('woff2'),
+//          url('../../fonts/micradi_regular-webfont.woff') format('woff');
+//     font-weight: normal;
+//     font-style: normal;
+// }
+// @font-face {
+// 	font-family: 'micradiregular';
+// 	src: url('../../fonts/MICRADI_.eot');
+// 	src: local('☺'),
+//   url('../../fonts/MICRADI_.woff') format('woff'),
+//   url('../../fonts/MICRADI_.ttf') format('truetype'),
+//   url('../../fonts/MICRADI_.svg') format('svg');
+// 	font-weight: normal;
+// 	font-style: normal;
+// }
 .route--active {
   font-weight: bold;
   text-decoration: underline;
 }
 .container-header {
-font-family: 'Conv_MICRADI_';
+font-family: 'Orbitron', sans-serif;
+font-weight: medium;
 align-items:baseline;
 }
 .logo {
@@ -29,12 +34,12 @@ align-items:baseline;
 
 }
 .btn {
-  font-family: 'Conv_MICRADI_';
+
   color: #e5d800;
 }
 .navbtn1 {
+		font-family: 'Orbitron', sans-serif;
   padding-top:20px;
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
   margin:0px;
 	padding-top:20px;
@@ -44,7 +49,6 @@ align-items:baseline;
 
 }
 .navbtn1:active {
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
   padding-top:20px;
   margin:0px;
@@ -55,7 +59,7 @@ align-items:baseline;
 	float: left;
 }
 .navbtn2 {
-  font-family: 'Conv_MICRADI_';
+		font-family: 'Orbitron', sans-serif;
   color: #e5d800;
   padding-top:20px;
   margin:0px;
@@ -65,7 +69,6 @@ align-items:baseline;
 	float: left;
 }
 .navbtn2:active {
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
   padding-top:20px;
   margin:0px;
@@ -75,7 +78,6 @@ align-items:baseline;
 	float: left;
 }
 .navbtnLogin {
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
   padding-top:20px;
 	padding-left:3px;
@@ -86,7 +88,6 @@ align-items:baseline;
 	float: left;
 }
 .navbtnLogin:active {
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
   padding-top:20px;
   margin:0px;
@@ -97,8 +98,8 @@ align-items:baseline;
 }
 
 .navbtn4{
+		font-family: 'Orbitron', sans-serif;
 	padding-top:20px;
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
   margin:0px;
 	padding-top:20px;
@@ -147,6 +148,5 @@ align-items:baseline;
     background-color: #3e8e41;
 }
 .userName {
-  font-family: 'Conv_MICRADI_';
   color: #e5d800;
 }

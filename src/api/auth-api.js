@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 import toastr from 'toastr'
 import { onLoginSuccess } from '../actions/auth-actions'
-import backend from './apis'
+import backend from '../../config/apis'
 import axios from 'axios'
 
 export const login = ({ email, password }) => dispatch => {

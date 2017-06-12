@@ -1,5 +1,5 @@
 import axios from 'axios'
-import backend from './apis'
+import backend from '../../config/apis'
 import toastr from 'toastr'
 
 export const pay = ({ token, amount, courseId, userId }) => dispatch => {
