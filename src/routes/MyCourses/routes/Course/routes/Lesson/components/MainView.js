@@ -108,8 +108,7 @@ class MainView extends Component {
   renderLesson () {
     const { lesson = {} } = this.state
     return (
-      <div className='container container-lesson text-center'>
-        <div className='row'>
+      <div>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Name:</label>
             <div> {lesson.name}</div>
@@ -142,7 +141,6 @@ class MainView extends Component {
             <label className='control-label col-xs-2'>TestId:</label>
             <div> {lesson.testId}</div>
           </div>
-        </div>
       </div>
     )
   }
@@ -150,22 +148,17 @@ class MainView extends Component {
   render () {
     const { params } = this.props
     return (
-      <div className='container'>
+      <div className='container container-course text-center'>
         <div className='row'>
-          <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-            <ul className='list-unstyled'>
+          <div className='col-xs-12 col-md-12' >
               {this.renderLesson()}
-            </ul>
           </div>
-        </div>
-        <div className='col-xs-12 col-md-10'>
-          <ul className='list-unstyled'>
+
             <CommentList
               lessonId={params.lessonId}
               courseId={params.courseId}
             />
-          </ul>
-        </div>
+              </div>
       </div>
     )
   }

@@ -63,6 +63,10 @@ class CoursesList extends Component {
               <div> {item.price}</div>
             </div>
             <div className='col-xs-10'>
+              <label className='control-label col-xs-2'>vipPrice:</label>
+              <div> {item.vipPrice}</div>
+            </div>
+            <div className='col-xs-10'>
               <label className='control-label col-xs-2'>Discipline:</label>
               <div> {item.discipline}</div>
             </div>

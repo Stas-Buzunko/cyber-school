@@ -1,3 +1,16 @@
+@font-face {
+	font-family: 'Conv_MICRADI_';
+	src: url('../../../fonts/MICRADI_.eot');
+	src: local('☺'),
+  url('../../../fonts/MICRADI_.woff') format('woff'),
+  url('../../../fonts/MICRADI_.ttf') format('truetype'),
+  url('../../../fonts/MICRADI_.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+.container {
+font-family: 'Conv_MICRADI_';
+}
 .content{
   padding-top: 22px;
   margin: auto;
@@ -72,6 +85,7 @@
   background-image: url(../../../images/btnActStartEduc.png);
 }
 .videoToParents{
+  border-width: 0px;
   padding:0px;
   margin:0px;
   width:1140px;
@@ -94,16 +108,16 @@
 }
 .play{
   margin:0;
-  width:23px;
-  height:23px;
+  width:21px;
+  height:21px;
   padding:10px;
   background-image: url(../../../images/play.png);
   float: left;
 }
 .pause{
   margin:0;
-  width:23px;
-  height:23px;
+  width:21px;
+  height:21px;
   padding:10px;
   background-image: url(../../../images/pause.png);
   float: left;
@@ -124,7 +138,7 @@
 input[type=range] {
   float: left;
   margin-top:10px;
-  width: 880px;
+  width: 870px;
   height: 3px;
   -webkit-appearance: none;
   border: 0 none;

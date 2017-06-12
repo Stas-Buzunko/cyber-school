@@ -9,52 +9,98 @@
 	font-style: normal;
 }
 
-.container-lesson {
+.container-course {
 font-family: 'Conv_MICRADI_';
 color: yellow;
 align-items:baseline;
 
 }
-
+.content-slider{
+  margin-top: 40px;
+  width:454px;
+}
 .content{
   padding-top: 22px;
   margin: auto;
   width:1140px;
 }
 .course-name{
+	font-size: 16px;
   padding:0px;
-  margin:20px 0px 20px 0px;
+  margin:10px 0px 5px 0px;
+	color: #F5F5F5;
 }
-.third2{
+.course-duration{
+	font-size: 12px;
   padding:0px;
-  margin:0px;
-  width:360px;
-  height:584px;
-  background-image: url(../../../images/bannerDota2blue.jpg);
+  margin:5px 0px 10px 0px;
+	color: #7bb4d7;
 }
-.third3{
-  padding:0px;
-  margin:0px;
-  width:360px;
-  height:584px;
-  background-image: url(../../../images/bannerLoLblue.jpg);
-}
-.textFrame {
-  padding-top:10px;
-  color: #7bb4d7;
-  width:360px;
-  height:70px;
-  text-align: center;
-    background-image: url(../../../images/textFrame.jpg);
-}
-.btnEnterFacult {
-  font-size: 12px;
-  padding-top: 22px;
-  text-align: center;
-  margin: 0 auto;
-  width:250px;
+.buttonBuy{
+	padding-top: 20px;
+	margin-left: 160px;
+  width:326px;
   height:64px;
-  background-image: url(../../../images/btnEnterFacult.png);
+  background-image: url(../../../images/buttonBuy.png);
+}
+.buttonBuy:hover{
+	padding-top: 20px;
+	margin-left: 160px;
+  width:326px;
+  height:64px;
+  background-image: url(../../../images/buttonBuyAct.png);
+}
+.lessonButton{
+  padding:3px;
+  margin:0px;
+  width:454px;
+  height:38px;
+  background-image: url(../../../images/lessonButton.png);
+}
+.lessonButton:hover{
+  padding:3px;
+  margin:0px;
+  width:454px;
+  height:38px;
+  background-image: url(../../../images/lessonButtonAct.png);
+}
+.slick-list{
+	height: 168px !important;
+}
+.descriptionBlock {
+  margin:45px 0px 0px 5px;
+	padding:20px;
+	width:650px;
+	height:235px;
+	text-align: left;
+  background-image: url(../../../images/descriptionBlock.jpg);
+}
+.sliderButtonPrev {
+  padding-top:20px;
+	width:454px;
+	height:38px;
+  background-image: url(../../../images/sliderButtonPrev.png);
+}
+.sliderButtonNext {
+	width:454px;
+	height:38px;
+  background-image: url(../../../images/sliderButtonNext.png);
+}
+.player{
+  padding-left:5px;
+  padding-top:5px;
+  margin:0;
+	width:1140px;
+	height:640px;
+  background-image: url(../../../images/player.png);
+}
+.videoButton{
+	border-width: 0px;
+  padding:0px;
+  margin:0px;
+  width:1140px;
+  height:70px;
+  background-image: url(../../../images/videoButton.jpg);
 }
 .сontrols{
   margin:auto;
@@ -64,16 +110,16 @@ align-items:baseline;
 }
 .play{
   margin:0;
-  width:23px;
-  height:23px;
-  padding:10px;
+  width:21px;
+  height:21px;
+  padding:10px 10px 0px 10px;
   background-image: url(../../../images/play.png);
   float: left;
 }
 .pause{
   margin:0;
-  width:23px;
-  height:23px;
+  width:21px;
+  height:21px;
   padding:10px;
   background-image: url(../../../images/pause.png);
   float: left;
@@ -94,7 +140,7 @@ align-items:baseline;
 input[type=range] {
   float: left;
   margin-top:10px;
-  width: 860px;
+  width: 850px;
   height: 3px;
   -webkit-appearance: none;
   border: 0 none;

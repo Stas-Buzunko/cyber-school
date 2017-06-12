@@ -16,6 +16,10 @@ class VideoPlayer extends Component {
       playbackRate: 1.0
     }
   }
+  componentWillReceiveProps (nextProps) {
+    this.props.stopVideo !== nextProps.stopVideo && this.playPause()
+  }
+
   renderVideoEnded () {
     const isEnded = true
   }
@@ -109,6 +113,7 @@ class VideoPlayer extends Component {
 
   render () {
     const { playing, volume, played, duration } = this.state
+    const { stopVideo } = this.props
     const classType = playing ? 'pause' : 'play'
     return (
       <div className='player'>
@@ -156,7 +161,8 @@ class VideoPlayer extends Component {
   }
 }
 VideoPlayer.propTypes = {
-  url: React.PropTypes.string
+  url: React.PropTypes.string,
+  stopVideo: React.PropTypes.bool
 }
 
 export default VideoPlayer

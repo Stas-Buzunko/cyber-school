@@ -26,9 +26,10 @@ class NewCourse extends Component {
   }
 
   saveCourse () {
-    const { name, description, mainPhoto, duration, price, discipline, author, sections } = this.state
+    const { name, description, mainPhoto, duration, price, vipPrice, discipline, author, sections } = this.state
     const dateUploaded = Date.now()
-    if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !discipline || !author) {
+    if (!name || !description || !mainPhoto || !duration || !dateUploaded || !price || !vipPrice ||
+       !discipline || !author) {
       if (!name) {
         toastr.error('Please, fill name')
       };
@@ -46,6 +47,9 @@ class NewCourse extends Component {
       };
       if (!price) {
         toastr.error('Please, fill price')
+      };
+      if (!vipPrice) {
+        toastr.error('Please, fill vipPrice')
       };
       if (!discipline) {
         toastr.error('Please, fill discipline')
@@ -65,6 +69,7 @@ class NewCourse extends Component {
       duration,
       dateUploaded,
       price,
+      vipPrice,
       discipline,
       author,
       sections
@@ -133,6 +138,15 @@ class NewCourse extends Component {
                     type='text'
                     className='form-control'
                     onChange={(e) => this.setState({ price: e.target.value })} />
+                </div>
+              </div>
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>VipPrice</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ vipPrice: e.target.value })} />
                 </div>
               </div>
 

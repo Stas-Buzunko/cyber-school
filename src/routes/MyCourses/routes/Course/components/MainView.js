@@ -3,6 +3,7 @@ import firebase from 'firebase'
 import CommentList from '../containers/CommentListContainer'
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
+import './MainView.scss'
 
 class MainView extends Component {
   constructor (props) {
@@ -306,7 +307,7 @@ class MainView extends Component {
     const { course, showComments } = this.state
     const { params } = this.props
     return (
-      <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
+      <div className='container-course'>
         <div className='col-xs-12 col-md-12'>
           <div className='col-xs-10'>
             <label className='control-label col-xs-2'>Name:</label>

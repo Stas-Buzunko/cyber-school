@@ -171,8 +171,6 @@ class CommentList extends Component {
   render () {
     const isRespond = false
     return (
-      <div className='container'>
-        <div className='row'>
           <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
             <label className='control-label col-xs-2 col-md-2'>Comments:</label>
             <ul className='list-unstyled'>
@@ -180,8 +178,6 @@ class CommentList extends Component {
               {this.renderCommentList()}
             </ul>
           </div>
-        </div>
-      </div>
     )
   }
 }
