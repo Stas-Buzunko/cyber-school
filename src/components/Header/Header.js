@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { IndexLink, browserHistory } from 'react-router'
 import './Header.scss'
-import backend from '../../../config/apis'
+import backend from './apis'
 import firebase from 'firebase'
 
 export const Header = ({ user }) =>

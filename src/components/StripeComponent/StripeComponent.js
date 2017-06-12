@@ -37,11 +37,13 @@ class StripeComponent extends Component {
   }
 
   render () {
-    const { buttonText } = this.props
+    const { buttonText, price } = this.props
 
     return (
-      <div className='flex'>
-        <button onClick={this.onOpenStripe}>{buttonText}</button>
+      <div>
+        <div onClick={this.onOpenStripe}
+                className='buttonBuy'
+          >{buttonText} {price}$</div>
       </div>
     )
   }

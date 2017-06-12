@@ -17,6 +17,7 @@ class EditCourse extends Component {
       mainPhoto:'',
       duration:'',
       price:'',
+      vipPrice: '',
       sections: [],
       id: this.props.params.id,
       error: '',
@@ -36,8 +37,8 @@ class EditCourse extends Component {
       .on('value', snapshot => {
         const object = snapshot.val()
         if (object !== null) {
-          const { name, description, mainPhoto, duration, price, discipline, author, sections, id } = object
-          this.setState({ name, description, mainPhoto, duration, price, discipline, author, sections, id })
+          const { name, description, mainPhoto, duration, price, vipPrice, discipline, author, sections, id } = object
+          this.setState({ name, description, mainPhoto, duration, price, vipPrice, discipline, author, sections, id })
         } else {
           this.setState({ error: true })
         }
@@ -45,12 +46,12 @@ class EditCourse extends Component {
   }
   editCourse () {
     const { id } = this.props.params
-    const { name, discipline, author, description, mainPhoto, duration, price, sections } = this.state
+    const { name, discipline, author, description, mainPhoto, duration, price, vipPrice, sections } = this.state
     const dateUploaded = Date.now()
     this.setState({ error: '' })
     firebase.database().ref('courses/' + id)
     .update({
-      name, discipline, author, description, mainPhoto, duration, price, dateUploaded, id, sections })
+      name, discipline, author, description, mainPhoto, duration, price, vipPrice, dateUploaded, id, sections })
       .then(() => {
         toastr.success('Your course saved!')
         browserHistory.push(`/admin/courses`)
@@ -72,7 +73,7 @@ class EditCourse extends Component {
   }
 
   render () {
-    const { name, discipline, author, description, mainPhoto, duration,
+    const { name, discipline, author, description, mainPhoto, duration, vipPrice,
     price, sections = [], isAddNewSectionOpen } = this.state
     return (
       <div className='container'>
@@ -152,6 +153,17 @@ class EditCourse extends Component {
                     type='text'
                     className='form-control'
                     onChange={(e) => this.setState({ price: e.target.value })} />
+                </div>
+              </div>
+
+              <div className='form-group'>
+                <label className='control-label col-xs-2'>vipPrice</label>
+                <div className='col-xs-10 col-md-6'>
+                  <input
+                    value={vipPrice}
+                    type='text'
+                    className='form-control'
+                    onChange={(e) => this.setState({ vipPrice: e.target.value })} />
                 </div>
               </div>
               <div className='col-xs-12 col-md-12'>
