@@ -40,37 +40,35 @@ class CoursesList extends Component {
     return courses.map((item, i) =>
       <li key={i}>
         <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-xs-12 col-md-8'>
-
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Name:</label>
-              <div> {item.name}</div>
+            <div className='col-md-12'>
+              <label className='control-label col-md-4'>Name:</label>
+              <div  className='col-md-8'> {item.name}</div>
             </div>
             <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Description:</label>
-              <div> {item.description}</div>
+              <label className='control-label col-md-4'>Description:</label>
+              <div className='col-md-8'> {item.description}</div>
             </div>
             <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Main photo:</label>
+              <label className='control-label col-md-4'>Main photo:</label>
                 <img src={item.mainPhoto} width='300px' height='200px' alt='Loading'/>
             </div>
             <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Duration:</label>
-              <div> {item.duration}</div>
+              <label className='control-label col-md-4'>Duration:</label>
+              <div className='col-md-8'> {item.duration}</div>
             </div>
             <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Price:</label>
-              <div> {item.price}</div>
+              <label className='control-label col-md-4'>Price:</label>
+              <div className='col-md-8'> {item.price}</div>
             </div>
             <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>vipPrice:</label>
-              <div> {item.vipPrice}</div>
+              <label className='control-label col-md-4'>vipPrice:</label>
+              <div className='col-md-8'> {item.vipPrice}</div>
             </div>
             <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Discipline:</label>
-              <div> {item.discipline}</div>
+              <label className='control-label col-md-4'>Discipline:</label>
+              <div className='col-md-8'> {item.discipline}</div>
             </div>
-          </div>
+
           <div className='col-xs-12 col-md-4'>
             <button
               type='button'

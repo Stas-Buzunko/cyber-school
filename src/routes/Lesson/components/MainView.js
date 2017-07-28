@@ -84,10 +84,17 @@ class MainView extends Component {
             <div> {lesson.isFree}</div>
           </div>
           <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>IsBonus:</label>
+            <div> {lesson.isBonus}</div>
+          </div>task
+          <div className='col-xs-10'>
             <label className='control-label col-xs-2'>TestId:</label>
             <div> {lesson.testId}</div>
           </div>
-
+          <div className='col-xs-10'>
+            <label className='control-label col-xs-2'>Task:</label>
+            <div> {lesson.task}</div>
+          </div>
         </div>
       </div>
     )

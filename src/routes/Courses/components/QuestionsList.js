@@ -78,18 +78,16 @@ class QuestionsList extends Component {
   renderAnswers (answers, rightAnswers) {
     return answers.map((item, i) =>
       <li key={i}>
-        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-md-12'>
-            <label className='control-label col-xs-1'>{i + 1}</label>
-            <div className='col-xs-10 col-md-9'>
-              {item}
-            </div>
-            <div className='col-xs-10 col-md-2'>
-              <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
-                <input type='checkbox' checked={this.isRightAnswer(i, rightAnswers)} />
-              </label>
-            </div>
+        <div className='col-md-12'>
+          <label className='col-md-1'>{i + 1}</label>
+          <div className='col-xs-10 col-md-9'>
+            {item}
           </div>
+          <div className='col-xs-10 col-md-2'>
+          <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+            <input type='checkbox' checked={this.isRightAnswer(i, rightAnswers)} />
+          </label>
+        </div>
         </div>
       </li>
   )
@@ -100,17 +98,17 @@ class QuestionsList extends Component {
     return questions.map((item, i) =>
       <li key={i}>
 
-        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-xs-12 col-md-8'>
+        <div style={{ padding: '15px' }} >
 
-            <div className='col-xs-10'>
-              <label className='control-label col-xs-2'>Question:</label>
-              <div> {item.text}</div>
+
+            <div className='col-md-12'>
+              <label className='col-md-3'>Question:</label>
+              <div className='col-md-6'> {item.text}</div>
             </div>
 
             {!isTestEdit &&
-              <div className='col-xs-10'>
-                <label className='control-label col-xs-2'>Answers:</label>
+              <div>
+                <label className='control-label'>Answers:</label>
                 <ul className='list-unstyled'>
                   <div> {this.renderAnswers(item.answers, item.rightAnswers)}</div>
                 </ul>
@@ -118,7 +116,7 @@ class QuestionsList extends Component {
             }
 
             {!!isTestEdit &&
-              <div className='col-xs-12 col-md-4'>
+              <div className='col-xs-12 col-md-4' style={{ padding: '15px' }}>
                 <button
                   type='button'
                   className='btn btn-primary lg'
@@ -141,7 +139,7 @@ class QuestionsList extends Component {
                 />
               </div>
             }
-          </div>
+
         </div>
       </li>
     )
@@ -152,12 +150,9 @@ class QuestionsList extends Component {
     let isNewQuestion
     let question = {}
     return (
-      <div className='container'>
-        <div className='row'>
-          <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
             <ul className='list-unstyled'>
               {this.renderQuestionsList()}
-              {!!isTestEdit && <div>
+              {!!isTestEdit && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
                 <button
                 type='button'
                 className='btn btn-primary lg'
@@ -170,10 +165,6 @@ class QuestionsList extends Component {
               />
             </div> }
             </ul>
-          </div>
-        </div>
-
-      </div>
     )
   }
 }

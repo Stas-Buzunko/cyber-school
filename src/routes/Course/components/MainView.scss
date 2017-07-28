@@ -1,12 +1,5 @@
-// @font-face {
-//     font-family: 'micradiregular';
-//     src: url('../../../fonts/micradi_regular-webfont.woff2') format('woff2'),
-//          url('../../../fonts/micradi_regular-webfont.woff') format('woff');
-//     font-weight: normal;
-//     font-style: normal;
-// }
 .container-course {
-font-family: 'Orbitron', sans-serif;
+font-family: 'MICRADI';
 font-weight: medium;
 color: yellow;
 align-items:baseline;
@@ -166,4 +159,71 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   // margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+.comment-avatar{
+  width:99px;
+  height:96px;
+  padding:0;
+}
+.scroll{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.comments-name{
+  float: left;
+  font-size: 16px;
+  padding-left: 15px;
+  text-align: left;
+}
+.comments-text{
+  padding-left: 15px;
+  color: #7bb4d7;
+  text-align: left;
+  float: left;
+}
+.reply-name{
+  padding-left: 25px;
+  text-align: left;
+  float: left;
+}
+.reply-text{
+  padding-left: 25px;
+  color: white;
+  text-align: left;
+  float: left;
+}
+.comment{
+  margin-top: 10px;
+}
+.scroll::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #000000;
+}
+.scroll::-webkit-scrollbar
+{
+  width: 23px;
+  background-color: red;
+}
+.scroll::-webkit-scrollbar-thumb
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #1a1a1a;
+}
+.scroll::-webkit-scrollbar-button:vertical:increment {
+  width:23px;
+  height:22px;
+  background-image: url(../../../images/down.jpg);
+}
+.scroll::-webkit-scrollbar-button:vertical:decrement {
+  width:23px;
+  height:22px;
+  background-image: url(../../../images/up.jpg);
+}
+.about{
+  font-size: 12px;
+  padding-top: 22px;
+  margin: auto;
+  width:800px;
+  color: white;
 }

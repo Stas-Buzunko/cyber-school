@@ -1,60 +1,14 @@
-// @font-face {
-//     font-family: 'micradiregular';
-//     src: url('../../../../../../../fonts/micradi_regular-webfont.woff2') format('woff2'),
-//          url('../../../../../../../fonts/micradi_regular-webfont.woff') format('woff');
-//     font-weight: normal;
-//     font-style: normal;
-// }
-.container-course {
-font-family: 'Orbitron', sans-serif;
-font-weight: medium;
-color: yellow;
-align-items:baseline;
-}
-
-.content{
-  padding-top: 22px;
-  margin: auto;
-  width:1140px;
-}
-.course-name{
-  padding:0px;
-  margin:20px 0px 20px 0px;
-}
-.third2{
-  padding:0px;
-  margin:0px;
-  width:360px;
-  height:584px;
-  background-image: url(../../../../../../../images/bannerDota2blue.jpg);
-}
-.third3{
-  padding:0px;
-  margin:0px;
-  width:360px;
-  height:584px;
-  background-image: url(../../../../../../../images/bannerLoLblue.jpg);
-}
-.textFrame {
-  padding-top:10px;
-  color: #7bb4d7;
-  width:360px;
-  height:70px;
-  text-align: center;
-    background-image: url(../../../../../../../images/textFrame.jpg);
-}
-.btnEnterFacult {
-  font-size: 12px;
-  padding-top: 22px;
-  text-align: center;
-  margin: 0 auto;
-  width:250px;
-  height:64px;
-  background-image: url(../../../../../../../images/btnEnterFacult.png);
+.player{
+  padding-left:5px;
+  padding-bottom:10px;
+  margin:0;
+	width:730px;
+	height:400px;
+  background-image: url(../../../../../../../images/player.png);
 }
 .сontrols{
   margin:auto;
-  width:1125px;
+  width:730px;
   height:30px;
   background-color: #000;
 }
@@ -87,10 +41,18 @@ align-items:baseline;
   padding:3px 12px 3px 12px;
   color: white;
 }
+.videoButton{
+	border-width: 0px;
+  padding:0px;
+  margin:0px;
+  width:730px;
+  height:70px;
+  background-image: url(../../../../../../../images/videoButton.jpg);
+}
 input[type=range] {
   float: left;
   margin-top:10px;
-  width: 860px;
+  width: 400px;
   height: 3px;
   -webkit-appearance: none;
   border: 0 none;

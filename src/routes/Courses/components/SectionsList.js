@@ -14,7 +14,7 @@ class SectionsList extends Component {
           </div>
         </div>
         <label className='col-xs-2 col-md-4'>Lessons: </label>
-        <div className='col-xs-2 col-md-10'>
+
           <ul className='list-unstyled'>
             <LessonsList
               sectionsList={'SectionsList'}
@@ -23,7 +23,7 @@ class SectionsList extends Component {
               sections={sections}
             />
           </ul>
-        </div>
+    
         <label className='col-xs-2 col-md-4'>Tests: </label>
         <div className='col-xs-2 col-md-10'>
           <ul className='list-unstyled'>

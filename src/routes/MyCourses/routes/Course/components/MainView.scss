@@ -6,119 +6,232 @@
 //     font-style: normal;
 // }
 .container-course {
-font-family: 'Orbitron', sans-serif;
+font-family: 'MICRADI';
 font-weight: medium;
 color: yellow;
 align-items:baseline;
-
+margin-top:20px;
 }
-
-.content{
-  padding-top: 22px;
-  margin: auto;
-  width:1140px;
+.button-lesson-name {
+  padding-top:8px;
+  margin:0px;
+  text-align: center;
+  width:267px;
+  height:38px;
+  display: block;
+  background-image: url(../../../../../images/buttonLessonName.png);
 }
-.course-name{
-  padding:0px;
-  margin:20px 0px 20px 0px;
-}
-.third2{
+.section-list {
   padding:0px;
   margin:0px;
-  width:360px;
-  height:584px;
-  background-image: url(../../../../../images/bannerDota2blue.jpg);
-}
-.third3{
-  padding:0px;
-  margin:0px;
-  width:360px;
-  height:584px;
-  background-image: url(../../../../../images/bannerLoLblue.jpg);
-}
-.textFrame {
-  padding-top:10px;
-  color: #7bb4d7;
-  width:360px;
-  height:70px;
   text-align: center;
-    background-image: url(../../../../../images/textFrame.jpg);
-}
-.btnEnterFacult {
-  font-size: 12px;
-  padding-top: 22px;
-  text-align: center;
-  margin: 0 auto;
-  width:250px;
-  height:64px;
-  background-image: url(../../../../../images/btnEnterFacult.png);
-}
-.сontrols{
-  margin:auto;
-  width:1125px;
-  height:30px;
-  background-color: #000;
-}
-.play{
-  margin:0;
-  width:23px;
-  height:23px;
-  padding:10px;
-  background-image: url(../../../../../images/play.png);
-  float: left;
-}
-.pause{
-  margin:0;
-  width:23px;
-  height:23px;
-  padding:10px;
-  background-image: url(../../../../../images/pause.png);
-  float: left;
-}
-.fullscreen{
-  margin:3px 0px 3px 10px;
-  width:21px;
-  height:21px;
-  padding:0px;
-  background-image: url(../../../../../images/fullscreen.png);
-  float: left;
-}
-.time{
-  float: left;
-  padding:3px 12px 3px 12px;
+  width:263px;
+  height:248px;
   color: white;
+  background-image: url(../../../../../images/list.png);
 }
-input[type=range] {
-  float: left;
+.bonus-link {
+  color: #7bb4d7;
+}
+.link {
+  color: yellow;
+}
+.checkbox {
+  padding:0px;
+  margin:0px;
+  width:13px;
+  height:15px;
+  display: inline-block;
+  background-image: url(../../../../../images/checkBox.png);
+}
+.button-continie-lesson {
+  padding:5px;
+  margin:15px;
+  width:241px;
+  height:33px;
+  text-align: center;
+  display: block;
+  background-image: url(../../../../../images/buttonContLesson.jpg);
+}
+.button-continie-lesson:active {
+  padding:5px;
+  margin:15px;
+  width:241px;
+  height:33px;
+  text-align: center;
+  display: block;
+  background-image: url(../../../../../images/buttonContLessonPress.jpg);
+}
+.button-coach-chat{
+  padding-top:8px;
+  margin:0px;
+  text-align: center;
+  width:267px;
+  height:38px;
+  display: block;
+  background-image: url(../../../../../images/buttonLessonName.png);
+}
+.chat-field {
+  padding:0px;
+  margin:0px;
+  width:263px;
+  height:293px;
+  font-size: 10pt;
+  background-image: url(../../../../../images/chatField.jpg);
+}
+.chat-input {
+  padding: 0px;
+  margin: 5px 10px;
+  width:240px;
+  height:61px;
+  border: none;
+  color: yellow;
+  background-image: url(../../../../../images/chatInput.jpg);
+}
+.chat-button {
+  padding:8px;
   margin-top:10px;
-  width: 860px;
-  height: 3px;
-  -webkit-appearance: none;
-  border: 0 none;
-  background:blue;
-  color: #0069b4 ;
-  overflow: visible;
+  width:267px;
+  height:38px;
+  text-align: center;
+  display: block;
+  background-image: url(../../../../../images/chatButton.png);
 }
-input[type=range].volume{
+.hi-words {
+  padding:20px;
+  margin:0px;
+  width:847px;
+  height:221px;
+  color: #7bb4d7;
+  background-image: url(../../../../../images/hiWordFromCoach.png);
+}
+.progress-lesson{
+  padding:15px;
+  margin:0px;
+  width:847px;
+  height:280px;
+}
+.starRow {
+  display: block;
+  padding-top:10px;
+  margin:auto;
+  width:847px;
+  height:130px;
+}
+.circle {
   float: left;
-  margin-top:10px;
-  padding:0px 10px 0px 10px;
-  width: 60px;
-  height: 3px;
-  -webkit-appearance: none;
-  border: 0 none;
-  background: #0069b4;
-  color: #0069b4;
-  overflow: visible;
 }
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 1px solid #000000;
-  height: 20px;
-  width: 10px;
-  border-radius: 3px;
-  background: blue;
-  cursor: pointer;
-  // margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+.starFff{
+  padding-top:60px;
+  width:79px;
+  height:104px;
+  float:left;
+  text-align: center;
+  background-image: url(../../../../../images/starFff.png);
+}
+.starEee{
+  padding-top:60px;
+  width:79px;
+  height:104px;
+  float:left;
+  text-align: center;
+  background-image: url(../../../../../images/starEee.png);
+}
+.starFfe{
+  padding-top:60px;
+  width:79px;
+  height:104px;
+  float:left;
+  text-align: center;
+  background-image: url(../../../../../images/starFfe.png);
+}
+.starFee{
+  padding-top:60px;
+  width:79px;
+  height:104px;
+  float:left;
+  text-align: center;
+  background-image: url(../../../../../images/starFee.png);
+}
+.questions {
+  display: block;
+}
+.question-field {
+  padding:0px;
+  margin:0px;
+  width:847px;
+  height:193px;
+  float:left;
+  text-align: center;
+  background-image: url(../../../../../images/questionField.jpg);
+}
+.question-button {
+  padding-top:8px;
+  margin-top:5px;
+  width:267px;
+  height:38px;
+  text-align: center;
+  background-image: url(../../../../../images/questionButton.png);
+}
+.topic-options{
+  padding: 0px;
+  margin:0px;
+  font-family: 'MICRADI';
+  font-weight: medium;
+  color: #7bb4d7;
+  width:847px;
+  height:36px;
+  border: none;
+  background-image: url(../../../../../images/topicField.jpg);
+}
+.options-lessons{
+  border: none;
+  background-color: black;
+}
+.question-input{
+  padding: 0px;
+  margin:0px;
+  font-family: 'MICRADI';
+  font-weight: medium;
+  color: #7bb4d7;
+  width:847px;
+  height:193px;
+  border: none;
+  background-image: url(../../../../../images/questionInput.jpg);
+}
+.save-comment-button {
+  padding-top:8px;
+  margin:auto;
+  width:267px;
+  height:38px;
+  text-align: center;
+  background-image: url(../../../../../images/questionButton.png);
+}
+.scroll::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #000000;
+}
+.scroll::-webkit-scrollbar
+{
+  width: 23px;
+  background-color: red;
+}
+.scroll::-webkit-scrollbar-thumb
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #1a1a1a;
+}
+.scroll::-webkit-scrollbar-button:vertical:increment {
+  width:23px;
+  height:22px;
+  background-image: url(../../../../../images/down.jpg);
+}
+.scroll::-webkit-scrollbar-button:vertical:decrement {
+  width:23px;
+  height:22px;
+  background-image: url(../../../../../images/up.jpg);
+}
+.scroll{
+  margin: 0px;
 }

@@ -8,7 +8,7 @@ class VideoPlayer extends Component {
     super(props)
     this.state = {
       playing: true,
-      volume: 0.6,
+      volume: 0.0,
       played: 0,
       loaded: 0,
       duration: 0,
@@ -54,6 +54,21 @@ class VideoPlayer extends Component {
     screenfull.request(findDOMNode(this.player))
   }
 
+  format (seconds) {
+    const date = new Date(seconds * 1000)
+    const hh = date.getUTCHours()
+    const mm = date.getUTCMinutes()
+    const ss = this.pad(date.getUTCSeconds())
+    if (hh) {
+      return `${hh}:${this.pad(mm)}:${ss}`
+    }
+    return `${mm}:${ss}`
+  }
+
+  pad (string) {
+    return ('0' + string).slice(-2)
+  }
+
   renderVideo () {
     const { url } = this.props
     const {
@@ -66,15 +81,14 @@ class VideoPlayer extends Component {
       soundcloudConfig
     } = this.state
 
-    // const videoId = url.replace('https://youtu.be/', '')
     return (
       <div>
         <ReactPlayer
-          // url={`https://www.youtube.com/embed/${videoId}`}
+          width={1130}
+          height={600}
           url={url}
           ref={player => { this.player = player }}
           className='react-player'
-
           playing={playing}
           playbackRate={playbackRate}
           volume={volume}
@@ -89,55 +103,60 @@ class VideoPlayer extends Component {
           onError={e => console.log('onError', e)}
           onProgress={this.onProgress}
           onDuration={duration => this.setState({ duration })}
-
         />
       </div>
     )
   }
 
   render () {
-    const { playing, volume, played } = this.state
+    const { playing, volume, played, duration } = this.state
+    const classType = playing ? 'pause' : 'play'
     return (
-      <div >
-
+      <div className='player'>
         {this.renderVideo()}
-        <div className='col-xs-12 col-md-12' style={{ padding: '25px' }}>
-          <table><tbody>
-            <tr>
-              <th>Controls</th>
-              <td>
-                <button onClick={this.stop}>Stop</button>
-                <button onClick={this.playPause}>{playing ? 'Pause' : 'Play'}</button>
-                <button onClick={this.onClickFullscreen}>Fullscreen</button>
-                <button onClick={this.setPlaybackRate} value={1}>1</button>
-                <button onClick={this.setPlaybackRate} value={1.5}>1.5</button>
-                <button onClick={this.setPlaybackRate} value={2}>2</button>
-              </td>
-            </tr>
-            <tr>
-              <th>Seek</th>
-              <td>
-                <input
-                  type='range' min={0} max={1} step='any'
-                  value={played}
-                  onMouseDown={this.onSeekMouseDown}
-                  onChange={this.onSeekChange}
-                  onMouseUp={this.onSeekMouseUp}
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>Volume</th>
-              <td>
-                <input type='range' min={0} max={1} step='any' value={volume} onChange={this.setVolume} />
-              </td>
-            </tr>
-          </tbody></table>
+        <div className='сontrols'>
+        <div
+          onClick={this.playPause}
+          className={classType}>
+        </div>
+          <time
+            dateTime={`P${Math.round(duration * played)}S`}
+            className='time'>
+            {this.format(duration * played)}
+          </time>
+          <input
+            type='range'
+            min={0}
+            max={1}
+            step='any'
+            value={played}
+            onMouseDown={this.onSeekMouseDown}
+            onChange={this.onSeekChange}
+            onMouseUp={this.onSeekMouseUp}
+          />
+          <time
+            dateTime={`P${Math.round(duration * (1 - played))}S`}
+            className='time'>
+            {this.format(duration * (1 - played))}
+          </time>
+          <input
+            className='volume'
+            type='range'
+            min={0}
+            max={1}
+            step='any'
+            value={volume}
+            onChange={this.setVolume} />
+          <div
+            onClick={this.onClickFullscreen}
+            className='fullscreen'>
+          </div>
         </div>
       </div>
     )
   }
 }
+
 VideoPlayer.propTypes = {
   url: React.PropTypes.string,
   addVideoId: React.PropTypes.func

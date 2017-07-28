@@ -13,8 +13,8 @@ export const Header = () =>
       Courses
     </Link>
     {' · '}
-    <Link to='/admin/faculties' activeClassName='route--active'>
-      Faculties
+    <Link to='/admin/siteInfo' activeClassName='route--active'>
+      Site information
     </Link>
     {' · '}
   </div>

@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
-import UserCoursesList from '../components/UserCoursesList'
+import userCoursesList from '../components/userCoursesList'
 
 const mapStateToProps = state => ({
   auth: state.auth
 })
 
-export default connect(mapStateToProps)(UserCoursesList)
+export default connect(mapStateToProps)(userCoursesList)

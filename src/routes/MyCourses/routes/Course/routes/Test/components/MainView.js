@@ -10,6 +10,7 @@ class MainView extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      isShowRightAnswers: false,
       testLoaded: false,
       userQuestions: [],
       rightUserAnswers: 0,
@@ -20,7 +21,8 @@ class MainView extends Component {
             text: '',
             answers: [],
             rightAnswers: [],
-            userAnswers: []
+            userAnswers: [],
+            textIfRight: ''
           }
         ]
       }
@@ -28,7 +30,6 @@ class MainView extends Component {
     this.closeAnswerPopup = this.closeAnswerPopup.bind(this)
     this.onCheckBoxClick = this.onCheckBoxClick.bind(this)
     this.countRightUserAnswers = this.countRightUserAnswers.bind(this)
-    this.closeAnswerPopup = this.closeAnswerPopup.bind(this)
     this.renderButtonSaveTestAnswers = this.renderButtonSaveTestAnswers.bind(this)
   }
 
@@ -85,6 +86,8 @@ class MainView extends Component {
   }
 
   renderAnswers (question) {
+    const { isShowRightAnswers } = this.state
+    const isRightAnswer = JSON.stringify(question.userAnswers) === JSON.stringify(question.rightAnswers)
     return (
       <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
         {question.answers.map((item, i) =>
@@ -92,7 +95,18 @@ class MainView extends Component {
             <div className='col-md-12'>
               <label className='control-label col-xs-1 col-md-3'>{ i + 1 }</label>
               <div className='col-xs-10 col-md-6'>
-                {item}
+
+                {isShowRightAnswers && question.rightAnswers.includes(i) &&
+                <div> {item} </div>}
+
+                {isShowRightAnswers && !question.rightAnswers.includes(i) &&
+                question.userAnswers.includes(i) && <div style={{ color: 'red' }}> {item}</div>}
+
+                {isShowRightAnswers && !question.userAnswers.includes(i) && !question.rightAnswers.includes(i) &&
+                <div> {item}</div>}
+
+                {!isShowRightAnswers && <div> {item}</div>}
+
               </div>
               <div className='col-xs-10 col-md-3'>
                 <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
@@ -105,6 +119,7 @@ class MainView extends Component {
             </div>
           </div>
         )}
+        {isShowRightAnswers && isRightAnswer && <div> {question.textIfRight}</div>}
       </div>
     )
   }
@@ -121,14 +136,16 @@ class MainView extends Component {
     return newRightUserAnswers
   }
 
-  addTestId () {
+  addTestId (mark) {
     const { courseId = '', testId = '' } = this.props.params
     const { userCourses, uid } = this.props.auth.user
     const courseFromUser = userCourses.find((item, i) => item.courseId === courseId)
     const { passedTestIds = [] } = courseFromUser
     const newPassedTestIds = [
       ...passedTestIds,
-      testId
+      { mark: mark,
+        testId: testId
+      }
     ]
     const newCourseFromUser = {
       ...courseFromUser,
@@ -147,12 +164,14 @@ class MainView extends Component {
     const { userQuestions = [] } = this.state
     const { params } = this.props
     const rightUserAnswers = this.countRightUserAnswers()
-    const isAllTestPassed = rightUserAnswers === userQuestions.length
+    const isAllTestPassed = rightUserAnswers >= userQuestions.length * 0.7
+    const mark = rightUserAnswers / userQuestions.length * 100
     if (isAllTestPassed) {
       browserHistory.push({ pathname : `/myCourses/course/${params.courseId}` })
-      this.addTestId()
+      this.addTestId(mark)
     } else {
-      toastr.success('Would you like to try one more time?')
+      // browserHistory.push({ pathname : `/myCourses/course/${params.courseId}` })
+      toastr.success('Try one more time later')
     }
     const NewUserQuestions = userQuestions
     NewUserQuestions.forEach(item => {
@@ -164,6 +183,7 @@ class MainView extends Component {
   closeAnswerPopup () {
     this.props.hideModal('answer')
     this.closeAnswer()
+    this.setState({ isShowRightAnswers: true })
   }
 
   renderButtonSaveTestAnswers () {
@@ -192,6 +212,7 @@ class MainView extends Component {
     )
   }
   render () {
+    console.log(this.state.test)
     const { questions = [], name } = this.state.test
     return (
       <div className='container'>

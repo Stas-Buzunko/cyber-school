@@ -157,7 +157,7 @@ class TestList extends Component {
     return tests.map((item, i) =>
       <li key={i}>
        <div className='col-xs-12 col-md-12'>
-          <div className='col-xs-12 col-md-4' style={{ padding: '15px' }} >
+          <div style={{ padding: '15px' }} >
             <label>Test: {item.name}</label>
           </div>
          {!!isShowEditButton && <div className='col-xs-10 col-md-4'>
@@ -175,7 +175,7 @@ class TestList extends Component {
            </button>
          </div>}
         </div>
-        <label className='col-xs-2 col-md-6'>Questions: </label>
+        <label className='col-xs-2 col-md-12'>Questions: </label>
         <div className='col-xs-2 col-md-12'>
           <ul className='list-unstyled'>
             <QuestionsList

@@ -113,10 +113,10 @@ class SectionsListEdit extends Component {
     const { lessonsIds = [] } = this.state
     const newLessons = [...lessonsIds, lessonKey]
     this.setState({ lessonsIds: newLessons })
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+    const { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id } = lesson
     const comments = []
     firebase.database().ref('lessons/' + lessonKey).update({
-      name, description, length, imageUrl, videoUrl, isFree, testId, id, comments
+      name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id, comments
     })
     this.props.hideModal('lesson')
     toastr.success('Your lesson saved!')

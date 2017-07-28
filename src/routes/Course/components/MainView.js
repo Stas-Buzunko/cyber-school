@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
 import CommentList from '../containers/CommentListContainer'
-import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import StripeComponent from '../../../components/StripeComponent'
+import { browserHistory } from 'react-router'
 import backend from '../../../../config/apis'
 import VideoPlayer from './VideoPlayer'
 import Slider from 'react-slick'
@@ -107,29 +106,18 @@ class MainView extends Component {
     return (
       <div className='content-slider'>
         <div className='sliderButtonPrev' onClick={() => { this.previous()}}></div>
-
-          <Slider  ref={c => this.slider = c } {...settings}>
-
-            { newLessons.map((item, i) =>
-              <div key={i}
-                className='lessonButton'
-                onClick={() => { this.setState({ lessonDescription: item.description }) }}
-                >{item.name}
-              </div> )}
-              {/* {!courseLoaded &&
-                <div className='lessonButton'></div>
-              } */}
-                {/* <div className='lessonButton'></div>
-                  <div className='lessonButton'></div>
-                     <div className='lessonButton'></div>
-                  <div className='lessonButton'></div>
-                    <div className='lessonButton'></div>
-                      <div className='lessonButton'></div> */}
+        <Slider  ref={c => this.slider = c } {...settings}>
+          { newLessons.map((item, i) =>
+            <div key={i}
+              className='lessonButton'
+              onClick={() => { this.setState({ lessonDescription: item.description }) }}
+              >{item.name}
+            </div> )}
           </Slider>
-             <div className='sliderButtonNext' onClick={() => { this.next()}}></div>
-      </div>
-    )
-  }
+          <div className='sliderButtonNext' onClick={() => { this.next()}}></div>
+        </div>
+      )
+    }
 
   renderDescripton () {
     const { lessonDescription } = this.state
@@ -146,41 +134,24 @@ class MainView extends Component {
     this.setState({ showComments: !showComments, buttonName: newButtonName })
   }
 
-  renderShowCommentsButton () {
-    const { buttonName } = this.state
-    return (
-      <div className='col-xs-12 col-md-10'>
-        <button
-          type='button'
-          className='btn btn-success lg'
-          style={{ width:'30%', margin: '15px' }}
-          onClick={() => this.buttonClick()}
-          >{buttonName}
-        </button>
-      </div>
-    )
-  }
-
   renderBuyButton () {
     const { course, courseLoaded } = this.state
     const { user } = this.props
-
+console.log(course.id, browserHistory )
     if (!Object.keys(user).length) {
       return (<a href={`${backend}/auth/steam`}>Login to Apply</a>)
     }
-
     if (courseLoaded && course.name) {
       return (
-        <StripeComponent
-          price={course.price}
-          amount={course.price * 100}
-          buttonText='Начать обучение'
-          courseId={course.id}
-          description={course.name}
-          userId={user.uid} />
+        <div
+          className='buttonBuy'
+          onClick={() => {
+            browserHistory.push({ pathname: `/accounts/${course.id}` })
+          }}
+          > Начать обучение {course.price}$
+        </div>
       )
     }
-
     return false
   }
   renderBuyVipButton () {
@@ -193,13 +164,11 @@ class MainView extends Component {
 
     if (courseLoaded && course.name) {
       return (
-        <StripeComponent
-          price={course.vipPrice}
-          amount={course.price * 100}
-          courseId={course.id}
-          buttonText='Vip обучение'
-          description={course.name}
-          userId={user.uid} />
+        <div
+          className='buttonBuy'
+          onClick={() => { browserHistory.push({ pathname: `/accounts/${course.id}` }) }}
+          > Vip обучение {course.vipPrice}$
+        </div>
       )
     }
 
@@ -209,73 +178,66 @@ class MainView extends Component {
   render () {
     const { course, showComments, sections, courseLoaded, stopVideo } = this.state
     const { params, user } = this.props
-    const isBuyButtonShow = true
-    const isBuyVipButtonShow = true
-    // const isBuyButtonShow = () => {
-    //   if (user.userCourses) {
-    //     const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
-    //     return (index === -1)
-    //   }
-    //   return false
-    // }
-    // const isBuyVipButtonShow = () => {
-    //   if (user.userVipCourses) {
-    //     const index = user.userVipCourses.findIndex(course => course.courseId === params.courseId)
-    //     return (index === -1)
-    //   }
-    //   return false
-    // }
+    const isBuyButtonShow = () => {
+      if (user.userCourses) {
+        const index = user.userCourses.findIndex(course => course.courseId === params.courseId)
+        return (index !== -1)
+      } else {
+        return false
+      }
+    }
+    const isBuyVipButtonShow = () => {
+      if (user.userVipCourses) {
+        const index = user.userVipCourses.findIndex(course => course.courseId === params.courseId)
+        return (index !== -1)
+      } else {
+        return false
+      }
+    }
     if (!courseLoaded) {
       return (<div>Loading...</div>)
     }
     return (
       <div className='container container-course text-center'>
         <div className='row'>
-            <div className='content'>
-          <div className='col-xs-12 col-md-12 course-name'> {course.name}</div>
-          <div className='col-xs-12 col-md-12 course-duration'>(длительность курса 2-3 недели)</div>
-          <div className='col-xs-12 col-md-12'>
-            {courseLoaded && <div> <VideoPlayer
-              url={sections[0].lessons[0].videoUrl}
-              stopVideo={stopVideo}
-            />
+          <div className='content'>
+            <div className='col-xs-12 col-md-12 course-name'> {course.name}</div>
+            <div className='col-xs-12 col-md-12 course-duration'>(длительность курса {course.duration}
+{/* {duration} */}
+            )</div>
+            <div className='col-xs-12 col-md-12'>
+              {courseLoaded && <div> <VideoPlayer
+                url={sections[0].lessons[0].videoUrl}
+                stopVideo={stopVideo}
+              />
               <button
                 type='button'
                 className='videoButton'
                 onClick={() => { this.setState({ stopVideo: !stopVideo }) }}
                 >
-              </button>
+                </button>
+              </div>
+            }
             </div>
-          }
-          </div>
-          <div className='col-xs-6 col-md-6'>{!!isBuyButtonShow && this.renderBuyButton()}</div>
-          <div className='col-xs-6 col-md-6'>{!!isBuyVipButtonShow && this.renderBuyVipButton()}</div>
-          <div className='col-xs-5 col-md-5'>
+            <div className='col-xs-6 col-md-6'>{!isBuyButtonShow() && !isBuyVipButtonShow() && this.renderBuyButton()}</div>
+            <div className='col-xs-6 col-md-6'>{!isBuyVipButtonShow() && this.renderBuyVipButton()}</div>
+            <div className='col-xs-5 col-md-5'>
               {this.renderSectionsList()}
-          </div>
+            </div>
 
-
-          <div className='col-xs-7 col-md-7'>
-            <ul className='descriptionBlock'>
-              {this.renderDescripton()}
-            </ul>
-          </div>
-
-
-          <div className='col-xs-12 col-md-12'>
-            {this.renderShowCommentsButton()}
-            {showComments && <div className='col-xs-12 col-md-10'>
-              <ul className='list-unstyled'>
-                <CommentList
-                  courseId={params.courseId}
-                />
+            <div className='col-xs-7 col-md-7'>
+              <ul className='descriptionBlock'>
+                {this.renderDescripton()}
               </ul>
             </div>
-            }
+
+            <div className='col-xs-12 col-md-12 comments'>
+              <CommentList courseId={params.courseId} />
+            </div>
+
           </div>
         </div>
       </div>
-    </div>
     )
   }
 }

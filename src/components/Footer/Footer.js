@@ -8,7 +8,7 @@ export const Footer = ({ user }) =>
     <div className='container d-flex align-items-start'>
       <a className='block' href='/about'>ABOUT</a>
       <a className='block' href='/becomeacoach'>BECOME A COACH</a>
-      <a className='block' href='/faq'>FAQ</a>
+      <a className='block' href='/vip'>VIP</a>
       <a className='block' href='/support'>SUPPORT</a>
       <a className='block' href='/terms'>TERMS</a>
       <a className='block' href='/coaches'>COACHES</a>

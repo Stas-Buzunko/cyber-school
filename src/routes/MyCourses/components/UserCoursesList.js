@@ -54,8 +54,8 @@ class UserCoursesList extends Component {
     const { userCourses } = this.props.auth.user
     const courseFromUser = userCourses.find((item, i) => item.courseId === course.id)
     const numberWatchedlessons = courseFromUser.uniqueWatchedLessonsIds ? courseFromUser.uniqueWatchedLessonsIds.length : 0
-
-    const lessonsNumbersArray = course.sections.map(section => {
+    const newSections = course.sections.filter((item) => item.sectionNumber !== 0)
+    const lessonsNumbersArray = newSections.map(section => {
       const lengthLessonsId = section.lessonsIds ? section.lessonsIds.length : 0
       return lengthLessonsId
     })
@@ -73,19 +73,27 @@ class UserCoursesList extends Component {
       </div>
     )
   }
-
-  renderCourses () {
-    const { courses = [] } = this.state
+  isVip (course) {
+    const { userVipCourses } = this.props.auth.user
+    const vipCourseFromUser = userVipCourses.find((item, i) => item.courseId === course.id)
+    return (
+      <div>
+        {!!vipCourseFromUser && <div> VipCourse</div> }
+      </div>
+    )
+  }
+  renderCourses (courses, isVip) {
     return courses.map((course, i) => (
       <div key={i}>
         <div className='col-sm-6 col-md-4' >
-          <div className='thumbnail' style={{ height: '360px' }}>
+          <div className='thumbnail' style={{ height: '460px' }}>
             <img src={course.mainPhoto} width='300px' height='250px' alt='loading' />
             <div className='caption'>
               <h5>{course.name} </h5>
               <h5>{course.description}</h5>
+              {this.isVip(course)}
               <div style={{ padding: '15px' }} >
-                {this.renderProgressBar(course)}
+                {this.renderProgressBar(course, isVip)}
               </div>
               <button
                 type='button'
@@ -105,15 +113,13 @@ class UserCoursesList extends Component {
     if (!coursesLoaded) {
       return (<div>Loading...</div>)
     }
+    const isSCount = (courses.length !== 1)
+    const coursesCount = isSCount ? 'courses' : 'course'
     return (
-      <div className='container'>
-        <div className='row'>
-          <div className='col-sm-12 col-md-12'>
-            <h4>You have {courses.length} paid courses</h4>
-            <div>
-              {this.renderCourses()}
-            </div>
-          </div>
+      <div>
+        <h4>You have {courses.length} paid {coursesCount}</h4>
+        <div>
+          {this.renderCourses(courses)}
         </div>
       </div>
     )

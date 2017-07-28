@@ -14,7 +14,9 @@ class LessonPopupComponent extends Component {
       imageUrl: '',
       videoUrl: '',
       isFree: false,
+      isBonus: false,
       testId: '',
+      task: '',
       id: '',
       error: ''
     }
@@ -25,17 +27,17 @@ class LessonPopupComponent extends Component {
     const isNewLesson = this.props.isNewLesson
     const lesson = this.props.item
     if (!isNewLesson) {
-      const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+      const { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id } = lesson
       this.setState({
-        name, description, length, imageUrl, videoUrl, isFree, testId, id
+        name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id
       })
     }
   }
   saveLessonPopup = () => {
     const { isEditSection } = this.props
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = this.state
+    const { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id } = this.state
     this.setState({ error: '' })
-    if (!name || !description || !length || !imageUrl || !videoUrl || !testId) {
+    if (!name || !description || !length || !imageUrl || !videoUrl || !testId || !task) {
       if (!name) {
         toastr.error('Please, fill name')
       };
@@ -54,17 +56,20 @@ class LessonPopupComponent extends Component {
       if (!testId) {
         toastr.error('Please, fill testId')
       };
+      if (!task) {
+        toastr.error('Please, fill task')
+      };
       return false
     }
 
-    const lesson = { name, description, length, imageUrl, videoUrl, isFree, testId, id }
+    const lesson = { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id }
     this.props.saveLesson(lesson, isEditSection)
   }
 
   render () {
     const { handleHide, show } = this.props
     console.log(this.props)
-    const { name, description, length, imageUrl, videoUrl, isFree, testId } = this.state
+    const { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task } = this.state
     return (
       <Modal
         backdrop={true}
@@ -145,6 +150,16 @@ class LessonPopupComponent extends Component {
           </div>
 
           <div className='form-group'>
+            <label className='control-label col-xs-12'> isBonus </label>
+            <div className='col-xs-10 col-md-6'>
+              <label className='checkbox-inline' style={{ paddingBottom: '20px' }}>
+                <input type='checkbox' checked={isBonus} onChange={(e) =>
+                  this.setState({ isBonus: !isBonus })} />
+              </label>
+            </div>
+          </div>
+
+          <div className='form-group'>
             <label className='control-label col-xs-12'>TestId </label>
             <div className='col-xs-10 col-md-6'>
               <input
@@ -153,6 +168,18 @@ class LessonPopupComponent extends Component {
                 className='form-control'
                 onChange={(e) => this.setState({
                   testId: e.target.value })} />
+            </div>
+          </div>
+
+          <div className='form-group'>
+            <label className='control-label col-xs-12'>Task </label>
+            <div className='col-xs-10 col-md-6'>
+              <input
+                value={task}
+                type='text'
+                className='form-control'
+                onChange={(e) => this.setState({
+                  task: e.target.value })} />
             </div>
           </div>
 

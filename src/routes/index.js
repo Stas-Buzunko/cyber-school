@@ -20,6 +20,8 @@ import Support from './Support'
 import Terms from './Terms'
 import Coaches from './Coaches'
 import Faculties from './Faculties'
+import SiteInfo from './siteInfo'
+import Accounts from './Accounts'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -69,8 +71,9 @@ export const createRoutes = (store) => ([{
     Support(store),
     Terms(store),
     Coaches(store),
-    Faculties(store)
-
+    Faculties(store),
+    SiteInfo(store),
+    Accounts(store)
   ]
 }, {
   onEnter: (nextState, replace) => redirectToLanding(nextState, replace, store),

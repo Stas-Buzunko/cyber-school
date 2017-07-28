@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
+import Infinite from 'react-infinite'
 
 class CommentList extends Component {
   constructor (props) {
@@ -39,50 +40,47 @@ class CommentList extends Component {
 
   renderChildrenList (item) {
     return item.children.map((child, i) =>
-      <div key={i} className='col-xs-12 col-md-12'>
-        <div className='col-xs-12 col-md-4'>
-          <div className='col-xs-12 col-md-4'>{item.displayName}</div>
-          <div className='col-xs-12 col-md-4'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
+      <div key={i}>
+        <div className='col-xs-10 col-md-10'>
+          <div className='reply-name'>{item.displayName}</div>
         </div>
-        <div className='col-xs-12 col-md-3 text-left'>{child} </div>
-      </div>)
+        <div className='col-xs-10 col-md-10'>
+        <div>
+          <div className='reply-text'>{child} </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   renderCommentList () {
     const { generalQuestions = [] } = this.state
     return generalQuestions.map((item, i) =>
       <li key={i}>
-        <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-xs-10 col-md-4'>
-            <div className='col-xs-10 col-md-2'>{item.displayName}</div>
-            <div className='col-xs-10 col-md-2'><img style={{ borderRadius:'50%' }} src={item.avatar} /> </div>
+        <div className='col-xs-12 col-md-12 comment'>
+          <div className='col-xs-1 col-md-1 comment-avatar'>
+            <div><img style={{ borderRadius:'10%' }} className='comment-avatar' src={item.avatar} /></div>
           </div>
-          <div className='col-xs-10 col-md-3 text-left'>{item.text} </div>
+          <div className='col-xs-10 col-md-10'>
+            <div className='comments-name'>{item.displayName}</div>
+            <div className='col-xs-10 col-md-10'>
+              <div className='comments-text'>{item.text} </div>
+            </div>
+            {item.children && <div> {this.renderChildrenList(item)} </div>}
+          </div>
         </div>
-        {item.children && <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-          <div className='col-xs-12 col-md-2'>
-          </div>
-          <div className='col-xs-10 col-md-8'>
-            {this.renderChildrenList(item)}
-          </div>
-        </div>}
       </li>
   )
   }
 
   render () {
     return (
-      <div className='container'>
-        <div className='row'>
-          <div className='col-xs-12 col-md-12' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-2 col-md-2'>Comments:</label>
-          </div>
-          <div className='col-xs-12 col-md-12'>
-            <ul className='list-unstyled'>
-              {this.renderCommentList()}
-            </ul>
-          </div>
-        </div>
+      <div>
+        <Infinite containerHeight={200} elementHeight={60} className='scroll'>
+          <ul className='list-unstyled'>
+            {this.renderCommentList()}
+          </ul>
+        </Infinite>
       </div>
     )
   }

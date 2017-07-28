@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import firebase from 'firebase'
-import CommentList from '../containers/CommentListContainer'
+import CommentToForum from '../containers/CommentToForumContainer'
+import QuestionsToCoach from '../containers/QuestionsToCoachContainer'
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 import './MainView.scss'
@@ -13,12 +14,12 @@ class MainView extends Component {
       courseLoaded: false,
       lessons: [],
       lessonsLoaded: false,
-      showComments: false,
-      buttonName: 'Show Comments',
       userCourses: [],
       newWatchLessonId: [],
       nextLessonId: '',
-      firstLessonId: ''
+      firstLessonId: '',
+      showSection: false,
+      set: new Set()
     }
   }
 
@@ -44,16 +45,16 @@ class MainView extends Component {
         const { sections } = course
         const newSectionsLessons = sections.map(section => {
           if (section.lessonsIds) {
-          const promisesLessons = section.lessonsIds.map(id =>
+            const promisesLessons = section.lessonsIds.map(id =>
             firebase.database().ref('lessons/' + id)
             .once('value')
             .then(snapshot2 => ({ ...snapshot2.val(), id }))
           )
-          return Promise.all(promisesLessons).then(lessons => {
-            section = { ...section, lessons }
-            return (section)
-          })
-        }
+            return Promise.all(promisesLessons).then(lessons => {
+              section = { ...section, lessons }
+              return (section)
+            })
+          }
         })
         Promise.all(newSectionsLessons).then(result => {
           const numberLessonsInCourse = this.countNumberLessonsInCourse(course)
@@ -65,7 +66,7 @@ class MainView extends Component {
             lessonsLoaded: true,
             numberLessonsInCourse,
             nextLessonId,
-            firstLessonId: course.sections[0].lessonsIds[0]
+            firstLessonId: course.sections[1].lessonsIds[0]
           })
           const { sections } = this.state
           const newSectionsTests = sections.map(section => {
@@ -98,111 +99,74 @@ class MainView extends Component {
     const courseFromUser = userCourses.find(item => item.courseId === params.courseId)
     const { uniqueWatchedLessonsIds = [], passedTestIds = [] } = courseFromUser
     const array = (type === 'lesson') ? uniqueWatchedLessonsIds : passedTestIds
-    const passed = array.findIndex(item => item === id)
+    const passed = (type === 'lesson') ? array.findIndex(item => item === id)
+    : array.findIndex(item => item.testId === id)
+    // this.setState({ mark })
     if (passed === -1) {
-      return false
+      return [false, 0]
     } else {
-      return true
+      const mark = array[`${passed}`].mark ? array[`${passed}`].mark : 0
+      return [true, mark]
     }
   }
 
   renderLessonsList (lessons = []) {
     const { location } = this.props
+    const isBonusLesson = (item) => {
+      return (item.isBonus === true)
+    }
+
     return lessons.map((item, i) =>
-    <tr key={i}>
-      <td>
-        <Link to={{ pathname: `${location.pathname}/lesson/${item.id}` }}>{item.name}</Link>
-      </td>
-      <td> {item.length} </td>
-      <td>
-        <div className='col-xs-10 col-md-2'>
-          <label className='checkbox checkbox-info checkbox-circle' style={{ paddingBottom: '20px' }}>
-            <input
-              type='checkbox'
-              checked={this.isPassed(item.id, 'lesson')}
-            />
-          </label>
-        </div>
-      </td>
-    </tr>
+    <div key={i}>
+      {!isBonusLesson(item) && <Link className='link' to={{ pathname: `${location.pathname}/lesson/${item.id}`}}>{item.name}</Link>}
+      {isBonusLesson(item) && <Link className='bonus-link' to={{ pathname: `${location.pathname}/lesson/${item.id}`}}>{item.name}</Link>}
+      {this.isPassed(item.id, 'lesson')[0] && <div className='checkbox'> </div> }
+    </div>
   )
   }
 
   renderTestsList (tests = []) {
     const { location } = this.props
     return tests.map((item, i) =>
-    <tr key={i}>
-      <td>
-        <Link to={{ pathname: `${location.pathname}/test/${item.id}` }}>{item.name}</Link>
-      </td>
-      <td> </td>
-      <td>
-        <div className='col-xs-10 col-md-2'>
-          <label className='checkbox checkbox-info checkbox-circle' style={{ paddingBottom: '20px' }}>
-            <input
-              type='checkbox'
-              checked={this.isPassed(item.id, 'test')}
-            />
-          </label>
-        </div>
-      </td>
-    </tr>
+    <div key={i} >
+        <Link className='link' to={{ pathname: `${location.pathname}/test/${item.id}`}}>{item.name}</Link>
+        {this.isPassed(item.id, 'test')[0] && <div className='checkbox'> </div> }
+      </div>
   )
   }
 
   renderSectionsList () {
-    const { sections = [] } = this.state
+    const { sections = [], set } = this.state
+    const newSections = sections.filter((item) => item.sectionNumber !== 0)
+    let newSet = new Set()
     return (
-      <div className='col-xs-12 col-md-12'>
-        <div className='col-xs-12 col-md-8'>
-          <table className='table'>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Length</th>
-                <th> </th>
-              </tr>
-            </thead>
-            {sections.map((item, i) =>
-              <tbody key={i}>
-                <tr>
-                  <td>
-                    <div className='col-xs-12 col-md-4'>{item.name}</div>
-                  </td>
-                  <td />
-                </tr>
-                {this.renderLessonsList(item.lessons)}
-                {this.renderTestsList(item.tests)}
-              </tbody>
-            )}
-          </table>
-        </div>
-      </div>
+      <ul className='list-unstyled'>
+        {newSections.map((item, i) =>
+          <div key={i}>
+            <div
+              onClick={() => {
+                if (set.has(i)) {
+                  newSet.delete(i)
+                } else {
+                  newSet.add(i)
+                }
+                this.setState({ set: newSet })
+              }
+              }
+              >{item.name}</div>
+            <div>
+              { set.has(i) && this.renderLessonsList(item.lessons)}
+              { set.has(i) && this.renderTestsList(item.tests)}
+            </div>
+          </div>
+          )}
+      </ul>
     )
   }
 
-  buttonClick () {
-    const { showComments, buttonName } = this.state
-    const newButtonName = (buttonName === 'Show Comments') ? 'Hide Comments' : 'Show Comments'
-    this.setState({ showComments: !showComments, buttonName: newButtonName })
-  }
-
-  renderShowCommentsButton () {
-    const { buttonName } = this.state
-    return (
-      <div className='col-xs-12 col-md-10'>
-        <button
-          type='button'
-          className='btn btn-success lg'
-          style={{ width:'30%', margin: '15px' }}
-          onClick={() => this.buttonClick()}
-          >{buttonName}
-        </button>
-      </div>
-    )
-  }
   countNumberLessonsInCourse (course = {}) {
-    const lessonsNumbersArray = course.sections.map(section => {
+    const newSections = course.sections.filter((item) => item.sectionNumber !== 0)
+    const lessonsNumbersArray = newSections.map(section => {
       if (section.lessonsIds) {
         return section.lessonsIds.length
       }
@@ -269,86 +233,99 @@ class MainView extends Component {
     // if 0 watched take 1st lesson of first section else count watchLessonId``
     const watchLessonId = courseFromUser.uniqueWatchedLessonsIds ? this.countNewWatchLessonId(courseFromUser) :
     firstLessonId
-    const isCorseWatched = false
-    if (courseFromUser.uniqueWatchedLessonsIds) {
-      const isCorseWatched = courseFromUser.uniqueWatchedLessonsIds.length === numberLessonsInCourse
-    }
+    const isCorseWatched = courseFromUser.uniqueWatchedLessonsIds ?
+      courseFromUser.uniqueWatchedLessonsIds.length === numberLessonsInCourse : false
     const percent = numberWatchedlessons / numberLessonsInCourse
 
     return (
       <div>
-        <div className='col-xs-6 col-md-12' style={{ padding: '15px' }}>
-          <label className='control-label col-xs-8 col-md-6'>
-            Your progress: {numberWatchedlessons} lessons from {numberLessonsInCourse} </label>
-        </div>
-        <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
-          <div className='progress'>
-            <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
-              aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent * 100}%` }}>
-              {Math.round(percent * 100)}% Complete (success)
-            </div>
+      {!!watchLessonId && !isCorseWatched && <div className='button-continie-lesson'
+        onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${watchLessonId}` }) }}
+        >{buttonName}
+      </div>
+    }</div>
+  )
+  }
+  renderCircles (sections, fromN, toN) {
+    const widthPercent = 100/(toN-fromN+1)
+    const padding = (807/(toN-fromN+1)-79)/2
+    const isCircle = (n) => {
+      if ((n >= fromN) && (n <= toN)) {
+        return true
+      } else {
+        return false
+      }
+    }
+    return sections.map((item, i) =>
+      <div key={i}>
+        {isCircle(i+1) && <div className='circle' style={{width:`${widthPercent}%`, padding:`0px ${padding}px`}}>
+          {this.isPassed(item.testsIds[0], 'test')[1] > 70 && this.isPassed(item.testsIds[0], 'test')[1] < 85 &&
+            <div className='starFee'>{i+1}</div>
+          }
+          {this.isPassed(item.testsIds[0], 'test')[1] >= 85 && this.isPassed(item.testsIds[0], 'test')[1] < 100 &&
+            <div className='starFee'>{i+1}</div>
+          }
+          {this.isPassed(item.testsIds[0], 'test')[1] === 100 &&
+            <div className='starFff'>{i+1}</div>
+          }
+          {!this.isPassed(item.testsIds[0], 'test')[0] &&
+            <div className='starEee'>{i+1}</div>
+          }
           </div>
-        </div>
-        <div className='col-xs-6 col-md-6' style={{ padding: '15px' }}>
-          {!!watchLessonId && !isCorseWatched && <button
-            type='button'
-            style={{ width:'30%', margin: '15px' }}
-            className='btn btn-success lg'
-            onClick={(e) => { browserHistory.push({ pathname: `${location.pathname}/lesson/${watchLessonId}` }) }}
-            >{buttonName}
-          </button>
         }
-        </div>
+      </div>
+     )
+  }
+  renderProgressLesson () {
+    const { sections = [] } = this.state
+    const newSections = sections.filter((item) => item.sectionNumber !== 0)
+    const oneElem = newSections[0]
+    const newEtsections = newSections.concat(newSections).concat(newSections).concat(newSections).concat(oneElem)
+    const toN = (newEtsections.length % 2 === 0) ? (newEtsections.length / 2) : Math.round(newEtsections.length/2)
+    return (
+      <div>
+        <div className='starRow' style={{ width:'100%' }}>{this.renderCircles(newEtsections, 1, toN)}</div>
+        <div className='starRow' style={{ width:'100%' }}>{this.renderCircles(newEtsections, toN + 1, newEtsections.length)}</div>
       </div>
     )
   }
 
   render () {
-    const { course, showComments } = this.state
+    const { course, courseLoaded } = this.state
     const { params } = this.props
+    if (!courseLoaded) {
+      return (<div className='container'>Loading...</div>)
+    }
     return (
-      <div className='container-course'>
-        <div className='col-xs-12 col-md-12'>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Name:</label>
-            <div> {course.name}</div>
+      <div className='container container-course'>
+        <div className='row'>
+          <div className='col-xs-3 col-md-3'>
+            <div className='button-lesson-name'> {course.name}</div>
+            <div className='section-list'>
+              <ul className='list-unstyled'>
+                {this.renderSectionsList()}
+                {this.renderSectionsList()}
+                {this.renderSectionsList()}
+                {this.renderSectionsList()}
+              </ul>
+            </div>
+            <div className='button-lesson-name'> {course.name}</div>
+            <div>{this.renderProgressBar()}</div>
+            <div className='button-coach-chat'>Чат с тренером</div>
+              <QuestionsToCoach
+                courseId={params.courseId}
+              />
           </div>
-          <div className='col-xs-10' style={{ padding: '15px' }}>
-            <label className='control-label col-xs-2'>Main photo:</label>
-            <img src={course.mainPhoto} className='img-thumbnail' width='400px' height='250px' />
+          <div className='col-xs-9 col-md-9'>
+            <div className='hi-words'>
+              <p>Приветствие от коуча для вип студента</p>
+              <p>Улучши свои навыки и контроль за игрой</p>
+            </div>
+            <div className='progress-lesson'>{this.renderProgressLesson()}</div>
+            <div className='questions'>
+              <CommentToForum courseId={params.courseId} />
+            </div>
           </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Description:</label>
-            <div> {course.description}</div>
-          </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Duration:</label>
-            <div> {course.duration}</div>
-          </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Price:</label>
-            <div> {course.price}</div>
-          </div>
-          <div className='col-xs-10'>
-            <label className='control-label col-xs-2'>Discipline:</label>
-            <div> {course.discipline}</div>
-          </div>
-        </div>
-        {this.renderShowCommentsButton()}
-        {showComments && <div className='col-xs-12 col-md-10'>
-          <ul className='list-unstyled'>
-            <CommentList
-              courseId={params.courseId}
-            />
-          </ul>
-        </div>
-      }
-        {this.renderProgressBar()}
-        <div className='col-xs-6 col-md-10' style={{ padding: '15px' }}>
-          <label className='control-label col-xs-8' style={{ padding: '15px' }}>Sections: </label>
-          <ul className='list-unstyled'>
-            {this.renderSectionsList()}
-          </ul>
         </div>
       </div>
     )

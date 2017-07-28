@@ -43,6 +43,7 @@ class HomeView extends Component {
                   <div className='quater1'>
                     <div className='text'>
                       Изучи механизм игры и взаимодействие с командой
+                      {/* {quaterText1} */}
                     </div>
                   </div>
                 </div>
@@ -50,6 +51,7 @@ class HomeView extends Component {
                   <div className='quater2'>
                     <div className='text'>
                       Улучши свои навыки и контроль за игрой
+                      {/* {quaterText2} */}
                     </div>
                   </div>
                 </div>
@@ -57,6 +59,7 @@ class HomeView extends Component {
                   <div className='quater3'>
                     <div className='text'>
                       Изучи продвинутые техники профессиональных спортсменов и научись их применять
+                      {/* {quaterText3} */}
                     </div>
                   </div>
                 </div>
@@ -64,6 +67,7 @@ class HomeView extends Component {
                   <div className='quater4'>
                     <div className='text'>
                       Каждый ученик получает право бесплатно попасть на турнир с 2000$ призовых
+                      {/* {quaterText4} */}
                     </div>
                   </div>
                 </div>
@@ -74,6 +78,7 @@ class HomeView extends Component {
                        onClick={() => {  browserHistory.push({ pathname: '/faculties'}) }}
                     >
                     Начать обучение
+                    {/* {buttonText} */}
                   </div>
                 </div>
               </div>
@@ -83,6 +88,7 @@ class HomeView extends Component {
               <div>
                 <VideoPlayer
                   url={`https://www.youtube.com/watch?v=fvySzEH85hk`}
+                  // url={`linkVideoToParents`}
                 />
               </div>
             </div>}

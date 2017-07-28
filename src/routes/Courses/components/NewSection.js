@@ -74,9 +74,9 @@ class NewSection extends Component {
     const { lessonsIds = [] } = this.state
     const newLessons = [...lessonsIds, lessonKey]
     this.setState({ lessonsIds: newLessons })
-    const { name, description, length, imageUrl, videoUrl, isFree, testId, id } = lesson
+    const { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id } = lesson
     firebase.database().ref('lessons/' + lessonKey).update({
-      name, description, length, imageUrl, videoUrl, isFree, testId, id
+      name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task, id
     })
     .then(() => {
       this.props.hideModal('lesson')

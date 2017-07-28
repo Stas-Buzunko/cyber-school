@@ -41,26 +41,26 @@
 .course0{
   padding:0px;
   margin:20px 0px 10px 0px;
-  width:360px;
-  height:277px;
-  background-image: url(../../../images/course1.png);
+  width:361px;
+  height:317px;
+  background-image: url(../../../images/course1.jpg);
 }
 .course1{
   padding:0px;
   margin:20px 0px 10px 0px;
-  width:360px;
-  height:277px;
-  background-image: url(../../../images/course2.png);
+  width:361px;
+  height:317px;
+  background-image: url(../../../images/course2.jpg);
 }
 .course2{
   padding:0px;
   margin:20px 0px 10px 0px;
-  width:360px;
-  height:277px;
-  background-image: url(../../../images/course3.png);
+  width:361px;
+  height:317px;
+  background-image: url(../../../images/course3.jpg);
 }
 .btn-start{
-  bottom: 50px;
+  bottom: 35px;
   padding:20px 5px 0px 45px;
   position: relative;
   left: calc((30%-120px)/2);
@@ -71,6 +71,7 @@
 .text-course{
   padding:10px 20px 5px 10px;
   color: #7bb4d7;
+  height:120px;
   text-align: right;
   font-size: 12px;
 }
@@ -93,6 +94,49 @@
   margin:0px;
   font-size: 14px;
   text-align: right;
+}
+.text-reviewNuber{
+  color: #e5d800;
+  padding: 95px 20px 5px 0px;
+  margin:0px;
+  font-size: 14px;
+  text-align: right;
+}
+.text-starMark{
+  color: #e5d800;
+  padding: 10px 10px 5px 15px;
+  margin:0px;
+  font-size: 14px;
+  text-align: right;
+  width:350px;
+  margin:0px;
+}
+.starFull{
+  padding:0px;
+  margin-top:0px;
+  width:24px;
+  height:21px;
+  float:left;
+  background-image: url(../../../images/starFull.png);
+}
+.starHalf{
+  padding:0px;
+  margin-top:0px;
+  width:24px;
+  height:21px;
+  float:left;
+  background-image: url(../../../images/starHalf.png);
+}
+.starEmpty{
+  padding:0px;
+  margin-top:0px;
+  width:24px;
+  height:21px;
+  float:left;
+  background-image: url(../../../images/starEmpty.png);
+}
+.stars{
+  float:left;
 }
 .avatar{
   padding:0px;

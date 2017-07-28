@@ -7,7 +7,7 @@ const MainView = (props) => {
     browserHistory.push({ pathname: `/` })
   }
   return (
-    <div>
+    <div className='container'>
       <UserCoursesList />
     </div>
   )

@@ -70,9 +70,9 @@ class LessonsList extends Component {
       this.props.saveLesson(lesson)
     } else {
       const lessonKey = lesson.id
-      const { name, description, length, imageUrl, videoUrl, isFree, testId } = lesson
+      const { name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task } = lesson
       firebase.database().ref('lessons/' + lessonKey).update({
-        name, description, length, imageUrl, videoUrl, isFree, testId
+        name, description, length, imageUrl, videoUrl, isFree, isBonus, testId, task
       })
       .then(() => {
         const lessonKey = lesson.id
@@ -100,42 +100,46 @@ class LessonsList extends Component {
       <div>
         {lessons.map((item, i) =>
           <li key={i}>
-            <div className='col-xs-12 col-md-12' style={{ padding: '15px' }} >
-              <div className='col-xs-12 col-md-6'>
-
-                <div className='col-xs-10'>
-                  <label className='control-label col-xs-2'>Name:</label>
-                  <div> {item.name}</div>
-                </div>
-                { !!isNewLesson && <div>
-                  <div className='col-xs-10'>
-                    <label className='control-label col-xs-2'>Description:</label>
-                    <div> {item.description}</div>
-                  </div>
-                  <div className='col-xs-10'>
-                    <label className='control-label col-xs-2'>Length:</label>
-                    <div> {item.length}</div>
-                  </div>
-                  <div className='col-xs-10'>
-                    <label className='control-label col-xs-2'>VideoUrl:</label>
-                    <div> {item.videoUrl}</div>
-                  </div>
-                  <div className='col-xs-10'>
-                    <label className='control-label col-xs-2'>IsFree:</label>
-                    <div> {item.isFree}</div>
-                  </div>
-                  <div className='col-xs-10'>
-                    <label className='control-label col-xs-2'>TestId:</label>
-                    <div> {item.testId}</div>
-                  </div>
-                </div>}
-              </div>
-              <div className='col-xs-12 col-md-6'>
+            <div style={{ padding: '15px' }} >
+            <div className='col-md-12'>
+              <label className='col-md-3'>Name:</label>
+              <div className='col-md-6'> {item.name}</div>
+            </div>
+            { !!isNewLesson && <div>
                 <div className='col-md-12'>
-                  <label className='control-label col-xs-2'>ImageUrl:</label>
-                  <img src={item.imageUrl} width='300px' height='200px' alt='Loading' />
-                </div>
+                <label className='col-md-3'>Description:</label>
+                <div className='col-md-6'> {item.description}</div>
               </div>
+                <div className='col-md-12'>
+                <label className='col-md-3'>Length:</label>
+                <div className='col-md-6'> {item.length}</div>
+              </div>
+                <div className='col-md-12'>
+                <label className='col-md-3'>VideoUrl:</label>
+                <div className='col-md-6'> {item.videoUrl}</div>
+              </div>
+              <div className='col-md-12'>
+                <label className='col-md-3'>IsFree:</label>
+                <div className='col-md-6'> {item.isFree}</div>
+              </div>
+              <div className='col-md-12'>
+                <label className='col-md-3'>isBonus:</label>
+                <div className='col-md-3'> {item.isBonus}</div>
+              </div>
+              <div className='col-md-12'>
+                <label className='col-md-3'>TestId:</label>
+                <div className='col-md-6'> {item.testId}</div>
+              </div>
+              <div className='col-md-12'>
+                <label className='col-md-3'>Task:</label>
+                <div className='col-md-6'> {item.task}</div>
+              </div>
+            </div>}
+                <div className='col-md-12'>
+                  <label className='col-md-3'>ImageUrl:</label>
+                  <img className='col-md-6' src={item.imageUrl} width='300px' height='200px' alt='Loading' />
+                </div>
+
               { !isNewLesson && <div className='col-xs-12 col-md-4'>
                 <button
                   type='button'

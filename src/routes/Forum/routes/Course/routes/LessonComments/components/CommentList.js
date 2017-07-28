@@ -127,9 +127,9 @@ class CommentList extends Component {
           ...item.children,
           respond
         ]
-        const indexItemToRemove = comments.findIndex(comment => item.text === comment.text)
+        const indexItem = comments.findIndex(comment => item.text === comment.text)
         const newComment = {
-          text : comments[indexItemToRemove].text,
+          text : comments[indexItem].text,
           children: newCommentChildrenArray,
           uid: user.uid,
           displayName: user.displayName,

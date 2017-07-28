@@ -20,7 +20,8 @@ class QuestionPopupComponent extends Component {
             text: '',
             answers: {},
             rightAnswers: [],
-            userAnswers:[]
+            userAnswers:[],
+            textIfRight: ''
           }
         ]
       }
@@ -33,23 +34,24 @@ class QuestionPopupComponent extends Component {
   componentWillMount () {
     const { isNewQuestion } = this.props
     if (!isNewQuestion) {
-      const { text, questionNumber, answers, rightAnswers } = this.props.question
+      const { text, questionNumber, answers, rightAnswers, textIfRight = '' } = this.props.question
       this.setState({
         questionNumber,
         text,
         answers,
-        rightAnswers
+        rightAnswers,
+        textIfRight
       })
     }
   }
 
   saveQuestionPopup = () => {
     const { questionNumber, isNewQuestion } = this.props
-    const { text, answers, rightAnswers } = this.state
+    const { text, answers, rightAnswers, textIfRight } = this.state
     this.setState({ error: '' })
     const isOneAnswer = answers.length
     const haveRightAnswer = rightAnswers.length
-    if (!text || !isOneAnswer || !haveRightAnswer) {
+    if (!text || !isOneAnswer || !haveRightAnswer || !textIfRight) {
       if (!text) {
         toastr.error('Please, fill question text')
       };
@@ -59,19 +61,24 @@ class QuestionPopupComponent extends Component {
       if (!haveRightAnswer) {
         toastr.error('Please, add right answer')
       };
+      if (!textIfRight) {
+        toastr.error('Please, add right answer text')
+      };
       return false
     }
     const question = {
       questionNumber,
       text,
       answers,
-      rightAnswers
+      rightAnswers,
+      textIfRight
     }
     this.props.saveQuestion(question, isNewQuestion)
     this.setState({
       text: '',
       answers: ['', '', '', ''],
-      rightAnswers: [0]
+      rightAnswers: [0],
+      textIfRight:''
     })
   }
 
@@ -156,7 +163,7 @@ class QuestionPopupComponent extends Component {
 
   render () {
     const { handleHide, show } = this.props
-    const { text } = this.state
+    const { text, textIfRight } = this.state
     return (
       <Modal
         backdrop={true}
@@ -188,6 +195,18 @@ class QuestionPopupComponent extends Component {
             </div>
             <div className='col-xs-10 col-md-12'>
               {this.addAnswerButton()}
+            </div>
+          </div>
+
+          <div className='form-group'>
+            <label className='control-label col-xs-12'>Right answer text</label>
+            <div className='col-xs-10 col-md-12'>
+              <input
+                value={textIfRight}
+                type='text'
+                className='form-control'
+                onChange={(e) => this.setState({
+                  textIfRight: e.target.value })} />
             </div>
           </div>
 

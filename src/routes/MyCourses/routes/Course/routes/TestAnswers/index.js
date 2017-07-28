@@ -1,4 +1,3 @@
-// import { injectReducer } from '../../../../store/reducers'
 
 export const TestAnswersRoute = (store) => ({
   path : 'test/:id/answers',

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import firebase from 'firebase'
 import { browserHistory } from 'react-router'
 import './MainView.scss'
+import _ from 'lodash'
 
 class MainView extends Component {
   constructor (props) {
@@ -40,7 +41,49 @@ class MainView extends Component {
       }
     })
   }
+  countVoises (count) {
+    if (count % 10 === 1) {
+      return ('голос')
+    } else {
+      const isACount = (count % 10 === 2 || count % 10 === 3 || count % 10 === 4)
+      const voises = isACount ? 'голоса' : 'голосов'
+      return (voises)
+    }
+  }
 
+  isFull (number, mark) {
+    if (mark * 2 >= number) {
+      return true
+    } else { return false }
+  }
+
+  countStars (mark) {
+    const arrayMarkDouble = _.range((mark * 2) + 1)
+    return (
+      <div className='stars'>
+
+        {!this.isFull(2, mark) && arrayMarkDouble.includes(1) && <div className='starHalf'></div>}
+        {this.isFull(2, mark) && arrayMarkDouble.includes(2) && <div className='starFull'></div>}
+        {!arrayMarkDouble.includes(1) && <div className='starEmpty'></div>}
+
+        {!this.isFull(4, mark) && arrayMarkDouble.includes(3) && <div className='starHalf'></div>}
+        {this.isFull(4, mark) && arrayMarkDouble.includes(4) && <div className='starFull'></div>}
+        {!arrayMarkDouble.includes(3) && <div className='starEmpty'></div>}
+
+        {!this.isFull(6, mark) && arrayMarkDouble.includes(5) && <div className='starHalf'></div>}
+        {this.isFull(6, mark) && arrayMarkDouble.includes(6) && <div className='starFull'></div>}
+        {!arrayMarkDouble.includes(5) && <div className='starEmpty'></div>}
+
+        {!this.isFull(8, mark) && arrayMarkDouble.includes(7) && <div className='starHalf'></div>}
+        {this.isFull(8, mark) && arrayMarkDouble.includes(8) && <div className='starFull'></div>}
+        {!arrayMarkDouble.includes(7) && <div className='starEmpty'></div>}
+
+        {!this.isFull(10, mark) && arrayMarkDouble.includes(9) && <div className='starHalf'></div>}
+        {this.isFull(10, mark) && arrayMarkDouble.includes(10) && <div className='starFull'></div>}
+        {!arrayMarkDouble.includes(9) && <div className='starEmpty'></div>}
+      </div>
+    )
+  }
   rederCourses () {
     const { courses } = this.state
     return courses.map((course, i) => (
@@ -48,7 +91,7 @@ class MainView extends Component {
         <div className='col-sm-4 col-md-4'>
           <div className={`course${i % 3}`}>
             <div className='text-time'>
-              2-3 недели
+              {course.duration}
             </div>
             <div className='text-name'>
               {course.name}
@@ -57,13 +100,18 @@ class MainView extends Component {
               {course.description}
             </div>
 
+            <div className='text-starMark'>
+              {this.countStars(course.starMark)} {course.reviewNumber} {this.countVoises(course.reviewNumber)}
+            </div>
           </div>
+
           <div
             className='btn-start'
             onClick={() => {
               browserHistory.push({ pathname: `/faculty/${course.discipline}/course/${course.id}` })
             }}
             >Начать обучение
+            {/* {startButton} */}
           </div>
         </div>
 
@@ -83,10 +131,16 @@ class MainView extends Component {
             <div className='description text-description'>
               ЗДЕСЬ МЫ ВОСПИТЫВАЕМ СТРАТЕГОВ И МЫСЛИТЕЛЕЙ, РАЗВИВАЕМ ЖИВОСТЬ УМА И РЕАКЦИЮ,
               РАСТИМ ДОСТОЙНЫХ И ЦИВИЛИЗОВАННЫХ ИГРОКОВ. ДОБРО ПОЖАЛОВАТЬ НА ФАКУЛЬТЕТ!
+              {/* {hiWord} */}
             </div>
           </div>
           <div className='col-sm-4 col-md-4 '>
-            <div className='logo-Dota2'>
+            <div className='logo-Dota2'
+              // style={{backgroundImage: url(../../../images/logoDota2.jpg}}
+              // logoBannerDota:'',
+              // logoBannerCSGO:'',
+              // logoBannerLoL:'',
+                >
             </div>
           </div>
           {this.rederCourses()}
@@ -98,6 +152,8 @@ class MainView extends Component {
             <div className='reviews text-reviews'>
               {/* <CommentList
                 courseId={params.courseId}
+                reviews
+                reviewsImg
               /> */}
             </div>
           </div>

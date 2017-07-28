@@ -1,22 +1,15 @@
-// @font-face {
-//     font-family: 'micradiregular';
-//     src: url('../../fonts/micradi_regular-webfont.woff2') format('woff2'),
-//          url('../../fonts/micradi_regular-webfont.woff') format('woff');
-//     font-weight: normal;
-//     font-style: normal;
-// }
 @font-face {
-	font-family: 'Orbitron';
-	src: url('../../fonts/orbitron-medium-webfont.eot');
+	font-family: 'MICRADI';
+	src: url('/src/fonts/MICRADI_.eot');
 	src: local('☺'),
-  url('../../fonts/orbitron-medium-webfont.woff') format('woff'),
-  url('../../fonts/MICRADI_.ttf') format('truetype'),
-  url('../../fonts/MICRADI_.svg') format('svg');
+  url('/src/fonts/MICRADI_.woff') format('woff'),
+  url('/src/fonts/MICRADI_.ttf') format('truetype'),
+  url('/src/fonts/MICRADI_.svg') format('svg');
 	font-weight: medium;
 	font-style: normal;
 }
 .container {
-font-family: 'Orbitron', sans-serif;
+font-family: 'MICRADI';
 font-size: 14px;
 display: flex;
 color: #e5d800;

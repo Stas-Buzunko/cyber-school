@@ -12,6 +12,12 @@
     },
     "tests": {
       ".read": true
+    },
+    "forumSections": {
+      ".read": true
+    },
+    "statistic": {
+      ".read": true
     }
   }
 }

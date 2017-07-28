@@ -10,7 +10,8 @@ class StripeComponent extends Component {
     buttonText: PropTypes.string.isRequired,
     pay: PropTypes.func.isRequired,
     courseId: PropTypes.string.isRequired,
-    userId: PropTypes.string.isRequired
+    userId: PropTypes.string.isRequired,
+    isVip: PropTypes.bool.isRequired
   }
 
   componentDidMount () {
@@ -32,8 +33,8 @@ class StripeComponent extends Component {
   }
 
   receiveToken = token => {
-    const { pay, amount, courseId, userId } = this.props
-    pay({ token: token.id, amount, courseId, userId })
+    const { pay, amount, courseId, userId, isVip } = this.props
+    pay({ token: token.id, amount, courseId, userId, isVip })
   }
 
   render () {
@@ -42,7 +43,6 @@ class StripeComponent extends Component {
     return (
       <div>
         <div onClick={this.onOpenStripe}
-                className='buttonBuy'
           >{buttonText} {price}$</div>
       </div>
     )
