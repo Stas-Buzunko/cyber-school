@@ -17,7 +17,6 @@ align-items:baseline;
 
 }
 .btn {
-
   color: #e5d800;
 }
 .navbtn1 {
@@ -30,16 +29,6 @@ align-items:baseline;
   height:60px;
   background-image: url(../../images/btn1.png);
 
-}
-.navbtn1:active {
-  color: #e5d800;
-  padding-top:20px;
-  margin:0px;
-  width:204px;
-	padding-top:20px;
-  height:63px;
-  background-image: url(../../images/btnAct1.png);
-	float: left;
 }
 .navbtn2 {
 	font-family: 'MICRADI';
@@ -109,7 +98,7 @@ align-items:baseline;
 
 }
 .firstButton{
-	margin-left:20px;
+	margin-left:110px;
 }
 /* Links inside the dropdown */
 .dropdown-content a {

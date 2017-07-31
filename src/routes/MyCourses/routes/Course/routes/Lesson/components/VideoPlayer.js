@@ -88,8 +88,8 @@ class VideoPlayer extends Component {
     return (
       <div>
         <ReactPlayer
-          width={730}
-          height={400}
+          width={830}
+          height={420}
           url={url}
           ref={player => { this.player = player }}
           className='react-player'

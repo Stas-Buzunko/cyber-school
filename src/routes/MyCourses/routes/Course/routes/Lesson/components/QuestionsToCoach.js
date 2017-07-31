@@ -3,6 +3,7 @@ import firebase from 'firebase'
 import toastr from 'toastr'
 import Infinite from 'react-infinite'
 import moment from 'moment'
+import './MainView.scss'
 
 class QuestionsToCoach extends Component {
   constructor (props) {
@@ -32,8 +33,8 @@ class QuestionsToCoach extends Component {
     const { user } = this.props.auth
     this.fetchItems(courseId, user)
     this.fetchCourse(courseId)
-
     this.chatListener()
+
   }
 
   fetchCourse (courseId) {
@@ -93,13 +94,13 @@ class QuestionsToCoach extends Component {
     if (chat[`${newDiscipline}`] !== []) {
       return chat[`${newDiscipline}`].messages.map((item, i) =>
         <li key={i}>
-          <div className='col-xs-12 col-md-12 comment'>
+          <div className='col-xs-12 col-md-12'>
             {/* <div><img style={{ borderRadius:'10%' }} className='comment-avatar' src={item.avatar} /></div> */}
             <div className='col-xs-12 col-md-12'>
               <div style={{ color:'lightBlue' }}>{item.user}</div>
-              <div style={{ color:'blue' }}>{ moment(item.date).toNow() }</div>
+              <div style={{ color:'#7bb4d7' }}>{ moment(item.date).toNow() }</div>
             </div>
-            <div className='col-xs-12 col-md-12'>
+            <div style={{ color:'white' }} className='col-xs-12 col-md-12'>
               {item.text}
             </div>
           </div>
@@ -122,7 +123,7 @@ class QuestionsToCoach extends Component {
     this.setState({ messages: newMessages })
     const newChat = { ...chat }
     newChat[`${newDiscipline}`].messages = newMessages
-    this.setState({ message: '' })
+    this.setState({ message: ''})
     firebase.database().ref('chats/' + user.uid).update({ chat: newChat })
     .then(() => {
       toastr.success('Your message saved!')
@@ -144,7 +145,6 @@ class QuestionsToCoach extends Component {
     const { disciplines, discipline, chatLoaded } = this.state
     firebase.database().ref('chats/' + user.uid)
     .on('value', snapshot => {
-      console.log(snapshot.val())
       const object = snapshot.val()
       if (object !== null) {
         const chat = object.chat || {}
@@ -158,32 +158,37 @@ class QuestionsToCoach extends Component {
       }
     })
   }
+
   render () {
     const { disciplineLoaded, chatLoaded } = this.state
     return (
       <div>
-        <div>
-          <Infinite containerHeight={200} elementHeight={60} className='scroll'>
+        <div className='chat-field scroll'>
+          <Infinite containerHeight={225} elementHeight={20} className='scroll' >
+            <div>
             <ul className='list-unstyled'>
               {chatLoaded && disciplineLoaded && this.renderCommentList()}
             </ul>
+            <div id='box'
+              ref={(el) => { this.messagesEnd = el }} ></div>
+            </div>
           </Infinite>
+          <div>
+            ​<textarea
+              type='textarea'
+              className='chat-input'
+              value={this.state.message}
+              cols='50'
+              rows='3'
+              onChange={(e) => this.setState({ message: e.target.value })}>
+            </textarea>
+          </div>
         </div>
-        <form>
-          <textarea
-            value={this.state.message}
-            onChange={(e) => this.setState({ message: e.target.value })}
-            cols={50}
-            rows={4}
-          />
-          <button
-            type='button'
-            style={{ width:'50%', margin: '15px' }}
-            className='btn btn-success lg'
-            onClick={this.saveCommentClick}
-            >Ask question
-          </button>
-        </form>
+        <div
+          className='chat-button'
+          onClick={this.saveCommentClick}
+          >Ask question
+        </div>
       </div>
     )
   }

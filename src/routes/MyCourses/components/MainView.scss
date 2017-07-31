@@ -1,1 +1,128 @@
-
+.ikon-dragon{
+  padding:0px;
+  margin:30px 0px 15px 0px;
+  width:165px;
+  height:157px;
+ background-image: url(../../../images/ikonDragon.jpg);
+}
+.text-place{
+  margin:30px 0px 15px 0px;
+  padding:30px;
+  color: #7bb4d7;
+}
+.text-frame{
+  padding:30px;
+  margin:30px 0px 15px 0px;
+  width:681px;
+  height:157px;
+  color: white;
+  background-image: url(../../../images/textFrameMyCourses.jpg);
+}
+.tab{
+  padding-top:40px;
+  margin-bottom:20px;
+  width:1140px;
+  height:506px;
+  background-image: url(../../../images/tab.png);
+}
+.vip-course{
+  color: yellow;
+  margin:auto;
+  height:15px;
+}
+.frame-course{
+  color:white;
+  width:360px;
+  height:417px;
+  display:inline-block;
+  background-image: url(../../../images/frameLesson.jpg);
+}
+.progress{
+  margin:auto;
+  width:307px;
+  height:24px;
+  background-color: transparent;
+  background-image: url(../../../images/progressBarFull.png);
+  display:inline-block;
+}
+.progress-bar{
+  margin:2px;
+  width:307px;
+  height:20px;
+  white-space: normal;
+  background-image: url(../../../images/progressBar.jpg);
+}
+.frame-name{
+  color:white;
+  width:330px;
+  height:35px;
+  font-size: 14px;
+  text-align: right;
+  display:block;
+  white-space: normal;
+}
+.frame-description{
+  color:#7bb4d7;
+  height:80px;
+  width:330px;
+  font-size: 12px;
+  text-align: right;
+  display:block;
+  white-space: normal;
+}
+.my-courses{
+  padding:10px 0px 0px 30px;
+  font-size: 14px;
+}
+.button-details{
+  padding-top:20px;
+  margin:auto;
+  width:250px;
+  height:64px;
+  text-align: center;
+  background-image: url(../../../images/buttonDetailsAct.png);
+}
+.button-details:hover{
+  padding-top:20px;
+  margin:auto;
+  width:250px;
+  height:64px;
+  text-align: center;
+  background-image: url(../../../images/buttonDetailsAct.png);
+}
+.div-scroll{
+  width:1140px;
+  height:460px;
+  overflow-x:scroll;
+  white-space: nowrap;
+  overflow-y:hidden;
+}
+.scroll-horizontal::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #000000;
+}
+.scroll-horizontal::-webkit-scrollbar
+{
+  width: 23px;
+  background-color: black;
+}
+.scroll-horizontal::-webkit-scrollbar-thumb
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #1a1a1a;
+}
+.scroll-horizontal::-webkit-scrollbar-button:horizontal:increment {
+  width:8px;
+  height:17px;
+  background-image: url(../../../images/right.png);
+}
+.scroll-horizontal::-webkit-scrollbar-button:horizontal:decrement {
+  width:8px;
+  height:17px;
+  background-image: url(../../../images/left.png);
+}
+.scroll-horizontal{
+  margin-left: 10px;
+  width:1110px;
+}

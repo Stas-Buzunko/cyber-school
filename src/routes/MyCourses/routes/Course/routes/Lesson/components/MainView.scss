@@ -1,14 +1,168 @@
+.container-mylesson {
+  font-family: 'MICRADI';
+  font-weight: medium;
+  color: yellow;
+  align-items:baseline;
+  margin-top:20px;
+}
+.button-lesson-name {
+  padding-top:8px;
+  margin:0px;
+  text-align: center;
+  width:267px;
+  height:38px;
+  display: block;
+  background-image: url(../../../../../../../images/buttonLessonName.png);
+}
+.section-list {
+  padding:0px;
+  margin:0px;
+  text-align: center;
+  width:263px;
+  height:248px;
+  color: white;
+  background-image: url(../../../../../../../images/list.png);
+}
+.bonus-link {
+  color: #7bb4d7;
+}
+.link {
+  color: yellow;
+}
+.checkbox {
+  padding:0px;
+  margin:0px;
+  width:13px;
+  height:15px;
+  display: inline-block;
+  background-image: url(../../../../../../../images/checkBox.png);
+}
+.button-continie-lesson {
+  padding:5px;
+  margin:15px;
+  width:241px;
+  height:33px;
+  text-align: center;
+  display: block;
+  background-image: url(../../../../../../../images/buttonContLesson.jpg);
+}
+.button-continie-lesson:active {
+  padding:5px;
+  margin:15px;
+  width:241px;
+  height:33px;
+  text-align: center;
+  display: block;
+  background-image: url(../../../../../../../images/buttonContLessonPress.jpg);
+}
+.button-coach-chat{
+  padding-top:8px;
+  margin:20px 0px 0px 0px;
+  text-align: center;
+  width:267px;
+  height:38px;
+  display: block;
+  background-image: url(../../../../../../../images/buttonLessonName.png);
+}
+.chat-field {
+  padding:0px;
+  margin:0px;
+  width:263px;
+  height:293px;
+  font-size: 10pt;
+  background-image: url(../../../../../../../images/chatField.jpg);
+}
+.chat-input {
+  padding: 0px;
+  margin: 5px 0px 5px 15px;
+  width:240px;
+  height:61px;
+  border: none;
+  color: yellow;
+  background-image: url(../../../../../../../images/chatInput.jpg);
+}
+.chat-button {
+  padding:8px;
+  margin-top:5px;
+  width:267px;
+  height:38px;
+  text-align: center;
+  display: block;
+  background-image: url(../../../../../../../images/chatButton.png);
+}
+.questions {
+  display: block;
+}
+.question-field {
+  padding:0px;
+  margin:0px;
+  width:847px;
+  height:193px;
+  float:left;
+  text-align: center;
+  background-image: url(../../../../../../../images/questionField.jpg);
+}
+.question-button {
+  padding-top:8px;
+  margin-top:5px;
+  width:267px;
+  height:38px;
+  text-align: center;
+  background-image: url(../../../../../../../images/questionButton.png);
+}
+.topic-options{
+  padding: 0px;
+  margin:0px;
+  font-family: 'MICRADI';
+  font-weight: medium;
+  color: #7bb4d7;
+  width:847px;
+  height:36px;
+  border: none;
+  background-image: url(../../../../../../../images/topicField.jpg);
+}
+.options-lessons{
+  border: none;
+  background-color: black;
+}
+.question-input{
+  padding: 0px;
+  margin:0px;
+  font-family: 'MICRADI';
+  font-weight: medium;
+  color: #7bb4d7;
+  width:847px;
+  height:193px;
+  border: none;
+  background-image: url(../../../../../../../images/questionInput.jpg);
+}
+.save-comment-button {
+  padding-top:8px;
+  margin:auto;
+  width:267px;
+  height:38px;
+  text-align: center;
+  background-image: url(../../../../../../../images/questionButton.png);
+}
+.test-button {
+  padding-top:8px;
+  margin:5px auto;
+  width:267px;
+  height:38px;
+  text-align: center;
+  background-image: url(../../../../../../../images/questionButton.png);
+}
 .player{
   padding-left:5px;
   padding-bottom:10px;
-  margin:0;
-	width:730px;
-	height:400px;
-  background-image: url(../../../../../../../images/player.png);
+  margin:auto;
+	width:845px;
+	height:468px;
+  background-image: url(../../../../../../../images/videoFrameLesson.jpg);
 }
 .сontrols{
   margin:auto;
-  width:730px;
+  width:832px;
   height:30px;
   background-color: #000;
 }
@@ -23,7 +177,7 @@
 .pause{
   margin:0;
   width:23px;
-  height:23px;
+  height:22px;
   padding:10px;
   background-image: url(../../../../../../../images/pause.png);
   float: left;
@@ -44,9 +198,12 @@
 .videoButton{
 	border-width: 0px;
   padding:0px;
-  margin:0px;
-  width:730px;
+  margin:auto;
+  width:845px;
   height:70px;
+  color: white;
+  font-family: 'MICRADI';
+  font-weight: medium;
   background-image: url(../../../../../../../images/videoButton.jpg);
 }
 input[type=range] {
@@ -82,4 +239,32 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   // margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+.scroll::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #000000;
+}
+.scroll::-webkit-scrollbar
+{
+  width: 23px;
+  background-color: red;
+}
+.scroll::-webkit-scrollbar-thumb
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #1a1a1a;
+}
+.scroll::-webkit-scrollbar-button:vertical:increment {
+  width:23px;
+  height:22px;
+  background-image: url(../../../../../../../images/down.jpg);
+}
+.scroll::-webkit-scrollbar-button:vertical:decrement {
+  width:23px;
+  height:22px;
+  background-image: url(../../../../../../../images/up.jpg);
+}
+.scroll{
+  margin: 0px;
 }

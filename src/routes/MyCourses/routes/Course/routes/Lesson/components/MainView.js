@@ -267,13 +267,11 @@ class MainView extends Component {
     const { buttonName } = this.state
     return (
       <div>
-        <button
-          type='button'
-          className='btn btn-success lg'
-          style={{ width:'30%', margin: '15px' }}
+        <div
+          className='comment'
           onClick={() => this.buttonClick()}
           >{buttonName}
-        </button>
+        </div>
       </div>
     )
   }
@@ -288,13 +286,12 @@ class MainView extends Component {
     const { buttonTaskName } = this.state
     return (
       <div>
-        <button
-          type='button'
+        <div
           className='btn btn-success lg'
           style={{ width:'30%', margin: '15px' }}
           onClick={() => this.buttonClickTask()}
           >{buttonTaskName}
-        </button>
+        </div>
       </div>
     )
   }
@@ -304,17 +301,15 @@ class MainView extends Component {
     const { location } = this.props
     return (
       <div>
-        <button
-          type='button'
-          className='btn btn-success lg'
-          style={{ width:'30%', margin: '15px' }}
+        <div
+          className='test-button'
           onClick={() => {
             browserHistory.push({
               pathname: `${location.pathname.substring(0, location.pathname.length - 27)}test/${testId}`
             })
           }}
           >Пройти тест
-        </button>
+        </div>
       </div>
     )
   }
@@ -326,62 +321,50 @@ class MainView extends Component {
     if (!courseLoaded) {
       return (<div>Loading...</div>)
     }
-
     return (
-      <div className='container'>
+      <div className='container container-mylesson'>
         <div className='row'>
-          <div className='col-xs-12 col-md-12'>
-            <div className='col-xs3 col-md-3'>
-              <div className='chapters'>
-                <div> {course.name}</div>
-                <ul className='list-unstyled'>
-                  {this.renderSectionsList()}
-                </ul>
-              </div>
+
+<div className='col-xs-12 col-md-12'>
+          <div className='col-xs-3 col-md-3'>
+            <div className='button-lesson-name'> {course.name}</div>
+            <div className='section-list'>
+              <ul className='list-unstyled'>
+                {this.renderSectionsList()}
+                {this.renderSectionsList()}
+              </ul>
             </div>
-            <div className='col-xs-9 col-md-9'>
-              {/* <div className='progress'> */}
-              <div> {this.renderVideo()}</div>
-              <button
-                type='button'
-                className='videoButton'
-                onClick={() => { this.setState({ stopVideo: !stopVideo }) }}
-                >{lesson.name}
-              </button>
-            </div>
+            <div className='button-lesson-name'> {course.name}</div>
+            <div className='button-coach-chat'>Чат с тренером</div>
+            <QuestionsToCoach courseId={params.courseId} />
           </div>
-          <div className='col-xs-12 col-md-12'>
-            <div className='col-xs-4 col-md-4'>
-              <div className='chat'>
-                <div>Чат с тренером</div>
-                <QuestionsToCoach
-                  courseId={params.courseId}
-                />
-              </div>
-            </div>
-            <div className='col-xs-8 col-md-8 questions'>
-              <div className='questions'>
-                {this.renderShowCommentsButton()}
-                {showComments && <CommentToForum
-                  courseId={params.courseId}
-                />}
-              </div>
+
+          <div className='col-xs-9 col-md-9'>
+            <div> {this.renderVideo()}</div>
+            <button
+              type='button'
+              className='videoButton'
+              onClick={() => { this.setState({ stopVideo: !stopVideo }) }}
+              >{lesson.name}
+            </button>
+
+            <div className='questions'>
+              {this.renderShowCommentsButton()}
+              {showComments && <CommentToForum
+                courseId={params.courseId}
+              />}
             </div>
 
-            <div className='col-xs-8 col-md-8 task'>
+            <div className='task'>
               {this.renderShowTaskButton()}
               {showTask && <div> Hello. I am your practice task: {practiceTask}
               </div>}
             </div>
-
-            <div className='col-xs-8 col-md-8 testButton'>
-              <div className='questions'>
                 {this.renderTestButton()}
-              </div>
-            </div>
           </div>
         </div>
       </div>
+          </div>
     )
   }
 }

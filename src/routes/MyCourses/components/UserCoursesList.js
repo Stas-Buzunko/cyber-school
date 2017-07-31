@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 import { browserHistory } from 'react-router'
+import './MainView.scss'
 
 class UserCoursesList extends Component {
   constructor (props) {
     super(props)
-
     this.state = {
       courses: [],
       coursesLoaded: false,
@@ -62,13 +62,14 @@ class UserCoursesList extends Component {
     const numberLessonsInCourse = lessonsNumbersArray.reduce((a, b) => {
       return a + b
     })
-
     const percent = Math.round(numberWatchedlessons / numberLessonsInCourse * 100)
     return (
-      <div className='progress'>
-        <div className='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40'
-          aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent}%` }}>
-          {percent}% Complete (success)
+      <div>
+        <div className='progress' style={{ margin: '0px 0px 10px 10px' }}>
+          <div className='progress-bar' role='progressbar' aria-valuenow='40'
+            aria-valuemin='0' aria-valuemax='100' style={{ width: `${percent}%` }}>
+            {percent}% Complete
+          </div>
         </div>
       </div>
     )
@@ -78,49 +79,58 @@ class UserCoursesList extends Component {
     const vipCourseFromUser = userVipCourses.find((item, i) => item.courseId === course.id)
     return (
       <div>
-        {!!vipCourseFromUser && <div> VipCourse</div> }
+        {!!vipCourseFromUser && <div className='vip-course'> VipCourse</div> }
+        {!vipCourseFromUser && <div className='vip-course'></div> }
       </div>
     )
   }
-  renderCourses (courses, isVip) {
-    return courses.map((course, i) => (
-      <div key={i}>
-        <div className='col-sm-6 col-md-4' >
-          <div className='thumbnail' style={{ height: '460px' }}>
-            <img src={course.mainPhoto} width='300px' height='250px' alt='loading' />
-            <div className='caption'>
-              <h5>{course.name} </h5>
-              <h5>{course.description}</h5>
-              {this.isVip(course)}
-              <div style={{ padding: '15px' }} >
-                {this.renderProgressBar(course, isVip)}
-              </div>
-              <button
-                type='button'
-                className='btn btn-primary'
-                onClick={() => { browserHistory.push({ pathname: `/myCourses/course/${course.id}` }) }}
-                >More details
-              </button>
-            </div>
+
+  renderCourses () {
+    const { courses } = this.state
+    const newCourses = [].concat(courses).concat(courses)
+    return newCourses.map((course, i) => (
+      <div key={i} className='frame-course' style={{ padding: '5px', margin: '15px 10px 10px 10px' }}>
+        <img src={course.mainPhoto} width='352px' height='150px' alt='loading' />
+        <div className='caption' style={{ padding: '5px 10px 5px 10px' }}>
+          <h5 className='frame-name'>{course.name} </h5>
+          <h5 className='frame-description'>{course.description}</h5>
+          <div>
+            {this.renderProgressBar(course)}
+          </div>
+          {this.isVip(course)}
+          <div
+            className='button-details'
+            style={{ color: 'yellow' }}
+            onClick={() => { browserHistory.push({ pathname: `/myCourses/course/${course.id}` }) }}
+            >More details
           </div>
         </div>
       </div>
     ))
   }
-
   render () {
-    const { coursesLoaded, courses } = this.state
+    const { coursesLoaded } = this.state
     if (!coursesLoaded) {
       return (<div>Loading...</div>)
     }
-    const isSCount = (courses.length !== 1)
-    const coursesCount = isSCount ? 'courses' : 'course'
+    // const isSCount = (courses.length !== 1)
+    // const coursesCount = isSCount ? 'courses' : 'course'
     return (
-      <div>
-        <h4>You have {courses.length} paid {coursesCount}</h4>
-        <div>
-          {this.renderCourses(courses)}
+      <div className='row'>
+        <div className='col-xs-12 col-md-12' style={{ padding: '0px' }}>
+          <div className='col-xs-2 col-md-2 ikon-dragon'></div>
+          <div className='col-xs-3 col-md-3 text-place'>Улучши свои навыки и контроль за игрой</div>
+          <div className='col-xs-7 col-md-7 text-frame'> Изучи механизм игры и взаимодействие с командой</div>
         </div>
+        <div className='col-xs-12 col-md-12 tab' style={{ padding: '10px 0px 0px 0px' }}>
+          <div>
+            <span className='my-courses'>Мои курсы</span>
+            <div className='div-scroll scroll-horizontal'>
+              {this.renderCourses()}
+            </div>
+          </div>
+        </div>
+        {/* <h4>You have {courses.length} paid {coursesCount}</h4> */}
       </div>
     )
   }
